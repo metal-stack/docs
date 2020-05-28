@@ -1,10 +1,9 @@
 import Pkg
 Pkg.add("Documenter")
 
-push!(LOAD_PATH,"../src/")
 push!(LOAD_PATH,"src/")
 
-using Documenter, Example
+using Documenter
 
 is_ci_build = get(ENV, "CI", nothing) == "true"
 
@@ -21,7 +20,7 @@ makedocs(
             "The Stack" => "architecture/the_stack.md",
             "Networking" => "architecture/networking.md",
         ],
-        "enhancement_proposals.md",
+        "Enhancement Proposals" => "proposals/index.md",
         "contributing.md",
     ]
 )
