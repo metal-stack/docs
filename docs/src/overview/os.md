@@ -6,14 +6,14 @@ The images are hosted on GKE at images.metal-pod.io.
 
 ## Supported OS Images
 
-Our operating system images are trimmed down to their bare essentials for serving as Kubernetes worker nodes. Small image sizes make our machine provisioning blazingly fast.
+The operating system images that we use are trimmed down to their bare essentials for serving as Kubernetes worker nodes. Small image sizes make our machine provisioning blazingly fast.
 
-The following images are supported and built and updated on regular basis.
+The following images are built, updated and scanned from the metal-stack developers on regular basis.
 
 - Debian 10
 - Ubuntu 19.10
 
-## Build Your Own Images
+## Building Your Own Images
 
 It is possible to just build your own operating system images!
 
