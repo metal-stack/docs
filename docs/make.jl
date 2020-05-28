@@ -10,11 +10,14 @@ makedocs(
     ),
     authors = "metal-stack authors and contributors.",
     pages = [
-        "index.md",
-        "getting_started.md",
+        "Overview" => "index.md",
         "Architecture" => Any[
-            "The Stack" => "architecture/the_stack.md",
+            "Components" => "architecture/the_stack.md",
             "Networking" => "architecture/networking.md",
+        ],
+        "Getting Started" => Any[
+            "Guides" => "guides.md",
+            "mini-lab" => "external/mini-lab/README.md",
         ],
         "Enhancement Proposals" => "proposals/index.md",
         "contributing.md",
