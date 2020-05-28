@@ -1,6 +1,6 @@
-# metal-stack Documentation
+# What is metal-stack?
 
-metal-stack is a software that provides an API for provisioning and managing physical servers. It is a fully-automated provisioning framework for bare metal machines. To categorize this product, we commonly use the terminology _metal-as-a-service (MaaS)_ or _bare metal cloud_.
+metal-stack is a software that provides an API for provisioning and managing physical servers in a data center. To categorize this product, we commonly use the terminology _metal-as-a-service (MaaS)_ or _bare metal cloud_.
 
 ```@contents
 Pages = ["index.md"]
@@ -23,7 +23,7 @@ metal-stack itself is typically deployed on Kubernetes as well. However, there a
 
 In partnership with the open-source project [Gardener](https://gardener.cloud/), we provision Kubernetes clusters on metal-stack at scale. From the perspective of the Gardener, the metal-stack is just another cloud provider.
 
-We are clearly aiming at a fully-automated lifecycle for K8s clusters. The time saving compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
+We are clearly aiming at a fully-automated lifecycle for K8s clusters. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
 
 ## Why Bare Metal?
 

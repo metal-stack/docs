@@ -10,16 +10,26 @@ makedocs(
     ),
     authors = "metal-stack authors and contributors.",
     pages = [
-        "Overview" => "index.md",
-        "Architecture" => Any[
-            "Components" => "architecture/the_stack.md",
-            "Networking" => "architecture/networking.md",
+        "Introduction" => "index.md",
+        "Overview" => Any[
+            "Architecture" => "overview/architecture.md",
+            "Networking" => "overview/networking.md",
+            "Operating Systems" => "overview/os.md",
+            "Hardware Support" => "overview/hardware.md",
         ],
-        "Getting Started" => Any[
-            "Guides" => "guides.md",
+        "Guides" => Any[
+            "Getting Started" => "getting_started.md",
             "mini-lab" => "external/mini-lab/README.md",
+            "metalctl" => "external/metalctl/README.md",
+        ],
+        "Getting Serious" => Any[
+            "Buying Hardware" => "installation/hardware.md",
+            "Installation" => "installation/deployment.md",
+            "Monitoring" => "installation/monitoring.md",
+            "Troubleshooting" => "installation/troubleshooting.md",
         ],
         "Enhancement Proposals" => "proposals/index.md",
+        "Support" => "support.md",
         "contributing.md",
     ]
 )
