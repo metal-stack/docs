@@ -28,5 +28,6 @@ makedocs(
 if is_ci_build
     deploydocs(
         repo = "github.com/metal-stack/docs.git",
+        push_preview = true,
     )
 end
