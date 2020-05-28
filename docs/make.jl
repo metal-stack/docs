@@ -10,7 +10,8 @@ is_ci_build = get(ENV, "CI", nothing) == "true"
 makedocs(
     sitename="metal-stack",
     format = Documenter.HTML(
-        prettyurls = is_ci_build
+        prettyurls = is_ci_build,
+        assets = ["assets/favicon.ico"],
     ),
     authors = "metal-stack authors and contributors.",
     pages = [

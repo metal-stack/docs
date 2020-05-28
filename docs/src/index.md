@@ -17,7 +17,7 @@ Running this on-premise has several benefits:
 - Better price/performance ratio
 - Easier connectivity to existing company networks
 
-From the very beginning, the machines provided by metal-stack are provided with the intention to run software managed by K8s. Reason for this is that K8s makes the bare metal approach shine and mitigates the problems that come with the approach (see [Why bare metal?](#why-bare-metal)).
+From the very beginning, the machines provided by metal-stack are provided with the intention to run software managed by K8s. Reason for this is that K8s makes the bare metal approach shine and mitigates the problems that come with the approach (see [Why Bare Metal?](@ref)).
 
 metal-stack itself is typically deployed on Kubernetes as well. However, there are no specific dependencies of metal-stack running in a Kubernetes cluster. It exposes a traditional REST API that can be used for managing bare metal machines.
 
@@ -30,16 +30,16 @@ We are clearly aiming at a fully-automated lifecycle for K8s clusters. The speed
 The bare metal approach is especially attractive for the purpose of running K8s on top of it. Bare metal has several advantages over virtualized environments and overcomes several of the drawbacks of virtual machines.
 
 1. Virtual environment drawbacks
-  - [Spectre and Meltdown](https://meltdownattack.com/) can only be mitigated with a "cluster per tenant" approach
-  - Missing isolation of multi-tenant change impacts
-  - Licensing restrictions
-  - "Noisy-neighbor" issues
+   - [Spectre and Meltdown](https://meltdownattack.com/) can only be mitigated with a "cluster per tenant" approach
+   - Missing isolation of multi-tenant change impacts
+   - Licensing restrictions
+   - "Noisy-neighbor" issues
 1. Advantages of a metal-as-a-service platform
-  - High and guaranteed performance (especially disk i/o)
-  - Reduced stack depth (Host -> VM -> Application vs. Host -> Container) => reduced attack surface, cost/performance gain, no VM live-migrations
-  - No need for a central storage system: Local storage governed by K8s to reduce storage costs
-  - Bigger hardware configuration possible (hypervisors have restrictions, e.g. it is not possible to assign all CPUs to a single VM)
-  - K8s ships with "enterprise" features (performance, availability, scalability) on commodity hardware
+   - High and guaranteed performance (especially disk i/o)
+   - Reduced stack depth (Host -> VM -> Application vs. Host -> Container) => reduced attack surface, cost/performance gain, no VM live-migrations
+   - No need for a central storage system: Local storage governed by K8s to reduce storage costs
+   - Bigger hardware configuration possible (hypervisors have restrictions, e.g. it is not possible to assign all CPUs to a single VM)
+   - K8s ships with "enterprise" features (performance, availability, scalability) on commodity hardware
 
 Beside these benefits there are also several disadvantages of metal-as-a-service platforms to consider:
 
