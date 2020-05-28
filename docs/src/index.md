@@ -1,6 +1,6 @@
 # Introduction
 
-metal-stack is a software that provides an API for provisioning and managing physical servers in a data center. To categorize this product, we commonly use the terminology _metal-as-a-service (MaaS)_ or _bare metal cloud_.
+metal-stack is a software that provides an API for provisioning and managing physical servers in a data center. To categorize this product, we commonly use the terms like _metal-as-a-service (MaaS)_ or _bare metal cloud_.
 
 ```@contents
 Pages = ["index.md"]
@@ -15,11 +15,15 @@ Running on-premise gives you full data sovereignty and usually a better price/pe
 
 ### Fast Provisioning
 
-Machine provisioning of bare metal machines should not feel much different from virtual machines. metal-stack is capable of provisioning servers in less than a minute.
+Machine provisioning of bare metal machines should not feel much different from virtual machines. And to be honest: Slow environments are no fun to work with. metal-stack is capable of provisioning servers in less than a minute.
 
 ### No-Ops
 
 Part of the metal-stack runs on dedicated switches in your data center. This way, it is possible to automate server inventorization, network configuration and machine lifecycles.
+
+### API driven
+
+Every service of the metal-stack has an API and can be consumed by technical systems or humans either way. This approach delivers the highest possible degree of automation, maintainability and performance.
 
 ### Ready for Kubernetes
 
