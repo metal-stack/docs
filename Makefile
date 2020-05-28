@@ -2,4 +2,5 @@
 
 .PHONY: build
 build:
-	docker run -it --rm -v $(PWD):/workdir -w /workdir julia:1.4.2 julia docs/make.jl
+	docker build -t docs-builder .
+	docker run -it --rm -v $(PWD)/docs:/workdir/docs -w /workdir docs-builder julia --color=yes --project=docs/ -e 'using Pkg; Pkg.instantiate(); include("docs/make.jl")'

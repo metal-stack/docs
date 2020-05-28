@@ -1,8 +1,3 @@
-import Pkg
-Pkg.add("Documenter")
-
-push!(LOAD_PATH,"src/")
-
 using Documenter
 
 is_ci_build = get(ENV, "CI", nothing) == "true"
