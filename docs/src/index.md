@@ -19,11 +19,11 @@ Machine provisioning of bare metal machines should not feel much different from 
 
 ### No-Ops
 
-Part of the metal-stack runs on dedicated switches in your data center. This way, it is possible to automate server inventorization, network configuration and machine lifecycles.
+Part of the metal-stack runs on dedicated switches in your data center. This way, it is possible to automate server inventorization, permanently reconcile network configuration and automatically manage machine lifecycles. Manual configuration is neither required nor wanted.
 
 ### API driven
 
-Every service of the metal-stack has an API and can be consumed by technical systems or humans either way. This approach delivers the highest possible degree of automation, maintainability and performance.
+The development of metal-stack is strictly API driven and offers self-service to end-users. In addition to that, the API driven approach delivers the highest possible degree of automation, maintainability and performance.
 
 ### Ready for Kubernetes
 

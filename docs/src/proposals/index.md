@@ -1,9 +1,10 @@
 # Metal Stack Enhancement Proposals (MEPs)
 
-This directory contains proposals which address substantial modifications to metal-stack and are discussed here.
-Each Proposal is numbered and raised as a pull request.
+This section contains proposals which address substantial modifications to metal-stack.
 
-Every proposal has a shortcut name which starts with *MEP* followed by a unique number. The proposal should be raised as a merge request, if the merge request was excepted everyone can read it. This does not necessarily mean the proposal was accepted or not. The list of proposal and their current state is listed in the table below.
+Every proposal has a short name which starts with *MEP* followed by an incremental, unique number. Proposal should be raised as pull requests in the [docs](https://github.com/metal-stack/docs) repository and can be discussed in Github issues.
+
+The list of proposal and their current state is listed in the table below.
 
 Possible states are:
 
@@ -13,7 +14,7 @@ Possible states are:
 - InProgress
 - Completed
 
-Once a proposal was accepted, a issue should be raised and the implementation should be done in a seperate PR.
+Once a proposal was accepted, an issue should be raised and the implementation should be done in a separate PR.
 
 | Name                     | Description                                     | State            | Issue     | PR      |
 |:------------------------ |:----------------------------------------------- |:----------------:|:---------:|:-------:|
