@@ -7,47 +7,59 @@ Pages = ["index.md"]
 Depth = 5
 ```
 
-## Use-Cases
+## Key Properties
 
-The major intent to initiate metal-stack was to build a framework that provides an on-premise machine infrastructure for [Kubernetes](https://kubernetes.io/) (K8s) as a service (KaaS). But of course you can also use metal-stack only for multi-tenant-capable machine provisioning as well in your data center.
+### On-Premise
 
-Running on-premise has several benefits:
+Running on-premise gives you full data sovereignty and usually a better price/performance ratio than with hyperscalers (especially the larger your environment gets). Another advantage of running on-premise is the easier connectivity to existing company networks.
 
-- Full data sovereignty
-- Typically better price/performance ratio than hyperscalers (especially the larger your environments are)
-- Easier connectivity to existing company networks
+### Fast Provisioning
 
-metal-stack itself is typically deployed on Kubernetes as well. However, there are no specific dependencies of metal-stack running in a Kubernetes cluster. It exposes a traditional REST API that can be used for managing bare metal machines.
+Machine provisioning of bare metal machines should not feel much different from virtual machines. metal-stack is capable of provisioning servers in less than a minute.
 
-## Kubernetes Integration
+### No-Ops
 
-In partnership with the open-source project [Gardener](https://gardener.cloud/), we provision Kubernetes clusters on metal-stack at scale. From the perspective of the Gardener, the metal-stack is just another cloud provider.
+Part of the metal-stack runs on dedicated switches in your data center. This way, it is possible to automate server inventorization, network configuration and machine lifecycles.
 
-We are clearly aiming at a fully-automated lifecycle for K8s clusters. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
+### Ready for Kubernetes
+
+Not only does the metal-stack run smoothly on Kubernetes. The major intent of metal-stack has always been to build an elastic machine infrastructure for [Kubernetes](https://kubernetes.io/) (K8s) as a service (KaaS). In partnership with the open-source project [Gardener](https://gardener.cloud/), we provision Kubernetes clusters on metal-stack at scale.
+
+From the perspective of the Gardener, the metal-stack is just another cloud provider. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
+
+Of course, you can use metal-stack only for machine provisioning as well.
+
+### Open Source
+
+The metal-stack is open source and free of constraints regarding vendors and third-party products. The stack is completely built on open source products. We have an open community actively working on the metal-stack, which can assist you delivering all reasonable features you are gonna need.
 
 ## Why Bare Metal?
 
-Bare metal has several advantages over virtualized environments and overcomes several of the drawbacks of virtual machines.
+Bare metal has several advantages over virtualized environments and overcomes several drawbacks of virtual machines.
 
-1. Virtual environment drawbacks
-   - [Spectre and Meltdown](https://meltdownattack.com/) can only be mitigated with a "cluster per tenant" approach
-   - Missing isolation of multi-tenant change impacts
-   - Licensing restrictions
-   - "Noisy-neighbor" issues
-1. Advantages of a metal-as-a-service platform
-   - High and guaranteed performance (especially disk i/o)
-   - Reduced stack depth (Host -> VM -> Application vs. Host -> Container) => reduced attack surface, cost/performance gain, no VM live-migrations
-   - No need for a central storage system: Local storage governed by K8s to reduce storage costs
-   - Bigger hardware configuration possible (hypervisors have restrictions, e.g. it is not possible to assign all CPUs to a single VM)
-   - K8s ships with "enterprise" features (performance, availability, scalability) on commodity hardware
+### Virtual Environment Drawbacks
 
-Beside these benefits there are also several disadvantages of metal-as-a-service platforms to consider:
+- [Spectre and Meltdown](https://meltdownattack.com/) can only be mitigated with a "cluster per tenant" approach
+- Missing isolation of multi-tenant change impacts
+- Licensing restrictions
+- Noisy-neighbors
+
+### Bare Metal Advantages
+
+- Guaranteed and fastest possible performance (especially disk i/o)
+- Reduced stack depth (Host -> VM -> Application vs. Host -> Container)
+  - Reduced attack surface
+  - Lower costs, higher performance
+  - No VM live-migrations
+- Bigger hardware configurations possible (hypervisors have restrictions, e.g. it is not possible to assign all CPUs to a single VM)
+
+### Bare Metal Drawbacks
 
 - Hardware defects have direct impact (should be considered by design) and can not be mitigated by live-migration as in virtual environments
-- Not many "providers" to choose from
-- Bare metal provisioning is slower than provisioning a VM
 - Capacity planning is more difficult (no resource overbooking possible)
 - Higher "AfA"-costs
+
+### Conclusion
 
 In the end, we have come to the conclusion that most of the drawbacks of bare metal machines can be mitigated best when running K8s on the machines. K8s will take care of high-availability in case of hardware failures and also supervises machine resources. We are certain that the chosen approach can satisfy the needs of the future users to a higher degree than virtual machines could do.
 

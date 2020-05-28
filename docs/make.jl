@@ -16,7 +16,7 @@ makedocs(
             "Networking" => "overview/networking.md",
             "Operating Systems" => "overview/os.md",
             "Hardware Support" => "overview/hardware.md",
-            "Kubernetes Integration" => "kubernetes.md",
+            "Kubernetes Integration" => "overview/kubernetes.md",
         ],
         "Quickstart" => "quickstart.md",
         "Guides" => Any[
@@ -31,7 +31,6 @@ makedocs(
         ],
         "API Documentation" => "api_docs.md",
         "Enhancement Proposals" => "proposals/index.md",
-        "Support" => "support.md",
         "contributing.md",
     ]
 )

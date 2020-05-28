@@ -6,6 +6,10 @@ In order to build up your deployment, you can make use of the Ansible roles that
 
 ## Deploying the Control Plane
 
+The metal-stack control-plane is typically deployed on Kubernetes. However, there are no specific dependencies of metal-stack running in a Kubernetes cluster. It exposes a traditional REST API that can be used for managing bare metal machines.
+
 ## Bootstrapping a Partition
 
 ## Deploying a Partition
+
+## Deploying Gardener with metal-stack

@@ -1,7 +1,9 @@
 # Getting Started
 
-Before starting to buy any expensive hardware, you should try out the metal-stack on your notebook and familiarize with all the major principles.
+Before starting to buy any hardware, you should try out the metal-stack on your notebook and familiarize with the capabilities of metal-stack.
 
 For this, we made the [mini-lab](https://github.com/metal-stack/mini-lab).
 
-The mini-lab is a fully virtual setup and is supposed to be run on a single notebook. For this reason, the setup is slightly simplified in comparison to full-blown setups on real hardware. However, the lab should help to understand all major ideas and components of the metal-stack.
+The mini-lab is a fully virtual setup and is supposed to be run locally on a single machine. For this reason, the setup was slightly simplified in comparison to full-blown setups on real hardware. However, the lab should help to understand all ideas behind the metal-stack.
+
+Get your hands dirty and follow the guide on how to get on with the mini-lab [here](external/mini-lab/README.md).
