@@ -9,7 +9,7 @@ Even if it should go without saying, we live an open culture of discussion, in w
 If you want, feel free to propose changes to this document in a pull request.
 
 ```@contents
-Pages = ["index.md"]
+Pages = ["contributing.md"]
 Depth = 5
 ```
 
