@@ -1,6 +1,6 @@
 # metal-stack Documentation
 
-metal-stack is a software to provide physical servers on demand. It is a fully-automated provisioning framework for bare metal machines. To categorize this product, we commonly use the terminology _metal-as-a-service (MaaS)_ or _bare metal cloud_.
+metal-stack is a software that provides an API for provisioning and managing physical servers. It is a fully-automated provisioning framework for bare metal machines. To categorize this product, we commonly use the terminology _metal-as-a-service (MaaS)_ or _bare metal cloud_.
 
 ```@contents
 Pages = ["index.md"]
