@@ -3,8 +3,9 @@
 ## Problem Statement
 
 We face the situation that we argue for running bare metal on premise because this way the customers can control where and how their software and data are processed and stored.
-On the other hand, we have currently a hard requirement that our metal-api control plane components need to be running on a kubernetes cluster on some of the available hyperscalers.
-Running the control plane on kubernetes has the following benefits:
+On the other hand, we have currently decided that our metal-api control plane components run on a kubernetes cluster (in our case on a cluster provided by one of the available hyperscalers).
+
+Running the control plane on Kubernetes has the following benefits:
 
 - Ease of deployment
 - Get most, if not all, of the required infrastructure services like (probably incomplete):
@@ -15,7 +16,7 @@ Running the control plane on kubernetes has the following benefits:
   - S3 Backup
   - High Availability
 
-Using a kubernetes as a service offering from one of the hyperscalers (actually GKE), enables us to focus on using kubernetes instead of maintaining it as well.
+Using a kubernetes as a service offering from one of the hyperscalers, enables us to focus on using kubernetes instead of maintaining it as well.
 
 ## Goal
 

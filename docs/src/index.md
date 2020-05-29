@@ -29,11 +29,11 @@ The development of metal-stack is strictly API driven and offers self-service to
 
 ### Ready for Kubernetes
 
-Not only does the metal-stack run smoothly on [Kubernetes](https://kubernetes.io/) (K8s). The major intent of metal-stack has always been to build a scalable machine infrastructure for _Kubernetes as a service (KaaS)_. In partnership with the open-source project [Gardener](https://gardener.cloud/), we can provision Kubernetes clusters on metal-stack at scale.
+Not only does the metal-stack run smoothly on [Kubernetes](https://kubernetes.io/) (K8s). The major intent of metal-stack has always been to build a scalable machine infrastructure for _Kubernetes as a Service (KaaS)_. In partnership with the open-source project [Gardener](https://gardener.cloud/), we can provision Kubernetes clusters on metal-stack at scale.
 
 From the perspective of the Gardener, the metal-stack is just another cloud provider. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
 
-Of course, you can use metal-stack only for machine provisioning as well.
+Of course, you can use metal-stack only for machine provisioning as well. Literally, you can get very creative with what you stack onto metal.
 
 ### Open Source
 
@@ -41,7 +41,7 @@ The metal-stack is open source and free of constraints regarding vendors and thi
 
 ## Why Bare Metal?
 
-Bare metal has several advantages over virtualized environments and overcomes several drawbacks of virtual machines.
+Bare metal has several advantages over virtual environments and overcomes several drawbacks of virtual machines.
 
 ### Virtual Environment Drawbacks
 

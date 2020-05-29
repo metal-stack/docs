@@ -2,7 +2,7 @@
 
 This section contains proposals which address substantial modifications to metal-stack.
 
-Every proposal has a short name which starts with *MEP* followed by an incremental, unique number. Proposal should be raised as pull requests in the [docs](https://github.com/metal-stack/docs) repository and can be discussed in Github issues.
+Every proposal has a short name which starts with *MEP* followed by an incremental, unique number. Proposals should be raised as pull requests in the [docs](https://github.com/metal-stack/docs) repository and can be discussed in Github issues.
 
 The list of proposal and their current state is listed in the table below.
 
