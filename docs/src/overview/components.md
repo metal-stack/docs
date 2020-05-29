@@ -32,7 +32,7 @@ The following figure shows the relationships between these microservices:
 
 A _partition_ is our term for describing hardware in the data center (typically grouped in a rack or a group of racks) controlled by the metal-stack with all the hardware participating in the same network topology. For this reason, the hardware inside a partition belongs to the same failure domain. Even though the network topology for running the metal-stack is required to be redundant by design, you should consider setting up multiple partitions. With multiple partitions in your data center it is possible for users to maintain availability of their applications by spreading them across the partitions. Installing partitions in multiple data centers would be even better in regards of failsafe application performance, which would even tolerate the meltdown of a data center.
 
-We strongly advise to group your hardware into racks that are specially made for running metal-stack. When you use modular rack design, extending the amount of compute resources of a partition can be done very easily by adding racks. This makes your infrastructure very elastic for end-users and allows them to scale their applications almost infinitely. How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networks section](networking.md). The hardware that you can place inside a partition is described in the [hardware](hardware.md) document.
+We strongly advise to group your hardware into racks that are specifically assembled for running metal-stack. When you use modular rack design, extending the amount of compute resources of a partition can easily be done by adding racks. This makes your infrastructure very elastic for end-users and allows them to scale their applications without borders. How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networks](networking.md) section. The hardware that we currently support to be placed inside a partition is described in the [hardware](hardware.md) document.
 
 Inside a partition, the metal-stack requires a couple of servers serving special roles. These servers, which are not added to the pool of user-allocatable machines, we call  _management servers_. In addition to the management servers, the metal-stack has microservices running on the leaf switches. For this reason, your lead switches are required to run a Linux distribution that you have full access to.
 
@@ -40,6 +40,7 @@ The microservices running inside a partition are:
 
 - **[metal-core](https://github.com/metal-stack/metal-core)**
 - **[pixiecore](https://github.com/danderson/netboot/tree/master/pixiecore)**
+- **[metal-hammer](https://github.com/metal-stack/metal-hammer)**
 
 **TODO: add figure**
 

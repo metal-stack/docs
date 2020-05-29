@@ -2,7 +2,7 @@
 
 Our operating system images are built on regular basis from the [metal-images](https://github.com/metal-stack/metal-images) repository.
 
-The images are hosted on GKE at [images.metal-pod.io](https://images.metal-pod.io). Feel free to use this mirror for your metal-stack partitions if you want. The metal-stack developers continuously update these images and scan them for vulnerabilities.
+All images are hosted on GKE at [images.metal-pod.io](https://images.metal-pod.io). Feel free to use this as a mirror for your metal-stack partitions if you want. The metal-stack developers continuously have an eye on the supported images. They are updated regularly and scanned for vulnerabilities.
 
 ## Supported OS Images
 
