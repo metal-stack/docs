@@ -1,21 +1,23 @@
 # Introduction
 
-metal-stack is a software that provides an API for provisioning and managing physical servers in a data center. To categorize this product, we commonly use the terms like _metal-as-a-service (MaaS)_ or _bare metal cloud_.
+metal-stack is a software that provides an API for provisioning and managing physical servers in the data center. To categorize this product, we commonly use the terms _Metal-as-a-Service (MaaS)_ or _bare metal cloud_.
+
+From the perspective of a user, the metal-stack does not feel different from working with any other cloud provider. Users manage their resources (machines, networks and ip addresses, etc.) by themselves, turning your data center into an elastic cloud infrastructure. The major difference to other cloud providers is that compute power and data reside in your own data center.
 
 ```@contents
 Pages = ["index.md"]
 Depth = 5
 ```
 
-## Key Properties
+## Key Characteristics
 
 ### On-Premise
 
-Running on-premise gives you full data sovereignty and usually a better price/performance ratio than with hyperscalers (especially the larger your environment gets). Another advantage of running on-premise is the easier connectivity to existing company networks.
+Running on-premise gives you data sovereignty and usually a better price/performance ratio than with hyperscalers (especially the larger your environment gets). Another benefit of running on-premise is an easier connectivity to existing company networks.
 
 ### Fast Provisioning
 
-Machine provisioning of bare metal machines should not feel much different from virtual machines. And to be honest: Slow environments are no fun to work with. metal-stack is capable of provisioning servers in less than a minute.
+Provisioning bare metal machines should not feel much different from virtual machines. And to be honest: Slow environments are no fun to work with. metal-stack is capable of provisioning servers in less than a minute. The underlying network topology is based on BGP and allows announcing new routes to your host machines in a matter of seconds.
 
 ### No-Ops
 
@@ -23,11 +25,11 @@ Part of the metal-stack runs on dedicated switches in your data center. This way
 
 ### API driven
 
-The development of metal-stack is strictly API driven and offers self-service to end-users. In addition to that, the API driven approach delivers the highest possible degree of automation, maintainability and performance.
+The development of metal-stack is strictly API driven and offers self-service to end-users. This approach delivers the highest possible degree of automation, maintainability and performance.
 
 ### Ready for Kubernetes
 
-Not only does the metal-stack run smoothly on Kubernetes. The major intent of metal-stack has always been to build an elastic machine infrastructure for [Kubernetes](https://kubernetes.io/) (K8s) as a service (KaaS). In partnership with the open-source project [Gardener](https://gardener.cloud/), we provision Kubernetes clusters on metal-stack at scale.
+Not only does the metal-stack run smoothly on [Kubernetes](https://kubernetes.io/) (K8s). The major intent of metal-stack has always been to build a scalable machine infrastructure for _Kubernetes as a service (KaaS)_. In partnership with the open-source project [Gardener](https://gardener.cloud/), we can provision Kubernetes clusters on metal-stack at scale.
 
 From the perspective of the Gardener, the metal-stack is just another cloud provider. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
 
