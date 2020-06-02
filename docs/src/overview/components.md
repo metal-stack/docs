@@ -64,9 +64,9 @@ The metal-stack has microservices running on the leaf switches in a partition. F
 
 The microservices running inside a partition are:
 
-- **[metal-core](https://github.com/metal-stack/metal-core)** (runs on leaf switches) Dynamically configures the leaf switch from information provided by the metal-api.
+- **[metal-hammer](https://github.com/metal-stack/metal-hammer)** (runs on a server when not allocated by user, often referred to as _discovery image_) An initrd, which is booted up in PXE mode, preparing and registering a machine. When a user allocates a machine, the metal-hammer will install the target operating system on this machine and kexec into the new operating system kernel.
+- **[metal-core](https://github.com/metal-stack/metal-core)** (runs on leaf switches) Dynamically configures the leaf switch from information provided by the metal-api. It also proxies requests from the metal-hammer to the metal-api including publishment of machine lifecycle events and machine registration requests.
 - **[pixiecore](https://github.com/danderson/netboot/tree/master/pixiecore)** (runs on leaf switches, not developed by metal-stack) Provides the capability of PXE booting servers in the PXE boot network.
-- **[metal-hammer](https://github.com/metal-stack/metal-hammer)** (runs on a server when not allocated by user) An initrd, which is booted up in PXE mode, preparing and registering a machine. When a user allocates a machine, the metal-hammer will install the target operating system on this machine and kexec into the new operating system kernel.
 - **[bmc-proxy](https://github.com/metal-stack/metal-console)** (runs on management servers) Belongs to the metal-console, allowing user access to the machine's serial console. It can be seen as an optional component.
 - **[ipmi-catcher](https://github.com/metal-stack/ipmi-catcher)** (runs on management servers) Reports the ip addresses that are leased to ipmi devices together with their machine uuids to the metal-api. This provides machine discovery in the partition machines and keeps all IPMI interface access data up-to-date.
 
