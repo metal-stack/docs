@@ -31,6 +31,7 @@ The following figure shows the relationships between these microservices:
 > Figure 1: The metal control plane deployed in a Kubernetes environment with an ingress-controller exposing additional services via [service exposal](https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/).
 
 Some notes on this picture:
+
 - Users can access the metal-api with the CLI client called [metalctl](https://github.com/metal-stack/metalctl).
 - Our databases are wrapped in a specially built [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar), which is consistently backing up the databases in external blob storage.
 - The metal-api can be scaled out in Kubernetes using replicas.
@@ -43,11 +44,11 @@ A _partition_ is our term for describing hardware in the data center controlled 
 
     In our setups, we encode the name of a region and a zone name into our partition names. However, we do not have dedicated entities for regions and zones in our APIs.
 
-    A _region_ is a geographic area in which data centers are located.
+    A **region** is a geographic area in which data centers are located.
 
-    _Zones_ are geographic location inside a region usually in different fire compartments. Regions can consist of several zones.
+    **Zones** are geographic locations in a region usually in different fire compartments. Regions can consist of several zones.
 
-    A zone can consist of several partitions. Usually, a partitions spans a rack or a group of racks.
+    A zone can consist of several **partitions**. Usually, a partition spans a rack or a group of racks.
 
 We strongly advise to group your hardware into racks that are specifically assembled for running metal-stack. When using modular rack design, extending the amount of compute resources of a partition can easily be done by adding more racks to your partition.
 
@@ -59,7 +60,7 @@ We strongly advise to group your hardware into racks that are specifically assem
 
     How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networks](networking.md) section.
 
-The metal-stack has microservices running on the leaf switches in a partition. For this reason, your leaf switches are required to run a Linux distribution that you have full access to. Additionally, there are a servers not added to the pool of user-allocatable machines, which are instead required for running metal-stack and we call them _management servers_.
+The metal-stack has microservices running on the leaf switches in a partition. For this reason, your leaf switches are required to run a Linux distribution that you have full access to. Additionally, there are a servers not added to the pool of user-allocatable machines, which are instead required for running metal-stack and we call them _management servers_. TODO: Explain management network, management firewall and _switch plane_.
 
 The microservices running inside a partition are:
 
@@ -69,12 +70,24 @@ The microservices running inside a partition are:
 - **[bmc-proxy](https://github.com/metal-stack/metal-console)** (runs on management servers) Belongs to the metal-console, allowing user access to the machine's serial console. It can be seen as an optional component.
 - **[ipmi-catcher](https://github.com/metal-stack/ipmi-catcher)** (runs on management servers) Reports the ip addresses that are leased to ipmi devices together with their machine uuids to the metal-api. This provides machine discovery in the partition machines and keeps all IPMI interface access data up-to-date.
 
-**TODO: add figure**
+![Partition](partition.svg)
+
+> Figure 2: Simplified illustration of services running inside a partition.
+
+Some notes on this picture:
+
+- This figure is slightly simplified. The switch plane consists of spine switches, exit routers, management firewalls and a bastion router with more software components deployed on these entities. Please refer to the [networking](networking.md) document to see the full overview over the switch plane.
+- The image-cache is an optional component consisting of multiple services to allow caching images from the public image store inside a partition. This brings increased download performance on machine allocation and increases independence of a partition on the internet connection.
 
 ## Entire Picture
 
-**TODO: add figure**
+![metal-stack](metal-stack.svg)
 
-By design, a partition only has very few ports open for incoming-connections from the internet. This contributes to a smaller attack surface and higher security of your infrastructure.
+> Figure 3: Reduced view on the communication between the metal control plane and multiple partitions.
+
+Some notes on this picture:
+
+- By design, a partition only has very few ports open for incoming-connections from the internet. This contributes to a smaller attack surface and higher security of your infrastructure.
+- With the help of NSQ, it is not required to have connections from the metal control plane to the metal-core. The metal-core instances register at the message bus and can then consume partition-specfic topics, e.g. when a machine deletion gets issued by a user.
 
 ## Machine Provisioning Sequence

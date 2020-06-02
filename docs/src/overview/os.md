@@ -24,7 +24,7 @@ There are some conventions though that you need to follow in order to make your 
 1. Images need to be compressed to a tarball using the [lz4](https://de.wikipedia.org/wiki/LZ4) compression algorithm
 1. An `md5` checksum file with the same name as the image archive needs to be provided in the download path along with the actual os image
 1. A `packages.txt` containing the packages contained in the OS image should be provided in the download path (not strictly required)
-1. Consider semantic image versioning, which we use in our algorithms to select latest images (e.g. <os-major.minor.patch> -> `ubuntu-19.10.20191018`)
+1. Consider semantic image versioning, which we use in our algorithms to select latest images (e.g. `os-major.minor.patch` ➡️ `ubuntu-19.10.20191018`)
 1. Consider installing packages used by the metal-stack infrastructure
    - [FRR](https://frrouting.org/) to enable routing-to-the-host in our network topology
    - [go-lddp](https://github.com/metal-stack/go-lldpd) to enable checking if the machine is still alive after user allocation
@@ -34,3 +34,7 @@ There are some conventions though that you need to follow in order to make your 
    - Please check this contract between image and the metal-hammer [here](https://github.com/metal-stack/metal-hammer/blob/v0.5.3/cmd/install.go#L27-L46)
 1. For the time being, your image must be able to support [kexec](https://en.wikipedia.org/wiki/Kexec) into the new operating system kernel, the `kexec` command is issued by the metal-hammer after running the `install.sh`. We do this because `kexec` is _much_ faster than rebooting a machine.
 1. We recommend building images from Dockerfiles as it is done in [metal-images](https://github.com/metal-stack/metal-images) repository.
+
+!!! info
+
+    Building own operating system images is an advanced topic. When you have just started with metal-stack, we recommend using the public operating system images first.

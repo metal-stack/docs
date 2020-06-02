@@ -20,3 +20,9 @@ At the moment we support the following switch types:
 | Vendor    | Series        | Model      |
 |:--------- |:------------- |:---------- |
 | Edge-Core | AS7700 Series | AS7712-32X |
+
+!!! warning
+
+    On our switches we run [Cumulus Linux](https://cumulusnetworks.com/products/cumulus-linux/). The metal-core writes network configuration specifically implemented for this operating system. Please also consider running Cumulus Linux on your switches if you do not want to run into any issues with networking.
+
+    Of course, contributions for supporting other switch vendors and operating systems are highly appreciated.

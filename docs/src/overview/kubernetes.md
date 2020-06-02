@@ -18,6 +18,8 @@ When dealing with local storage, it can be pretty useful not to write directly o
 
 Checkout the csi-lvm repository [here](https://github.com/metal-stack/csi-lvm).
 
+### firewall-controller
+
 ## Gardener related components
 
 ## gardener-extension-provider-metal

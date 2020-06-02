@@ -23,7 +23,7 @@ Provisioning bare metal machines should not feel much different from virtual mac
 
 Part of the metal-stack runs on dedicated switches in your data center. This way, it is possible to automate server inventorization, permanently reconcile network configuration and automatically manage machine lifecycles. Manual configuration is neither required nor wanted.
 
-### Secure
+### Security
 
 Our networking approach was designed for highest standards on security. Also, we enforce firewalling on dedicated tenant firewalls before users can establish connections to other networks than their private tenant network.
 
