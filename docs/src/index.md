@@ -57,7 +57,7 @@ Bare metal has several advantages over virtual environments and overcomes severa
 ### Bare Metal Advantages
 
 - Guaranteed and fastest possible performance (especially disk i/o)
-- Reduced stack depth (Host -> VM -> Application vs. Host -> Container)
+- Reduced stack depth (Host ➡️ VM ➡️ Application vs. Host ➡️ Container)
   - Reduced attack surface
   - Lower costs, higher performance
   - No VM live-migrations
@@ -71,7 +71,3 @@ Bare metal has several advantages over virtual environments and overcomes severa
 ### Conclusion
 
 In the end, we have come to the conclusion that most of the drawbacks of bare metal machines can be mitigated best when running K8s on the machines. K8s will take care of high-availability in case of hardware failures and also supervises machine resources. We are certain that the chosen approach can satisfy the needs of the future users to a higher degree than virtual machines could do.
-
-## Roadmap
-
-Coming soon.

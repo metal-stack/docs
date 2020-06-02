@@ -1,11 +1,11 @@
-# Components
+# Architecture
 
 The metal-stack is a compound of microservices written in [Golang](https://golang.org/).
 
 This page gives you an overview over which microservices exist, how they communicate with each other and where they are deployed.
 
 ```@contents
-Pages = ["components.md"]
+Pages = ["architecture.md"]
 Depth = 5
 ```
 
@@ -33,8 +33,9 @@ The following figure shows the relationships between these microservices:
 Some notes on this picture:
 
 - Users can access the metal-api with the CLI client called [metalctl](https://github.com/metal-stack/metalctl).
+- You can programmatically access the metal-api using the [metal-go](https://github.com/metal-stack/metal-go) client library.
 - Our databases are wrapped in a specially built [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar), which is consistently backing up the databases in external blob storage.
-- The metal-api can be scaled out in Kubernetes using replicas.
+- The metal-api can be scaled out using replicas when being deployed in Kubernetes.
 
 ## Partitions
 
@@ -90,4 +91,10 @@ Some notes on this picture:
 - By design, a partition only has very few ports open for incoming-connections from the internet. This contributes to a smaller attack surface and higher security of your infrastructure.
 - With the help of NSQ, it is not required to have connections from the metal control plane to the metal-core. The metal-core instances register at the message bus and can then consume partition-specfic topics, e.g. when a machine deletion gets issued by a user.
 
-## Machine Provisioning Sequence
+# Machine Provisioning Sequence
+
+The following sequence diagram illustrates some of the main principles of the machine provisioning lifecycle.
+
+![provisioning sequence](provisioning_sequence.svg)
+
+> Figure 4: Sequence diagram of the machine provisioning sequence.

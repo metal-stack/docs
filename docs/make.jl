@@ -14,25 +14,24 @@ makedocs(
     pages = [
         "Introduction" => "index.md",
         "Overview" => Any[
-            "Components" => "overview/components.md",
+            "Architecture" => "overview/architecture.md",
             "Networking" => "overview/networking.md",
             "Operating Systems" => "overview/os.md",
             "Hardware Support" => "overview/hardware.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
         ],
         "Quickstart" => "quickstart.md",
-        "Guides" => Any[
+        "User Guides" => Any[
             "mini-lab" => "external/mini-lab/README.md",
             "metalctl" => "external/metalctl/README.md",
         ],
         "Installation & Maintenance" => Any[
-            "Preparations" => "installation/preparations.md",
             "Installation" => "installation/deployment.md",
             "Monitoring" => "installation/monitoring.md",
             "Troubleshoot" => "installation/troubleshoot.md",
         ],
         "API Documentation" => "api_docs.md",
-        "Enhancement Proposals" => "proposals/index.md",
+        "Development" => "development.md",
         "contributing.md",
     ]
 )
