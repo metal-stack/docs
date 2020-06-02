@@ -23,6 +23,10 @@ Provisioning bare metal machines should not feel much different from virtual mac
 
 Part of the metal-stack runs on dedicated switches in your data center. This way, it is possible to automate server inventorization, permanently reconcile network configuration and automatically manage machine lifecycles. Manual configuration is neither required nor wanted.
 
+### Secure
+
+Our networking approach was designed for highest standards on security. Also, we enforce firewalling on dedicated tenant firewalls before users can establish connections to other networks than their private tenant network.
+
 ### API driven
 
 The development of metal-stack is strictly API driven and offers self-service to end-users. This approach delivers the highest possible degree of automation, maintainability and performance.
@@ -63,7 +67,6 @@ Bare metal has several advantages over virtual environments and overcomes severa
 
 - Hardware defects have direct impact (should be considered by design) and can not be mitigated by live-migration as in virtual environments
 - Capacity planning is more difficult (no resource overbooking possible)
-- Higher "AfA"-costs
 
 ### Conclusion
 

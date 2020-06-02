@@ -39,6 +39,16 @@ Some notes on this picture:
 
 A _partition_ is our term for describing hardware in the data center controlled by the metal-stack with all the hardware participating in the same network topology. Typically, a partition spans a rack or a group of racks. Being in the same network topology causes the hardware inside a partition to build a failure domain. Even though the network topology for running the metal-stack is required to be redundant by design, you should consider setting up multiple partitions. With multiple partitions it is possible for users to maintain availability of their applications by spreading them across the partitions. Installing partitions in multiple data centers would be even better in regards of fail-safe application performance, which would even tolerate the meltdown of a data center.
 
+!!! tip
+
+    In our setups, we encode the name of a region and a zone name into our partition names. However, we do not have dedicated entities for regions and zones in our APIs.
+
+    A _region_ is a geographic area in which data centers are located.
+
+    _Zones_ are geographic location inside a region usually in different fire compartments. Regions can consist of several zones.
+
+    A zone can consist of several partitions. Usually, a partitions spans a rack or a group of racks.
+
 We strongly advise to group your hardware into racks that are specifically assembled for running metal-stack. When using modular rack design, extending the amount of compute resources of a partition can easily be done by adding more racks to your partition.
 
 !!! info

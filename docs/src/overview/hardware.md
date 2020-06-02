@@ -8,14 +8,15 @@ We came up with a repository called [go-hal](https://github.com/metal-stack/go-h
 
 At the moment we support the following server types:
 
-| Vendor     | Series | Model |
-|:---------- |:------ |:----- |
-| Supermicro | TODO   | TODO  |
+| Vendor     | Series      | Model            |
+|:---------- |:----------- |:---------------- |
+| Supermicro | Big-Twin    | SYS-2029BT-HNR   |
+| Supermicro | SuperServer | SSG-5019D8-TR12P |
 
 ## Switches
 
 At the moment we support the following switch types:
 
-| Vendor   | Series | Model |
-|:-------- |:------ |:----- |
-| Edgecore | TODO   | TODO  |
+| Vendor    | Series        | Model      |
+|:--------- |:------------- |:---------- |
+| Edge-Core | AS7700 Series | AS7712-32X |
