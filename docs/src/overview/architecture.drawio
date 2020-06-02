@@ -1,4 +1,4 @@
-<mxfile host="www.draw.io" modified="2020-06-02T15:30:20.484Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.45.1 Chrome/78.0.3904.130 Electron/7.2.4 Safari/537.36" etag="BkJEet1jjTp91OmbHpS8" version="13.1.12" pages="4">
+<mxfile host="www.draw.io" modified="2020-06-02T15:40:02.417Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.45.1 Chrome/78.0.3904.130 Electron/7.2.4 Safari/537.36" etag="JI4dz-65KcRfnkHHPCp5" version="13.1.12" pages="4">
     <diagram id="6hGFLwfOUW9BJ-s0fimq" name="metal-control-plane">
         <mxGraphModel dx="1058" dy="566" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
@@ -774,12 +774,6 @@
                 <mxCell id="XJTI1ORzcmVS8ecLJIW--30" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="XJTI1ORzcmVS8ecLJIW--11">
                     <mxGeometry x="40" y="70" width="10" height="130" as="geometry"/>
                 </mxCell>
-                <mxCell id="XJTI1ORzcmVS8ecLJIW--130" value="report machine phone home event [ if go-lldp running in target os ]" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="XJTI1ORzcmVS8ecLJIW--11" target="XJTI1ORzcmVS8ecLJIW--14">
-                    <mxGeometry width="80" relative="1" as="geometry">
-                        <mxPoint x="50" y="1120" as="sourcePoint"/>
-                        <mxPoint x="130" y="1120" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
                 <mxCell id="XJTI1ORzcmVS8ecLJIW--12" value="metal-core" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="XJTI1ORzcmVS8ecLJIW--1">
                     <mxGeometry x="420" y="40" width="100" height="1200" as="geometry"/>
                 </mxCell>
@@ -1103,6 +1097,12 @@
                     <mxGeometry width="80" relative="1" as="geometry">
                         <mxPoint x="810" y="1200" as="sourcePoint"/>
                         <mxPoint x="114.99999999999989" y="1200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="XJTI1ORzcmVS8ecLJIW--130" value="report machine phone home event &lt;br&gt;[ if go-lldp running in target os ]" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="XJTI1ORzcmVS8ecLJIW--1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="469.6666666666665" y="1170.0000000000002" as="sourcePoint"/>
+                        <mxPoint x="709.5" y="1170.0000000000002" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
             </root>
