@@ -26,7 +26,14 @@ The control plane contains of a couple of essential microservices for the metal-
 
 The following figure shows the relationships between these microservices:
 
-**TODO: add figure**
+![Metal Control Plane](control-plane.svg)
+
+> Figure 1: The metal control plane deployed in a Kubernetes environment with an ingress-controller exposing additional services via [service exposal](https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/).
+
+Some notes on this picture:
+- Users can access the metal-api with the CLI client called [metalctl](https://github.com/metal-stack/metalctl).
+- Our databases are wrapped in a specially built [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar), which is consistently backing up the databases in external blob storage.
+- The metal-api can be scaled out in Kubernetes using replicas.
 
 ## Partitions
 

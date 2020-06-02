@@ -8,17 +8,17 @@ The list of proposal and their current state is listed in the table below.
 
 Possible states are:
 
-- InDiscussion
-- Accepted
-- Declined
-- InProgress
-- Completed
+- `In Discussion`
+- `Accepted`
+- `Declined`
+- `In Progress`
+- `Completed`
 
 Once a proposal was accepted, an issue should be raised and the implementation should be done in a separate PR.
 
 | Name                     | Description                                     | State            | Issue     | PR      |
 |:------------------------ |:----------------------------------------------- |:----------------:|:---------:|:-------:|
-| [MEP-1](MEP1/README.md)  | Distributed Control Plane Deployment            | InDiscussion     | N/A       | N/A     |
-| [MEP-2](MEP2/README.md)  | Two Factor Authentication                       | InProgress       | N/A       | N/A     |
-| [MEP-3](MEP3/README.md)  | Machine Re-Installation to preserve local data  | Completed        | N/A       | N/A     |
-| [MEP-4](MEP4/README.md)  | Multi-tenancy for the metal-api                 | Accepted         | N/A       | N/A     |
+| [MEP-1](MEP1/README.md)  | Distributed Control Plane Deployment            | `In Discussion`  | N/A       | N/A     |
+| [MEP-2](MEP2/README.md)  | Two Factor Authentication                       | `InProgress`     | N/A       | N/A     |
+| [MEP-3](MEP3/README.md)  | Machine Re-Installation to preserve local data  | `Completed`      | N/A       | N/A     |
+| [MEP-4](MEP4/README.md)  | Multi-tenancy for the metal-api                 | `Accepted`       | N/A       | N/A     |
