@@ -2,7 +2,7 @@
 
 Our operating system images are built on regular basis from the [metal-images](https://github.com/metal-stack/metal-images) repository.
 
-All images are hosted on GKE at [images.metal-pod.io](https://images.metal-pod.io). Feel free to use this as a mirror for your metal-stack partitions if you want. The metal-stack developers continuously have an eye on the supported images. They are updated regularly and scanned for vulnerabilities.
+All images are hosted on GKE at [images.metal-stack.io](https://images.metal-pod.io). Feel free to use this as a mirror for your metal-stack partitions if you want. The metal-stack developers continuously have an eye on the supported images. They are updated regularly and scanned for vulnerabilities.
 
 ## Supported OS Images
 
@@ -10,8 +10,10 @@ The operating system images that we build are trimmed down to their bare essenti
 
 The supported images currently are:
 
-- Debian 10
-- Ubuntu 19.10
+| Platform | Distribution | Version |
+|:-------- |:------------ |:------- |
+| Linux    | Debian       | 10      |
+| Linux    | Ubuntu       | 19.10   |
 
 ## Building Your Own Images
 

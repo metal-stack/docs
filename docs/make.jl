@@ -7,6 +7,8 @@ makedocs(
     format = Documenter.HTML(
         prettyurls = is_ci_build,
         assets = ["assets/favicon.ico"],
+        canonical = "https://metal-stack.github.io/docs/master/",
+        highlights = ["yaml"],
     ),
     authors = "metal-stack authors and contributors.",
     pages = [
