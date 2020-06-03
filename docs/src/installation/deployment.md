@@ -168,6 +168,10 @@ docker run --rm -it \
 
 After the deployment succeeded, you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes, operating system images, partitions and networks. You can do this by further parametrizing the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal). Please check the role documentation on how to do that.
 
+!!! tip
+
+    If you are having issues regarding the deployment take a look at the [troubleshoot document](troubleshoot.md). Please give feedback such that we can make the deployment of the metal-stack easier for you and for others!
+
 The basic principles of how the metal control plane can be deployed should now be clear. It is now up to you to migrate the deployment execution into your CI.
 
 !!! info
