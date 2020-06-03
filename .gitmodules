@@ -4,3 +4,9 @@
 [submodule "docs/src/external/metalctl"]
 	path = docs/src/external/metalctl
 	url = https://github.com/metal-stack/metalctl.git
+[submodule "docs/src/external/csi-lvm"]
+	path = docs/src/external/csi-lvm
+	url = https://github.com/metal-stack/csi-lvm.git
+[submodule "docs/src/external/firewall-controller"]
+	path = docs/src/external/firewall-controller
+	url = https://github.com/metal-stack/firewall-controller.git

@@ -16,7 +16,7 @@ The foundation of the metal-stack is what we call the _metal control plane_. The
 The control plane contains of a couple of essential microservices for the metal-stack including:
 
 - **[metal-api](https://github.com/metal-stack/metal-api)**
-  The API to manage and control resources like machines, switches, operating system images, machine sizes, networks, IP addresses and more. The metal-api stores the state of these entities in a [RethinkDB](https://rethinkdb.com/) database. The metal-api also has it's own IP address management ([go-ipam](https://github.com/metal-stack/go-ipam)), which writes IP address and network allocations into a PostgreSQL backend.
+  The API to manage and control resources like machines, switches, operating system images, machine sizes, networks, IP addresses and more. The exposed API is an old-fashioned REST API with different authentication methods. The metal-api stores the state of these entities in a [RethinkDB](https://rethinkdb.com/) database. The metal-api also has it's own IP address management ([go-ipam](https://github.com/metal-stack/go-ipam)), which writes IP address and network allocations into a PostgreSQL backend.
 - **[masterdata-api](https://github.com/metal-stack/masterdata-api)**
   Manages tenant and project entities, which can be described as entities used for company-specific resource separation and grouping. Having these "higher level entities" managed by a separate microservice was a design choice that allows to re-use the information by other microservices without having them to know the metal-api at all. The masterdata gets persisted in a dedicated PostgreSQL database.
 - **[metal-console](https://github.com/metal-stack/metal-console)**
@@ -98,3 +98,11 @@ The following sequence diagram illustrates some of the main principles of the ma
 ![provisioning sequence](provisioning_sequence.svg)
 
 > Figure 4: Sequence diagram of the machine provisioning sequence.
+
+Here is a video of the machine allocation taken from the serial console of a machine:
+
+```@raw html
+<div class="video-container">
+<iframe src="https://www.youtube-nocookie.com/embed/3oEhInk6BaU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+```

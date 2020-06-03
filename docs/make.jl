@@ -6,7 +6,7 @@ makedocs(
     sitename="metal-stack",
     format = Documenter.HTML(
         prettyurls = is_ci_build,
-        assets = ["assets/favicon.ico"],
+        assets = ["assets/favicon.ico", "assets/youtube.css"],
         canonical = "https://metal-stack.github.io/docs/master/",
         highlights = ["yaml"],
     ),
@@ -16,23 +16,28 @@ makedocs(
         "Overview" => Any[
             "Architecture" => "overview/architecture.md",
             "Networking" => "overview/networking.md",
-            "Operating Systems" => "overview/os.md",
             "Hardware Support" => "overview/hardware.md",
+            "Operating Systems" => "overview/os.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
         ],
         "Quickstart" => "quickstart.md",
-        "User Guides" => Any[
-            "mini-lab" => "external/mini-lab/README.md",
-            "metalctl" => "external/metalctl/README.md",
-        ],
         "Installation & Maintenance" => Any[
             "Installation" => "installation/deployment.md",
             "Monitoring" => "installation/monitoring.md",
             "Troubleshoot" => "installation/troubleshoot.md",
         ],
+        "User Guides" => Any[
+            "mini-lab" => "external/mini-lab/README.md",
+            "metalctl" => "external/metalctl/README.md",
+            "csi-lvm" => "external/csi-lvm/README.md",
+            "firewall-controller" => "external/firewall-controller/README.md",
+        ],
         "API Documentation" => "api_docs.md",
-        "Development" => "development.md",
-        "contributing.md",
+        "Development" => Any[
+            "roadmap.md",
+            "Enhancement Proposals" => "proposals/index.md",
+            "contributing.md",
+        ],
     ]
 )
 
