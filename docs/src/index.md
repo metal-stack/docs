@@ -41,7 +41,7 @@ Of course, you can use metal-stack only for machine provisioning as well and jus
 
 ### Open Source
 
-The metal-stack is open source and free of constraints regarding vendors and third-party products. The stack is completely built on open source products. We have an open community actively working on the metal-stack, which can assist you delivering all reasonable features you are gonna need.
+The metal-stack is open source and free of constraints regarding vendors and third-party products. The stack is completely built on open source products. We have a community actively working on the metal-stack, which can assist you delivering all reasonable features you are gonna need.
 
 ## Why Bare Metal?
 
