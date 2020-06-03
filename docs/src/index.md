@@ -17,7 +17,7 @@ Running on-premise gives you data sovereignty and usually a better price/perform
 
 ### Fast Provisioning
 
-Provisioning bare metal machines should not feel much different from virtual machines. And to be honest: Slow environments are no fun to work with. metal-stack is capable of provisioning servers in less than a minute. The underlying network topology is based on BGP and allows announcing new routes to your host machines in a matter of seconds.
+Provisioning bare metal machines should not feel much different from virtual machines. metal-stack is capable of provisioning servers in less than a minute. The underlying network topology is based on BGP and allows announcing new routes to your host machines in a matter of seconds.
 
 ### No-Ops
 
