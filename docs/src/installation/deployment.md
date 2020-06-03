@@ -156,7 +156,6 @@ export KUBECONFIG=<path-to-your-cluster-kubeconfig>
 docker run --rm -it \
   -v $(pwd):/workdir \
   --workdir /workdir \
-  --network host \
   -e KUBECONFIG="${KUBECONFIG}" \
   -e K8S_AUTH_KUBECONFIG="${KUBECONFIG}" \
   metalstack/metal-deployment-base:v0.0.5 \
@@ -177,11 +176,19 @@ The basic principles of how the metal control plane can be deployed should now b
 
 ### Setting up the backup-restore-sidecar
 
+The backup-restore-sidecar can come up very handy when you want to add another layer of security to the metal-stack databases in your Kubernetes cluster. The sidecar takes backups of the metal databases in small time intervals and stores them in a blobstore of a cloud provider. This way your metal-stack setup can even survive the deletion of your Kubernetes control plane cluster (including all volumes getting lost). After re-deploying metal-stack to another Kubernetes clusters, the databases should come up quite with the backup data in a matter of seconds.
+
+Checkout the role documentation of the individual databases to find out how to configure the sidecar properly. You can also try out the mechanism from the [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar) repository.
+
 ### Authentication
 
 metal-stack uses [dex](https://github.com/dexidp/dex) for providing user authentication through [OpenID Connect](https://openid.net/connect/) (OIDC).
 
-In order to configure the 
+After setting up a dex server, you can parametrize the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal) for using your dex server by defining the variable `metal_api_dex_address`.
+
+!!! info
+
+    We also have dedicated controllers for using the dex server for Kubernetes clusters when deploying metal-stack along with the Gardener in your environment. The approach is described in further detail in the section [Gardener with metal-stack](@ref).
 
 ## Bootstrapping a Partition
 

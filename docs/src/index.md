@@ -25,7 +25,7 @@ Part of the metal-stack runs on dedicated switches in your data center. This way
 
 ### Security
 
-Our networking approach was designed for highest standards on security. Also, we enforce firewalling on dedicated tenant firewalls before users can establish connections to other networks than their private tenant network.
+Our networking approach was designed for highest standards on security. Also, we enforce firewalling on dedicated tenant firewalls before users can establish connections to other networks than their private tenant network. API authentication and authorization is done with the help of OIDC.
 
 ### API driven
 
