@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-test-striped
+  namespace: default
+spec:
+  containers:
+  - name: volume-test-striped
+    image: nginx:stable-alpine
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: striped
+      mountPath: /striped
+    ports:
+    - containerPort: 80
+    resources:
+      limits:
+        cpu: 100m
+        memory: 100M
+  volumes:
+  - name: striped
+    persistentVolumeClaim:
+      claimName: lvm-pvc-striped
