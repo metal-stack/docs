@@ -1,6 +1,6 @@
 # Architecture
 
-The metal-stack is a compound of microservices written in [Golang](https://golang.org/).
+The metal-stack is a compound of microservices predominantly written in [Golang](https://golang.org/).
 
 This page gives you an overview over which microservices exist, how they communicate with each other and where they are deployed.
 
@@ -39,7 +39,7 @@ Some notes on this picture:
 
 ## Partitions
 
-A _partition_ is our term for describing hardware in the data center controlled by the metal-stack with all the hardware participating in the same network topology. Typically, a partition spans a rack or a group of racks. Being in the same network topology causes the hardware inside a partition to build a failure domain. Even though the network topology for running the metal-stack is required to be redundant by design, you should consider setting up multiple partitions. With multiple partitions it is possible for users to maintain availability of their applications by spreading them across the partitions. Installing partitions in multiple data centers would be even better in regards of fail-safe application performance, which would even tolerate the meltdown of a data center.
+A _partition_ is our term for describing hardware in the data center controlled by the metal-stack with all the hardware participating in the same network topology. Being in the same network topology causes the hardware inside a partition to build a failure domain. Even though the network topology for running the metal-stack is required to be redundant by design, you should consider setting up multiple partitions. With multiple partitions it is possible for users to maintain availability of their applications by spreading them across the partitions. Installing partitions in multiple data centers would be even better in regards of fail-safe application performance, which would even tolerate the meltdown of a data center.
 
 !!! tip
 
@@ -51,7 +51,7 @@ A _partition_ is our term for describing hardware in the data center controlled 
 
     A zone can consist of several **partitions**. Usually, a partition spans a rack or a group of racks.
 
-We strongly advise to group your hardware into racks that are specifically assembled for running metal-stack. When using modular rack design, extending the amount of compute resources of a partition can easily be done by adding more racks to your partition.
+We strongly advise to group your hardware into racks that are specifically assembled for running metal-stack. When using modular rack design, the amount of compute resources of a partition can easily be extended by adding more racks to your partition.
 
 !!! info
 
@@ -59,7 +59,7 @@ We strongly advise to group your hardware into racks that are specifically assem
 
 !!! info
 
-    How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networks](networking.md) section.
+    How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networking](networking.md) document.
 
 The metal-stack has microservices running on the leaf switches in a partition. For this reason, your leaf switches are required to run a Linux distribution that you have full access to. Additionally, there are a servers not added to the pool of user-allocatable machines, which are instead required for running metal-stack and we call them _management servers_. TODO: Explain management network, management firewall and _switch plane_.
 
@@ -80,7 +80,9 @@ Some notes on this picture:
 - This figure is slightly simplified. The switch plane consists of spine switches, exit routers, management firewalls and a bastion router with more software components deployed on these entities. Please refer to the [networking](networking.md) document to see the full overview over the switch plane.
 - The image-cache is an optional component consisting of multiple services to allow caching images from the public image store inside a partition. This brings increased download performance on machine allocation and increases independence of a partition on the internet connection.
 
-## Entire Picture
+## Complete View
+
+The following figure shows several partitions connected to a single metal control plane. Of course, it is also possible to have multiple metal control planes, which can be useful for staging.
 
 ![metal-stack](metal-stack.svg)
 
@@ -99,7 +101,7 @@ The following sequence diagram illustrates some of the main principles of the ma
 
 > Figure 4: Sequence diagram of the machine provisioning sequence.
 
-Here is a video of the machine allocation taken from the serial console of a machine:
+Here is a video showing a screen capture of a machine's serial console while running the metal-hammer in "wait mode". Then, a user allocates the machine and the metal-hammer installs the target operating system and the machine boots into the new operating system kernel via the kexec system call.
 
 ```@raw html
 <div class="video-container">
