@@ -65,7 +65,7 @@ The `requirements.yaml` is used for declaring [Ansible Galaxy](https://galaxy.an
 
 !!! tip
 
-    The [ansible-common](https://github.com/metal-stack/ansible-common.git) repository contains very general roles that you can also use when extending your deployment with further applications that you specifically need for your setup.
+    The [ansible-common](https://github.com/metal-stack/ansible-common.git) repository contains very general roles that you can also use when extending your deployment further.
 
 Then, there will be an inventory in the `inventory.yaml` that adds the localhost to the `control-plane` host group:
 
@@ -77,7 +77,7 @@ control-plane:
       ansible_python_interpreter: "{{ ansible_playbook_python }}"
 ```
 
-We do this since we are deploying to Kubernetes. We will not need to SSH-connect to the host for deployment (which is what Ansible typically does) but instead deploy against the Kubernetes cluster. Therefore, you will also need to provide the path to your [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) via the `KUBECONFIG` environment variable for Ansible later on. This inventory is also necessary to pick up the variables inside `group_vars/control-plane` during the deployment.
+We do this since we are deploying to Kubernetes and do not need to SSH-connect to any hosts for deployment (which is what Ansible typically does). This inventory is also necessary to pick up the variables inside `group_vars/control-plane` during the deployment.
 
 We also recommend using the following `ansible.cfg`:
 
@@ -92,14 +92,14 @@ transport = ssh
 timeout = 30
 ```
 
-Most of the properties in there are up to taste, but make sure you are enable the [Jinja2 native environment](https://jinja.palletsprojects.com/en/2.11.x/nativetypes/) as this is needed for some of our roles.
+Most of the properties in there are up to taste, but make sure you enable the [Jinja2 native environment](https://jinja.palletsprojects.com/en/2.11.x/nativetypes/) as this is needed for some of our roles.
 
-Next, we will define our first playbook in a file called `deploy_metal_control_plane.yaml`. You can start with the following lines:
+Next, we will define the first playbook in a file called `deploy_metal_control_plane.yaml`. You can start with the following lines:
 
 ```yaml
 ---
 - name: Deploy Control Plane
-  hosts: localhost
+  hosts: control-plane
   connection: local
   gather_facts: no
   roles:
@@ -149,7 +149,7 @@ As a next step you will need add the tasks for deploying an ingress-controller i
 
 TODO: Add deployment via helm chart
 
-Now, it should be possible to run the deployment through Docker by issueing the following command:
+Now, it should be possible to run the deployment through Docker. Make sure to have the [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) of your cluster for Ansible and set the path in the following command accordingly:
 
 ```bash
 export KUBECONFIG=<path-to-your-cluster-kubeconfig>
@@ -167,7 +167,7 @@ docker run --rm -it \
       deploy_metal_control_plane.yaml"
 ```
 
-After the deployment succeeded, you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes, operating system images, partitions and networks. You can do this by further parametrizing the `metal` role. Please check the role documentation on how to do that.
+After the deployment succeeded, you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes, operating system images, partitions and networks. You can do this by further parametrizing the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal). Please check the role documentation on how to do that.
 
 The basic principles of how the metal control plane can be deployed should now be clear. It is now up to you to migrate the deployment execution into your CI.
 
