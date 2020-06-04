@@ -2,6 +2,8 @@
 
 This document summarizes help when something goes wrong and provides advice on debugging the metal-stack in certain situations.
 
+Of course, it is also advisable to check out the issues on the Github projects for help.
+
 If you still can't find a solution to your problem, please reach out to us and our community. We have a public Slack Channel to discuss problems, but you can also reach us via mail. Check out [metal-stack.io](https://metal-stack.io) for contact information.
 
 ```@contents

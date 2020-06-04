@@ -72,7 +72,7 @@ A CLOS topology is named after the pioneer Charles Clos (short: **CLOS**) who fi
    +-------+       +-------+
 ```
 
-Picture 1: Fragment of CLOS to show leaf-spine layer.
+> Picture 1: Fragment of CLOS to show leaf-spine layer.
 
 This data center network architecture, based on a leaf-spine architecture, is also know as "two-tier" CLOS topology.
 
@@ -95,7 +95,7 @@ This data center network architecture, based on a leaf-spine architecture, is al
 
 ```
 
-Picture 2: Fragment to show a 3-stage, 2-layer CLOS topology.
+> Picture 2: Fragment to show a 3-stage, 2-layer CLOS topology.
 
 Tenant servers are dual-attached to the leaf layer in order to have redundancy and load balancing capability (Picture 2). The set of leaves, spine switches and tenant servers define stages. From top down each server is reachable with 3 hops (spine -> leaf -> server). This is why that CLOS design is called a 3-stage CLOS. Consistent latency throughout the data center are an outcome of this design.
 
@@ -201,7 +201,7 @@ Routing is needed for communication between VXLAN tunnels or between a VXLAN tun
   +---+    +---+ +---+
 ```
 
-Picture 3: Illustration of two distinct routing tables of VRF1 (enslaved: servers A and B) and VRF2 (enslaved: server C)
+> Picture 3: Illustration of two distinct routing tables of VRF1 (enslaved: servers A and B) and VRF2 (enslaved: server C)
 
 To leaverage the potential and power of BGP, VRF, EVPN/VXLAN without a vendor lock-in the implementation relies on hardware that is supported by open network operating system: Cumulus Linux.
 
@@ -214,7 +214,7 @@ Implementation of the network operation requires the data center infrastructure 
 Reference: See the CLOS overview picture in ./README.md.
 
 | Name                        | Wiring                                                                                        |
-|:--------------------------- |:--------------------------------------------------------------------------------------------- |
+| :-------------------------- | :-------------------------------------------------------------------------------------------- |
 | Tenant server (aka Machine) | Bare metal server that is associated to a tenant. Dual-connected to leafs.                    |
 | Tenant firewall             | Bare metal server that is associated to a tenant. Dual-connected to leafs.                    |
 | Leaf                        | Network Switch that interconnects tenant servers and firewalls. Connected to spines.          |
@@ -263,7 +263,7 @@ iface lan1 inet6 auto
   mtu 9000
 ```
 
-Listing 1: Network interfaces of a tenant server.
+> Listing 1: Network interfaces of a tenant server.
 
 Listing 1 shows the local interfaces configuration. lan0 and lan1 connect to the leaves. As described, there is no IPv4 address assigned to them (BGP unnumbered). The local loopback has an IPv4 address assigned that is announced by BGP.
 
@@ -315,7 +315,7 @@ route-map only-self-out deny 99
 !
 ```
 
-Listing 2: FRR configuration of a tenant server.
+> Listing 2: FRR configuration of a tenant server.
 
 The frr configuration in Listing 2 starts with `frr defaults datacenter`. This is a marker that enables compile-time provided settings that e.g. set specific values for BGP session timers. This is followed by a directive to state that instead of several configuration files for different purposes a single *frr.conf* file is used: `service integrated-vtysh-config`. The two interface specific blocks starting with `interface ...` enable the RA mechanism that is required for BGP unnumbered peer discovery. There is a global BGP instance configuration `router bgp 4200000001` that sets the private ASN. The BGP router configuration contains a setup that identifies the BGP speaker `bgp router-id 10.0.0.1`. This router id should be unique. It is a good practice to assign the local loopback IPv4 as router-id. To apply the same configuration to several interfaces a peer group named `TOR` is defined via `neighbor TOR peer-group`. `remote-as external` activates external BGP for this peer group. To have a fast convergence, limits of default timers are reduced by `timer 1 3` section. The two BGP-peer-facing interfaces are enslaved into the peer-group to inherit the peer-group's setup. Activation of IPv4 unicast protocol is completed with `address-family ipv4 unicast`. To prevent a tenant server from announcing other paths than `lo` interface a route-map `only-self-out` is defined. This route map is activated within the ipv4 address family: `neighbor TOR route-map only-self-out out`.
 
@@ -381,7 +381,7 @@ iface swp1
 # [...]
 ```
 
-Listing 3: Fragment that shows swp1 being member of vrf vrf3981.
+> Listing 3: Fragment that shows swp1 being member of vrf vrf3981.
 
 There is a VRF defintion `iface vrf3981` to create a distinct routing table and a section `vrf vrf3981` that enslaves swp1 (connects the tenant server) into the VRF. Those host facing ports are also called `edge ports`.
 
@@ -418,7 +418,7 @@ iface vni3981
 # [...]
 ```
 
-Listing 4: Fragment that shows VXLAN setup for vrf vrf3981.
+> Listing 4: Fragment that shows VXLAN setup for vrf vrf3981.
 
 All routing happens in the context of the tenant VRF. To send and receive packets of a VRF, several interface are in place.
 
@@ -462,7 +462,7 @@ route-map LOOPBACKS permit 10
 # [...]
 ```
 
-Listing 5: Leaf FRR configuration.
+> Listing 5: Leaf FRR configuration.
 
 Listing 5 shows the required FRR configuration of the BGP control plane. Only content not discussed so far is explained. The section `vrf vrf3981` contains the mapping from layer-3 VNI to VRF. This is required to be able to install EVPN IP prefix routes (type-5 routes) into the routing table. Further the file contains a global BGP instance `router bgp 4200000011` definition. A new setting `redistribute connected route-map LOOPBACKS` is in place to filter the redistribution of routes that are not matching the local loopback interface. The route-map is defined with `route-map LOOPBACKS permit 10`. With the configuration line  `address-family l2vpn evpn`, the EVPN address family is enabled between BGP neighbours. `advertise-all-vni` makes the switch a VTEP configures it in such a way, that all locally configured VNIs should be advertised by the BGP control plane.
 
@@ -479,7 +479,7 @@ iface swp1
     mtu 9216
 ```
 
-Listing 6: Fragment of spine interface configuration.
+> Listing 6: Fragment of spine interface configuration.
 
 The spines are important to forward EVPN routes and transport VXLAN packets between the VTEPs. They are not configured as VTEPs. The FRR configuration only contains the already known global BGP instance configuration `router bgp 4200000020` plus the activation of the l2vpn evpn address family `address-family l2vpn evpn` to enable EVPN type-5 route forwarding (Listing 7).
 
@@ -506,7 +506,7 @@ router bgp 4200000020
 # [...]
 ```
 
-Listing 7: Fragment of spine FRR configuration to show the activated L2VPN EVPN address-family.
+> Listing 7: Fragment of spine FRR configuration to show the activated L2VPN EVPN address-family.
 
 #### Tenant Firewalls: EVPN-to-the-Host
 
@@ -549,7 +549,7 @@ iface vrfInternet
     vrf-table auto
 ```
 
-Listing 8: Interfaces configuration of firewall to show the VTEP interface configuration.
+> Listing 8: Interfaces configuration of firewall to show the VTEP interface configuration.
 
 To install a default route into the routing table of tenant VRF vrf3981 a dynamic route leak is established for it (`import vrf vrfInternet`). With the help of a route-map `import vrf route-map vrf3981-import-map` only the default route will be leaked:
 
@@ -636,7 +636,7 @@ line vty
 !
 ```
 
-Listing 9: FRR configuration of a tenant firewall to show route leak and prefix announcement filtering.
+> Listing 9: FRR configuration of a tenant firewall to show route leak and prefix announcement filtering.
 
 #### Exit Switch
 
@@ -664,7 +664,7 @@ iface vrfInternet
 # [...]
 ```
 
-Listing 10: Fragment of interfaces configuration of exit switch.
+> Listing 10: Fragment of interfaces configuration of exit switch.
 
 The configuration of FRR is equivalent to the previously discussed ones. It contains a global BGP instance configuration that enables IPv4 unicast and l2vpn evpn address families. The vrfInternet BGP instance defines `neighbor 172.100.0.1 peer-group INTERNET` to use "old style BGP" transit network.
 
@@ -728,7 +728,7 @@ line vty
 !
 ```
 
-Listing 11: Fragment of FRR configuration on exit switch to give an example for numbered BGP and route leak.
+> Listing 11: Fragment of FRR configuration on exit switch to give an example for numbered BGP and route leak.
 
 In addition to the standard BGP setup the exit switches have configured `static route leak` to support internet access during PXE. There is one route leak from `default` VRF into the `mgmt` VRF defined with: `ip route 0.0.0.0/0 192.168.0.254 nexthop-vrf mgmt` and another one from `mgmt` VRF into the `default` VRF: `ip route 10.0.0.0/24 10.0.0.71 nexthop-vrf default`. The first one adds a default route into the `default` VRF and the second one routes traffic destined to the PXE network back from `mgmt` VRF into the `default` VRF.  
 
@@ -768,7 +768,7 @@ Before a bare metal server can act as tenant server or tenant firewall, it has t
 INTERFACES="vlan4000"
 ```
 
-Listing 13: DHCP server configration of exit switches.
+> Listing 13: DHCP server configration of exit switches.
 
 As shown in listing 13, the PXE DHCP server is located on the exit switches and enforced to bind to interface `vlan4000`. This represents a layer-2 separation that allows only DHCP clients in the same VLAN to request IP addresses. Only unprovisionned bare metal servers are configured to be member of this VLAN. Thus unwanted or accidential provisionning is impossible.
 
@@ -789,7 +789,7 @@ iface vni104000
 # [...]
 ```
 
-Listing 13: Interfaces configuration on exit and leaf switches to show DHCP/PXE related fragments.
+> Listing 13: Interfaces configuration on exit and leaf switches to show DHCP/PXE related fragments.
 
 On the leaf switches the bare metal server facing ports are configured as VLAN access ports to carry the traffic for only the PXE VLAN `vlan4000` (listing 14)to separate unprovisioned from other bare metal servers.
 
@@ -803,7 +803,7 @@ iface swp1
 # [...]
 ```
 
-Listing 14: VLAN access setup for bare metal server facing ports on leaves.
+> Listing 14: VLAN access setup for bare metal server facing ports on leaves.
 
 Once a bare metal server is provisioned it is deconfigured from PXE VLAN `vlan4000` to avoid accidential or unwanted provisioning.
 
@@ -814,11 +814,3 @@ During provisioning bare metal servers get internet access via the management ne
 To manage network switches beside the out-of-band system console access a further management access is required. For this purpose the concept of **Management VRF** is applied. The Management VRF is a subset of VRF. It provides a separation between out-of-band management network and the in-band data plane network by introducing another routing table **mgmt**. Cumulus Linux supports lan0 to be used as the management interface.
 
 To enable and use the Management VRF all switches have to be connected via their lan0 interface to a management-switch. The management switch is connected to a management server. All access is established from within the managment server. Logins to the switch are set into the Management VRF context once the Managment VRF is enabled.
-
-### Differences metal-lab vs physics
-
-There are differences between the vagrant based metal-lab setup and the phyiscal setup in the data center:
-
-| topic                                                    | metal-lab                                                                     | data center                                                     |
-|:-------------------------------------------------------- |:----------------------------------------------------------------------------- |:--------------------------------------------------------------- |
-| DHCP server on management server has a different purpose | Used to  provide IP addresses to network switches` management interface lan0. | Used to provide IP addresses to tenant servers for IPMI access. |  
