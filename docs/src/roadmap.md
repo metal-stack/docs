@@ -16,6 +16,7 @@ We incorporate community feedback into the roadmap. If you think that important 
 - Autoscaler for metal control plane components
 - CI dashboard
 - Cilium as the default CNI for metal-stack on Gardener K8s clusters
+- Improved release and deploy processes (GitOps, [Spinnaker](https://www.spinnaker.io/), [Flux](https://www.weave.works/oss/flux/))
 - Machine internet without firewalls
 - metal-stack dashboard (UI)
 - Offer our metal-stack extensions as enterprise products (accounting, cluster-api, S3) (neither of them will ever be required for running metal-stack, they just add extra value for certain enterprises)
