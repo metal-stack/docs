@@ -24,4 +24,4 @@ We incorporate community feedback into the roadmap. If you think that important 
 - Persistent storage solution for metal-stack partitions
 - Public offering / demo playground
 - Resource scoping in the metal-api (MEP-4)
-- Service account tokens
+- Service / API tokens (for scoped technical user access)
