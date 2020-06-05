@@ -2,7 +2,7 @@
 
 We are bootstrapping the [metal control plane](../overview/architecture.md##Metal-Control-Plane-1) as well as our [partitions](../overview/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
 
-In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using and maintaining by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles). 
+In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles). 
 
 In order to wrap up deployment dependencies there is a special [deployment base image](https://hub.docker.com/r/metalstack/metal-deployment-base) hosted on Docker Hub that you can use for running the deployment. Using this Docker image eliminates a lot of moving parts in the deployment and should keep the footprints on your system fairly small and maintainable.
 
@@ -20,6 +20,10 @@ Depth = 5
 !!! info
 
     If you do not want to use Ansible for deployment, you need to come up with a deployment mechanism by yourself. However, you will probably be able to re-use some of our contents from our [metal-roles](https://github.com/metal-stack/metal-roles) repository, e.g. the Helm chart for deploying the metal control plane.
+
+!!! tip
+
+    You can use the [mini-lab](https://github.com/metal-stack/mini-lab) as a template project for your own deployment. It uses the same approach as described in this document.
 
 ## Metal Control Plane Deployment
 
@@ -53,10 +57,6 @@ Let's now create the following files and folder structures:
         └── tasks
             └── main.yaml
 ```
-
-!!! tip
-
-    You can also use the [mini-lab](https://github.com/metal-stack/mini-lab) as a template project for your deployment. It uses the same approach as described in this document.
 
 The `requirements.yaml` is used for declaring [Ansible Galaxy](https://galaxy.ansible.com/) role depedencies. It will dynamically provide the [metal-roles](https://github.com/metal-stack/metal-roles) and the [ansible-common](https://github.com/metal-stack/ansible-common) role when starting the deployment. The file should contain the following dependencies:
 
