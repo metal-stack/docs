@@ -62,11 +62,11 @@ get this error message, please view the documentation for the provider
 you're using.
 ```
 
-This is actually expected behavior. As soon as the metal-core reconfigures the switch interfaces, the `eth0` interface will be reconfigured from DHCP to static. This causes Vagrant not to be able to figure out the IP address of the VM through dnsmasq anymore (which is how Vagrant gets to know the IP address of the VM). The IP address of the switch is still the same though. You can still access the VM using SSH with the vagrant user. 
+This is actually expected behavior. As soon as the metal-core reconfigures the switch interfaces, the `eth0` interface will be reconfigured from DHCP to static. This causes Vagrant not to be able to figure out the IP address of the VM through dnsmasq anymore (which is how Vagrant gets to know the IP address of the VM for libvirt). The IP address of the switch is still the same though. You can still access the VM using SSH with the vagrant user. 
 
 There are a couple of ways to get to know the IP address of the switch:
 
-- You can look it up in the switch interface configuration
+- You can look it up in the switch interface configuration using the VM console
 - It is cached by the Ansible Vagrant dynamic inventory
 
 The following way describes how to access `leaf01` using the information from the dynamic inventory:
