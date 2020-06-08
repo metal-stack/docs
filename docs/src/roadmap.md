@@ -2,6 +2,18 @@
 
 A roadmap with short-, mid- and long-term planning will be available soon. For now, there is only a backlog.
 
+## Short-term
+
+Available soon.
+
+## Mid-term
+
+Available soon.
+
+## Long-term
+
+Available soon.
+
 ## Backlog
 
 The backlog contains ideas of what could become part of the roadmap in the future. The list is ordered alphabetically. Therefore, the order does not express the importance of an idea.
