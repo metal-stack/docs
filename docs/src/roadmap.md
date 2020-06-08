@@ -16,7 +16,7 @@ Available soon.
 
 ## Backlog
 
-The backlog contains ideas of what could become part of the roadmap in the future. The list is ordered alphabetically. Therefore, the order does not express the importance of an idea.
+The backlog contains ideas of what could become part of the roadmap in the future. The list is ordered alphabetically. Therefore, the order does not express the importance or weight of a backlog item.
 
 We incorporate community feedback into the roadmap. If you think that important points are missing in the backlog, please share your ideas with us. We have a Slack channel. Please check out [metal-stack.io](https://metal-stack.io) for contact information.
 
