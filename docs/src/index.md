@@ -37,7 +37,7 @@ Not only does the metal-stack run smoothly on [Kubernetes](https://kubernetes.io
 
 From the perspective of the Gardener, the metal-stack is just another cloud provider. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
 
-Of course, you can use metal-stack only for machine provisioning as well and just put something else on top of the metal infrastructure. 
+Of course, you can use metal-stack only for machine provisioning as well and just put something else on top of the metal infrastructure.
 
 ### Open Source
 
