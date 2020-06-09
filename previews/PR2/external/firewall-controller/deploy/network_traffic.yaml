@@ -1,0 +1,9 @@
+apiVersion: metal-stack.io/v1
+kind: NetworkTraffic
+metadata:
+  name: cluster-networktraffic
+spec:
+  enabled: true
+  interval: 10s
+  nodeexporterurl: http://localhost:9100/metrics
+  interfaces: "w*"
