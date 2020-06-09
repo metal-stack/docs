@@ -2,7 +2,7 @@
 
 We are bootstrapping the [metal control plane](../overview/architecture.md##Metal-Control-Plane-1) as well as our [partitions](../overview/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
 
-In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles). 
+In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles).
 
 In order to wrap up deployment dependencies there is a special [deployment base image](https://hub.docker.com/r/metalstack/metal-deployment-base) hosted on Docker Hub that you can use for running the deployment. Using this Docker image eliminates a lot of moving parts in the deployment and should keep the footprints on your system fairly small and maintainable.
 
@@ -137,10 +137,10 @@ Basically, this playbook does the following:
 
 - Include all the modules, filter plugins, etc. of [ansible-common](https://github.com/metal-stack/ansible-common.git) into the play
 - Deploys an ingress-controller into your cluster
-- Deploys the metal-stack by 
+- Deploys the metal-stack by
   - Running preparation tasks
   - Deploying NSQ
-  - Deploying the rethinkdb database for the metal-api (wrapped in a backup-restore-sidecar), 
+  - Deploying the rethinkdb database for the metal-api (wrapped in a backup-restore-sidecar),
   - Deploying the postgres database for go-ipam (wrapped in a backup-restore-sidecar)
   - Deploying the postgres database for the masterdata-api (wrapped in a backup-restore-sidecar)
   - Applying the metal control plane helm chart
@@ -222,22 +222,22 @@ current: test
 contexts:
   test:
     # the metal-api endpoint depends on your dns name specified before
-    # you can look the url to the metal-api via the kubernetes ingress 
+    # you can look the url to the metal-api via the kubernetes ingress
     # resource with:
-    # $ kubectl get ingress -n metal-control-plane 
+    # $ kubectl get ingress -n metal-control-plane
     url: <metal-api-endpoint>
     # in the future you have to change the HMAC to a strong, random string
     # in order to protect against unauthorized api access
     # the default hmac is "change-me"
     hmac: change-me
-``` 
+```
 
 Issue the following command:
 
 ```bash
 $ metalctl image ls
-ID                              	NAME                          	DESCRIPTION                   	FEATURES	EXPIRATION	STATUS    
-ubuntu-19.10.20200331           	Ubuntu 19.10 20200331         	Ubuntu 19.10 20200331         	machine 	89d 23h   	preview  	
+ID                              	NAME                          	DESCRIPTION                   	FEATURES	EXPIRATION	STATUS
+ubuntu-19.10.20200331           	Ubuntu 19.10 20200331         	Ubuntu 19.10 20200331         	machine 	89d 23h   	preview
 ```
 
 The basic principles of how the metal control plane can be deployed should now be clear. It is now up to you to move the deployment execution into your CI and add things like certificates for the ingress-controller and NSQ.
@@ -261,7 +261,7 @@ TODO
 metal-stack currently supports two authentication methods:
 
 - [dex](https://github.com/dexidp/dex) for providing user authentication through [OpenID Connect](https://openid.net/connect/) (OIDC)
-- [HMAC](https://en.wikipedia.org/wiki/HMAC) auth, typically used for access by technical users (because we do not have service account tokens at the time being) 
+- [HMAC](https://en.wikipedia.org/wiki/HMAC) auth, typically used for access by technical users (because we do not have service account tokens at the time being)
 
 In the metal-api, we have three different user roles for authorization:
 
@@ -269,7 +269,7 @@ In the metal-api, we have three different user roles for authorization:
 - Edit
 - View
 
-How the user permissions are used is documented in the [technical API docs](../api_docs.md).
+How the user permissions are used is documented in the [technical API docs](../apidocs/apidocs.md).
 
 If you decided to set up a dex server, you can parametrize the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal) for using the dex server by defining the variable `metal_api_dex_address`.
 
@@ -285,7 +285,7 @@ If you decided to set up a dex server, you can parametrize the [metal role](http
 
 If you want to deploy metal-stack as a cloud provider for [Gardener](https://gardener.cloud/), you should follow the regular Gardener installation instructions and setup a Gardener cluster first. You can find installation instructions in their [docs](https://gardener.cloud/about/). metal-stack is an out-of-tree provider and therefore you will not find example files for metal-stack resources in the Gardener repositories. The following list describes the resources and components that you need to deploy into the Gardener cluster in order to make Gardener work with metal-stack:
 
-!!! warning 
+!!! warning
 
     The following list assumes you have Gardener installed in a Kubernetes cluster and that you have a basic understanding of how Gardener works. If you need further help with the following steps, you can also come and ask in our Slack channel.
 
@@ -314,7 +314,7 @@ If you want to deploy metal-stack as a cloud provider for [Gardener](https://gar
               autoDetectionMethod: interface=lo
             typha:
               enabled: false
-   ``` 
+   ```
 1. For your seed cluster you will need to provide the provider secret for metal-stack containing the key `metalAPIHMac`, which is the API HMAC to grant editor access to the metal-api
 1. Checkout our current provider configuration for [infratructure](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/pkg/apis/metal/v1alpha1/types_infrastructure.go) and [control-plane](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/pkg/apis/metal/v1alpha1/types_controlplane.go) before deploying your shoot
 

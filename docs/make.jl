@@ -32,7 +32,7 @@ makedocs(
             "csi-lvm" => "external/csi-lvm/README.md",
             "firewall-controller" => "external/firewall-controller/README.md",
         ],
-        "API Documentation" => "api_docs.md",
+        "API Documentation" => "apidocs/apidocs.md",
         "Development" => Any[
             "roadmap.md",
             "Enhancement Proposals" => "proposals/index.md",
