@@ -1,0 +1,20 @@
+@startuml EVPN VTEP
+skinparam Padding 5
+
+node "=Leaf 1" as l1 {
+  note "lo: 10.0.0.41" as n1
+  rectangle "**bridge**" <<VLAN aware>> as l1br
+  rectangle "**vni104001**\nVXLAN-Interface\nVTEP-Endpoint: 10.0.0.41" as l1vtep
+  cloud "VRF 104001" as l1vrf {
+      rectangle "**vlan4001**" <<SVI>> as l1svi
+      rectangle "**swp1**" as l1swp
+  }
+
+  l1br -[bold]- l1vtep: VLAN 4001
+  l1br -[bold]- l1svi: VLAN 4001
+}
+
+rectangle "Device 1" as d1
+l1swp -[bold]- d1
+
+@enduml
