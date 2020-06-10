@@ -58,42 +58,13 @@ External BGP together with network overlay concepts as EVPN can address the esse
 
 A CLOS topology is named after the pioneer Charles Clos (short: **CLOS**) who first formalized this approach. CLOS defines a multistage network topology that is used today to improve performance and resilience while enabling a cost effective scalability. A CLOS topology comprises network switches aggregated into spine and leaf layers. Each leaf switch (short: **leaf**) is connected to all spine switches (short: **spine**) but there is no direct leaf-to-leaf or spine-to-spine connection (See: picture 1).
 
-```
-            +--------+       +--------+
-    +-------+ Spine1 |       | Spine2 |
-    |       +-------++       ++------++
-    |               |         |      |
-    |   +---------------------+      |
-    |   |           |                |
-    |   |           |   +------------+
-    |   |           |   |
-   ++---+--+       ++---+--+
-   + Leaf1 +       + Leaf2 |
-   +-------+       +-------+
-```
+![2 Layer CLOS Topology](2-layer-leaf-spine.svg)
 
 > Picture 1: Fragment of CLOS to show leaf-spine layer.
 
 This data center network architecture, based on a leaf-spine architecture, is also know as "two-tier" CLOS topology.
 
-```
-           +-------+
-         +-+ Spine +-+
-         | +-------+ |
-         |           |
-         |           |
-   +-----+-+        ++------+
- +-+ Leaf1 +------+ | Leaf2 |
- | +-------+      | +-----+-+
- |                | |     |
- | +----------------------+
- | |              | |
- | |              | |
-++-++            ++-++
-| A |            | B |
-+---+            +---+
-
-```
+![3 Layer CLOS Topology](3-layer-leaf-spine.svg)
 
 > Picture 2: Fragment to show a 3-stage, 2-layer CLOS topology.
 
@@ -184,22 +155,7 @@ It is common practice to set the MTU for VXLAN facing interfaces (e.g. inter-swi
 
 Routing is needed for communication between VXLAN tunnels or between a VXLAN tunnel and an external networks. VXLAN routing supports layer-3 multi-tenancy. All routing occurs in the context of a VRF. There is a 1:1 relation of a VRF to a tenant. Picture 3 illustrates this. Servers A and B belong to the same vrf VRF1. Server C is enslaved into VRF2. There is no communication possible between members of VRF1 and those of VRF2.
 
-```
-+----------------------+
-| Leaf                 |
-|                      |
-| +------+    +------+ |
-| | VRF1 |    | VRF2 | |
-| +-+--+-+    +----+-+ |
-|   |  |           |   |
-+----------------------+
-    |  |           |
-    |  +-----+     |
-    |        |     |
-  +-+-+    +-+-+ +-+-+
-  | A |    | B | | C |
-  +---+    +---+ +---+
-```
+![Two routing tables](vrf-simple.svg)
 
 > Picture 3: Illustration of two distinct routing tables of VRF1 (enslaved: servers A and B) and VRF2 (enslaved: server C)
 
