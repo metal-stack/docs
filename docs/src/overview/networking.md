@@ -141,7 +141,9 @@ Required Interfaces to establish the EVPN control plane:
 - VLAN-aware bridge: because router MAC addresses of remote VTEPs are installed over this interface.
 - VXLAN Interface / VXLAN Tunnel Endpoint: because the VRF to layer-3 VNI mapping has to be consistent across all VTEPs)
 
-![EVPN VTEP](evpn_vtep.png)
+![EVPN VTEP](evpn-vtep.svg)
+
+> Picture 3: Required interfaces on the switch to wire up the vrf to swp 1 connectivity with a given vxlan
 
 Integrated routing and bridging (IRB) is the most complex part of EVPN. You could choose between centralized or distributed routing, and between asymmetrical (routing on ingress) or symmetrical (routing on ingress and egress) routing. We expect a lot of traffic within the data center itself which implies the need to avoid zigzag routing. This is why we go with distributed routing model. Further it is recommended to use the symmetric model since it makes the cut in most cases and has advantages in scalability (see "EVPN in the Data Center", Dinesh G. Dutt).
 
@@ -157,7 +159,7 @@ Routing is needed for communication between VXLAN tunnels or between a VXLAN tun
 
 ![Two routing tables](vrf-simple.svg)
 
-> Picture 3: Illustration of two distinct routing tables of VRF1 (enslaved: servers A and B) and VRF2 (enslaved: server C)
+> Picture 4: Illustration of two distinct routing tables of VRF1 (enslaved: servers A and B) and VRF2 (enslaved: server C)
 
 To leaverage the potential and power of BGP, VRF, EVPN/VXLAN without a vendor lock-in the implementation relies on hardware that is supported by open network operating system: Cumulus Linux.
 
