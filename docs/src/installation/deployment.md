@@ -60,15 +60,26 @@ Let's now create the following files and folder structures:
 
 The `requirements.yaml` is used for declaring [Ansible Galaxy](https://galaxy.ansible.com/) role depedencies. It will dynamically provide the [metal-roles](https://github.com/metal-stack/metal-roles) and the [ansible-common](https://github.com/metal-stack/ansible-common) role when starting the deployment. The file should contain the following dependencies:
 
+````@eval
+using Docs
+
+ansible_common = releaseVector()["ansible-roles"]["ansible-common"]["version"]
+metal_roles = releaseVector()["ansible-roles"]["metal-roles"]["version"]
+
+t = """
 ```yaml
 ---
 - src: https://github.com/metal-stack/ansible-common.git
   name: ansible-common
-  version: v0.5.2
+  version: %s
 - src: https://github.com/metal-stack/metal-roles.git
   name: metal-roles
-  version: v0.1.12
+  version: %s
 ```
+"""
+
+markdownTemplate(t, ansible_common, metal_roles)
+````
 
 !!! tip
 
@@ -147,21 +158,21 @@ Basically, this playbook does the following:
 
 Next you will need to parametrize the referenced roles to fit your requirements. The variables of the role dependencies can be looked up in the role documention on [metal-roles/control-plane](https://github.com/metal-stack/metal-roles/tree/master/control-plane). You should not need to define a lot of variables here for now, most values are reasonably defaulted in the roles. Just make sure you define all the "required" variables in your `group_vars/control-plane/all.yaml`, which looks like this:
 
+````@eval
+using Docs
+
+t = """
 ```yaml
 ---
 # common defaults
 metal_control_plane_ingress_dns: <your-dns-domain> # if you are trying this with a local setup, you can consider using xip.io
 
-# image versions
-metal_api_image_tag: v0.7.5
-metal_metalctl_image_tag: v0.7.5
-metal_masterdata_api_image_tag: v0.7.1
-metal_console_image_tag: v0.4.1
-
-metal_db_backup_restore_sidecar_image_tag: v0.5.1
-ipam_db_backup_restore_sidecar_image_tag: v0.5.1
-masterdata_db_backup_restore_sidecar_image_tag: v0.5.1
+metal_stack_version: %s
 ```
+"""
+
+markdownTemplate(t, releaseVersion())
+````
 
 By the time you will certainly add more parametrization to the deployment. When this happens, feel free to split up your `all.yaml` into separate files to keep everything nice and pretty.
 
@@ -182,6 +193,12 @@ This is how your `roles/ingress-controller/tasks/main.yaml` could look like:
 
 Now, it should be possible to run the deployment through a Docker container. Make sure to have the [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) of your cluster and set the path in the following command accordingly:
 
+````@eval
+using Docs
+
+base_image = releaseVector()["docker-images"]["metal-stack"]["generic"]["deployment-base"]["tag"]
+
+t = raw"""
 ```bash
 export KUBECONFIG=<path-to-your-cluster-kubeconfig>
 docker run --rm -it \
@@ -189,13 +206,17 @@ docker run --rm -it \
   --workdir /workdir \
   -e KUBECONFIG="${KUBECONFIG}" \
   -e K8S_AUTH_KUBECONFIG="${KUBECONFIG}" \
-  metalstack/metal-deployment-base:v0.0.5 \
+  metalstack/metal-deployment-base:%s \
   /bin/bash -ce \
     "ansible-galaxy install -r requirements.yaml
     ansible-playbook \
       -i inventories/control-plane.yaml \
       deploy_metal_control_plane.yaml"
 ```
+"""
+
+markdownTemplate(t, base_image)
+````
 
 !!! tip
 
