@@ -78,7 +78,7 @@ t = """
 ```
 """
 
-printMarkdown(t, ansible_common, metal_roles)
+markdownTemplate(t, ansible_common, metal_roles)
 ````
 
 !!! tip
@@ -171,7 +171,7 @@ metal_stack_version: %s
 ```
 """
 
-printMarkdown(t, releaseVersion())
+markdownTemplate(t, releaseVersion())
 ````
 
 By the time you will certainly add more parametrization to the deployment. When this happens, feel free to split up your `all.yaml` into separate files to keep everything nice and pretty.
@@ -215,7 +215,7 @@ docker run --rm -it \
 ```
 """
 
-printMarkdown(t, base_image)
+markdownTemplate(t, base_image)
 ````
 
 !!! tip
