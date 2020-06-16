@@ -15,7 +15,7 @@ function update_repo() {
     git clone $git_url --depth 1 --branch $ref --single-branch
     cd -
     rm -rf .git
-    find . -type f ! -name '*.md' -delete
+    find . -type f ! \( -name "*.md" -o -name "*.png" -o -name "*.svg" \) -delete
     popd
 }
 
