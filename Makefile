@@ -9,4 +9,4 @@ RELEASE_VERSION := $(or ${RELEASE_VERSION},master)
 .PHONY: update
 update:
 	docker build -f Dockerfile.updater -t docs-updater .
-	docker run -it --rm -v $(PWD):/workdir -w /workdir docs-updater bash -c "./update.sh $(RELEASE_VERSION)"
+	docker run -it --rm -u $$(id -u):$$(id -g) -v $(PWD):/workdir -w /workdir docs-updater bash -c "./update.sh $(RELEASE_VERSION)"
