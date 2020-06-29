@@ -26,7 +26,7 @@ module Docs
 </html>
 """
 
-    releaseVersion() = get(ENV, "RELEASE_VERSION", "master")
+    releaseVersion() = get(ENV, "RELEASE_VERSION", "develop")
     releaseVector() = release_vector
 
     r = HTTP.request("GET", string("https://raw.githubusercontent.com/metal-stack/releases/", releaseVersion(), "/release.yaml"))
