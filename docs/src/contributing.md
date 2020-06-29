@@ -38,7 +38,7 @@ This section contains language-agnostic topics that all metal-stack projects are
 
 ### Code Ownership
 
-The code base is owned by the entire team and every member is allowed to contribute changes to any of the projects. This is considered as collective code ownership (see https://martinfowler.com/bliki/CodeOwnership.html).
+The code base is owned by the entire team and every member is allowed to contribute changes to any of the projects. This is considered as collective code ownership[^1].
 
 As a matter of fact, there are persons in a project, which already have experience with the sources. These are defined directly in the repository's [CODEOWNERS](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners) file. If you want to merge changes into the master branch, it is advisable to include code owners into the proecess of discussion and merging.
 
@@ -88,12 +88,12 @@ This chapter describes general guidelines on how to develop and contribute code 
 
 Development follows the official guide to:
 
-- Write clear, idiomatic Go code: https://golang.org/doc/effective_go.html
-- Learn from mistakes that must not be repeated: https://github.com/golang/go/wiki/CodeReviewComments
+- Write clear, idiomatic Go code[^2]
+- Learn from mistakes that must not be repeated[^3]
 - Apply appropriate names to your artifacts:
-  - https://talks.golang.org/2014/names.slide#1
-  - https://blog.golang.org/package-names
-  - https://golang.org/doc/effective_go.html#names
+  - [https://talks.golang.org/2014/names.slide#1](https://talks.golang.org/2014/names.slide#1)
+  - [https://blog.golang.org/package-names](https://blog.golang.org/package-names)
+  - [https://golang.org/doc/effective_go.html#names](https://golang.org/doc/effective_go.html#names)
 - Enable others to understand the reasoning of non-trivial code sequences by applying a meaningful documentation.
 
 #### Development Decisions
@@ -118,7 +118,7 @@ From the server-side you should ensure that you are returning the common error j
 
 We want to share knowledge and keep things simple. If things cannot kept simple we want enable everybody to understand them by:
 
-- Document in short sentences (See https://github.com/golang/go/wiki/CodeReviewComments#comment-sentences).
+- Document in short sentences[^4].
 - Do not explain the HOW (this is already documented by your code and documenting the obvious is considered a defect).
 - Explain the WHY. Add a "to" in your documentation line to force yourself to explain the reasonning (e.g.  "`<THE WHAT> to <THE TO>`").
 
@@ -126,7 +126,13 @@ We want to share knowledge and keep things simple. If things cannot kept simple 
 
 Development follows the official guide to:
 
-- Style Guide for Python Code (PEP 8): https://www.python.org/dev/peps/pep-0008/
+- Style Guide for Python Code (PEP 8)[^5]
   - The use of an IDE like [PyCharm](https://www.jetbrains.com/pycharm/) helps to write compliant code easily
 - Consider [setuptools](https://pythonhosted.org/an_example_pypi_project/setuptools.html) for packaging
 - If you want to add a Python microservice to the mix, consider [pyinstaller](https://www.pyinstaller.org/) on Alpine to achieve small image sizes
+
+[^1]: [https://martinfowler.com/bliki/CodeOwnership.html](https://martinfowler.com/bliki/CodeOwnership.html)
+[^2]: [https://golang.org/doc/effective_go.html](https://golang.org/doc/effective_go.html)
+[^3]: [https://github.com/golang/go/wiki/CodeReviewComments](https://github.com/golang/go/wiki/CodeReviewComments)
+[^4]: [https://github.com/golang/go/wiki/CodeReviewComments#comment-sentences](https://github.com/golang/go/wiki/CodeReviewComments#comment-sentences)
+[^5]: [https://www.python.org/dev/peps/pep-0008/](https://www.python.org/dev/peps/pep-0008/)

@@ -179,15 +179,13 @@ using Docs
 t = """
 ```yaml
 ---
-# release versions are read from an external YAML file, which is achieved by
-# using the setup_yaml module (see https://github.com/metal-stack/ansible-common)
+# release versions are read from external YAML files, which is achieved by
+# using the setup_yaml module (https://github.com/metal-stack/ansible-common)
 setup_yaml:
-  - var: metal_stack_release
-    version: %s
+  - url: https://raw.githubusercontent.com/metal-stack/%s/develop/release.yaml
+    meta_var: metal_stack_release
     # the metal_stack_release variable is provided through role defaults in
     # https://github.com/metal-stack/metal-roles
-    # the variable points to the following release vector:
-    # https://github.com/metal-stack/releases
 
 # common defaults
 metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also use <ingress-ip>.xip.io
