@@ -156,7 +156,22 @@ Basically, this playbook does the following:
   - Deploying the postgres database for the masterdata-api (wrapped in a backup-restore-sidecar)
   - Applying the metal control plane helm chart
 
-Next you will need to parametrize the referenced roles to fit your requirements. The variables of the role dependencies can be looked up in the role documention on [metal-roles/control-plane](https://github.com/metal-stack/metal-roles/tree/master/control-plane). You should not need to define a lot of variables here for now, most values are reasonably defaulted in the roles. Just make sure you define all the "required" variables in your `group_vars/control-plane/all.yaml`, which looks like this:
+  As a next step you have to add a task for deploying an ingress-controller into your cluster. [nginx-ingress](https://kubernetes.github.io/ingress-nginx/) is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use nginx-ingress, make sure to also deploy it to the default namespace ingress-nginx.
+
+  This is how your `roles/ingress-controller/tasks/main.yaml` could look like:
+
+  ```yaml
+  - name: Deploy ingress-controller
+    include_role:
+      name: ansible-common/roles/helm-chart
+    vars:
+      helm_repo: "https://helm.nginx.com/stable"
+      helm_chart: nginx-ingress
+      helm_release_name: nginx-ingress
+      helm_target_namespace: ingress-nginx
+  ```
+
+Next, you will need to parametrize the referenced roles to fit your environment. The role parametrization can be looked up in the role documentation on [metal-roles/control-plane](https://github.com/metal-stack/metal-roles/tree/master/control-plane). You should not need to define a lot of variables for the beginning as most values are reasonably defaulted. The metal-stack release version to deploy can be defined through a special variable called `setup_yaml` (it will resolve all image versions from the release vector in the [releases](https://github.com/metal-stack/releases) repository). Your first version of `group_vars/control-plane/all.yaml` could look like this:
 
 ````@eval
 using Docs
@@ -164,10 +179,18 @@ using Docs
 t = """
 ```yaml
 ---
-# common defaults
-metal_control_plane_ingress_dns: <your-dns-domain> # if you are trying this with a local setup, you can consider using xip.io
+# release versions are read from an external YAML file, which is achieved by
+# using the setup_yaml module (see https://github.com/metal-stack/ansible-common)
+setup_yaml:
+  - var: metal_stack_release
+    version: %s
+    # the metal_stack_release variable is provided through role defaults in
+    # https://github.com/metal-stack/metal-roles
+    # the variable points to the following release vector:
+    # https://github.com/metal-stack/releases
 
-metal_stack_version: %s
+# common defaults
+metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also use <ingress-ip>.xip.io
 ```
 """
 
@@ -175,21 +198,6 @@ markdownTemplate(t, releaseVersion())
 ````
 
 By the time you will certainly add more parametrization to the deployment. When this happens, feel free to split up your `all.yaml` into separate files to keep everything nice and pretty.
-
-As a next step you will need to add the tasks for deploying an ingress-controller into your cluster. [nginx-ingress](https://kubernetes.github.io/ingress-nginx/) is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use nginx-ingress, make sure to also deploy it to the default namespace ingress-nginx.
-
-This is how your `roles/ingress-controller/tasks/main.yaml` could look like:
-
-```yaml
-- name: Deploy ingress-controller
-  include_role:
-    name: ansible-common/roles/helm-chart
-  vars:
-    helm_repo: "https://helm.nginx.com/stable"
-    helm_chart: nginx-ingress
-    helm_release_name: nginx-ingress
-    helm_target_namespace: ingress-nginx
-```
 
 Now, it should be possible to run the deployment through a Docker container. Make sure to have the [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) of your cluster and set the path in the following command accordingly:
 
@@ -243,7 +251,7 @@ current: test
 contexts:
   test:
     # the metal-api endpoint depends on your dns name specified before
-    # you can look the url to the metal-api via the kubernetes ingress
+    # you can look up the url to the metal-api via the kubernetes ingress
     # resource with:
     # $ kubectl get ingress -n metal-control-plane
     url: <metal-api-endpoint>
@@ -265,7 +273,7 @@ The basic principles of how the metal control plane can be deployed should now b
 
 !!! info
 
-    Image versions and ansible-role depedencies should be regularly checked for updates and adjusted according to the release notes.
+    Image versions and ansible-role dependencies should be regularly checked for updates and adjusted according to the release notes.
 
 ### Setting Up the backup-restore-sidecar
 
@@ -312,7 +320,7 @@ If you want to deploy metal-stack as a cloud provider for [Gardener](https://gar
 
 1. Deploy the [validator](https://github.com/metal-stack/gardener-extension-provider-metal/tree/v0.9.1/charts/validator-metal) from the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal) repository to your cluster via Helm
 1. Add a [cloud profile](https://github.com/gardener/gardener/blob/v1.3.3/example/30-cloudprofile.yaml) called `metal` containing all your machine images, machine types and regions (region names can be chosen freely, the zone names need to match your partition names) together with our metal-stack-specific provider config as defined [here](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/pkg/apis/metal/v1alpha1/types_cloudprofile.go)
-1. Register the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal) controller by deploying the [controller-registration](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/example/controller-registration.yaml) into your Gardener cluster, parametrize the imbedded chart in the controller registration's values section if necessary ([this](https://github.com/metal-stack/gardener-extension-provider-metal/tree/v0.9.1/charts/provider-metal) is the corresponding values file)
+1. Register the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal) controller by deploying the [controller-registration](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/example/controller-registration.yaml) into your Gardener cluster, parametrize the embedded chart in the controller registration's values section if necessary ([this](https://github.com/metal-stack/gardener-extension-provider-metal/tree/v0.9.1/charts/provider-metal) is the corresponding values file)
 1. metal-stack does not provide an own backup storage infrastructure for now. If you want to enable ETCD backups (which you should do because metal-stack also does not have persistent storage out of the box, which makes these backups even more valuable), you should deploy an extension-provider of another cloud provider and configure it to only reconcile the backup buckets (you can reference this backup infrastructure used for the metal shoot in the shoot spec)
 1. Register the [os-extension-provider-metal](https://github.com/metal-stack/os-metal-extension) controller by deploying the [controller-registration](https://github.com/metal-stack/os-metal-extension/blob/v0.4.1/example/controller-registration.yaml) into your Gardener cluster, this controller can transform the operating system configuration from Gardener into Ingition user data
 1. You need to use the Gardener's [networking-calico](https://github.com/gardener/gardener-extension-networking-calico) controller for setting up shoot CNI, you will have to put specific provider configuration into the shoot spec to make it work with metal-stack:
