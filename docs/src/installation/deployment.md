@@ -40,15 +40,17 @@ mkdir -p metal-stack-deployment
 cd metal-stack-deployment
 ```
 
-Let's now create the following files and folder structures:
+And create the following files and folder structures:
 
 ```
 .
 ├── ansible.cfg
 ├── deploy_metal_control_plane.yaml
 ├── group_vars
+│   ├── all
+│   │   └── images.yaml
 │   └── control-plane
-│       └── all.yaml
+│       └── common.yaml
 ├── inventories
 │   └── control-plane.yaml
 ├── requirements.yaml
@@ -125,6 +127,10 @@ Next, we will define the first playbook in a file called `deploy_metal_control_p
   hosts: control-plane
   connection: local
   gather_facts: no
+  vars:
+    setup_yaml:
+      - url: https://raw.githubusercontent.com/metal-stack/releases/{{ metal_stack_release_version }}/release.yaml
+        meta_var: metal_stack_release
   roles:
     - name: ansible-common
       tags: always
@@ -156,22 +162,7 @@ Basically, this playbook does the following:
   - Deploying the postgres database for the masterdata-api (wrapped in a backup-restore-sidecar)
   - Applying the metal control plane helm chart
 
-  As a next step you have to add a task for deploying an ingress-controller into your cluster. [nginx-ingress](https://kubernetes.github.io/ingress-nginx/) is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use nginx-ingress, make sure to also deploy it to the default namespace ingress-nginx.
-
-  This is how your `roles/ingress-controller/tasks/main.yaml` could look like:
-
-  ```yaml
-  - name: Deploy ingress-controller
-    include_role:
-      name: ansible-common/roles/helm-chart
-    vars:
-      helm_repo: "https://helm.nginx.com/stable"
-      helm_chart: nginx-ingress
-      helm_release_name: nginx-ingress
-      helm_target_namespace: ingress-nginx
-  ```
-
-Next, you will need to parametrize the referenced roles to fit your environment. The role parametrization can be looked up in the role documentation on [metal-roles/control-plane](https://github.com/metal-stack/metal-roles/tree/master/control-plane). You should not need to define a lot of variables for the beginning as most values are reasonably defaulted. The metal-stack release version to deploy can be defined through a special variable called `setup_yaml` (it will resolve all image versions from the release vector in the [releases](https://github.com/metal-stack/releases) repository). Your first version of `group_vars/control-plane/all.yaml` could look like this:
+The versions of the microservices are resolved from the release vector defined in the [releases](https://github.com/metal-stack/releases) repository. The `setup_yaml` module automatically maps the versions of a metal-stack release into Ansible variables. Your first version of `group_vars/all/images.yaml` could look like this:
 
 ````@eval
 using Docs
@@ -179,25 +170,36 @@ using Docs
 t = """
 ```yaml
 ---
-# release versions are read from external YAML files, which is achieved by
-# using the setup_yaml module (https://github.com/metal-stack/ansible-common)
-setup_yaml:
-  - url: https://raw.githubusercontent.com/metal-stack/%s/develop/release.yaml
-    meta_var: metal_stack_release
-    # the metal_stack_release variable is provided through role defaults in
-    # https://github.com/metal-stack/metal-roles
-
-# common defaults
-metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also use <ingress-ip>.xip.io
+metal_stack_release_version: %s
 ```
 """
 
 markdownTemplate(t, releaseVersion())
 ````
 
-By the time you will certainly add more parametrization to the deployment. When this happens, feel free to split up your `all.yaml` into separate files to keep everything nice and pretty.
+As a next step you have to add a task for deploying an ingress-controller into your cluster. [nginx-ingress](https://kubernetes.github.io/ingress-nginx/) is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use nginx-ingress, make sure to also deploy it to the default namespace ingress-nginx.
 
-Now, it should be possible to run the deployment through a Docker container. Make sure to have the [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) of your cluster and set the path in the following command accordingly:
+This is how your `roles/ingress-controller/tasks/main.yaml` could look like:
+
+```yaml
+- name: Deploy ingress-controller
+  include_role:
+    name: ansible-common/roles/helm-chart
+  vars:
+    helm_repo: "https://helm.nginx.com/stable"
+    helm_chart: nginx-ingress
+    helm_release_name: nginx-ingress
+    helm_target_namespace: ingress-nginx
+```
+
+Now you can parametrize the referenced roles to fit your environment. The role parametrization can be looked up in the role documentation on [metal-roles/control-plane](https://github.com/metal-stack/metal-roles/tree/master/control-plane). You should not need to define a lot of variables for the beginning as most values are reasonably defaulted. You can start with the following content for `group_vars/control-plane/common.yaml`:
+
+```yaml
+---
+metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also use <ingress-ip>.xip.io
+```
+
+Finally, it should be possible to run the deployment through a Docker container. Make sure to have the [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) of your cluster and set the path in the following command accordingly:
 
 ````@eval
 using Docs
@@ -228,7 +230,7 @@ markdownTemplate(t, base_image)
 
     If you are having issues regarding the deployment take a look at the [troubleshoot document](troubleshoot.md). Please give feedback such that we can make the deployment of the metal-stack easier for you and for others!
 
-After the deployment has finished (hopefully without any issues!), you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes, operating system images, partitions and networks. You can do this by further parametrizing the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal). We will just add an operating system for demonstration purposes. Add the following variable to your `group_vars/control-plane/all.yaml`:
+After the deployment has finished (hopefully without any issues!), you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes, operating system images, partitions and networks. You can do this by further parametrizing the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal). We will just add an operating system for demonstration purposes. Add the following variable to your `group_vars/control-plane/common.yaml`:
 
 ```
 metal_api_images:
