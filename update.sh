@@ -7,6 +7,7 @@ function update_repo() {
     path=$1
     git_url=$2
     ref=$3
+    if [[ $ref == "latest" ]]; then ref=master; fi
     echo "Updating repository ${path}"
     rm -rf $path
     mkdir -p $path
@@ -26,4 +27,4 @@ echo "Updating external repositories"
 update_repo "docs/src/external/csi-lvm" "https://github.com/metal-stack/csi-lvm.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.kubernetes.csi-lvm-controller.tag')
 update_repo "docs/src/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" "master"
 update_repo "docs/src/external/metalctl" "https://github.com/metal-stack/metalctl.git" $(yq r /tmp/release.yaml 'binaries.metal-stack.metalctl.version')
-update_repo "docs/src/external/firewall-controller" "https://github.com/metal-stack/firewall-controller.git" "master"
+update_repo "docs/src/external/firewall-controller" "https://github.com/metal-stack/firewall-controller.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.gardener.firewall-controller.tag')

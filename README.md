@@ -1,6 +1,6 @@
 # Docs
 
-This repository contains the documentation of metal-stack.
+This repository contains the documentation of metal-stack at [docs.metal-stack.io](https://docs.metal-stack.io/).
 
 It is being generated using [Julia Documenter](https://github.com/JuliaDocs/Documenter.jl). Everything is basically build on Markdown files. Check their [docs](https://juliadocs.github.io/Documenter.jl/stable/) if you want to dig deeper.
 
