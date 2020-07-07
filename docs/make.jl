@@ -34,9 +34,10 @@ makedocs(
         ],
         "API Documentation" => "apidocs/apidocs.md",
         "Development" => Any[
-            "roadmap.md",
-            "Enhancement Proposals" => "proposals/index.md",
-            "contributing.md",
+            "development/client_libraries.md",
+            "development/roadmap.md",
+            "Enhancement Proposals" => "development/proposals/index.md",
+            "development/contributing.md",
         ],
     ]
 )

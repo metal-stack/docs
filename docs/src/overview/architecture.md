@@ -33,7 +33,7 @@ The following figure shows the relationships between these microservices:
 Some notes on this picture:
 
 - Users can access the metal-api with the CLI client called [metalctl](https://github.com/metal-stack/metalctl).
-- You can programmatically access the metal-api using the [metal-go](https://github.com/metal-stack/metal-go) client library.
+- You can programmatically access the metal-api with [client libraries](../development/client_libraries.md) (e.g. [metal-go](https://github.com/metal-stack/metal-go)).
 - Our databases are wrapped in a specially built [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar), which is consistently backing up the databases in external blob storage.
 - The metal-api can be scaled out using replicas when being deployed in Kubernetes.
 
