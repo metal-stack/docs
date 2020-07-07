@@ -1,3 +1,6 @@
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://docs.metal-stack.io/)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://docs.metal-stack.io/dev/)
+
 # Docs
 
 This repository contains the documentation of metal-stack at [docs.metal-stack.io](https://docs.metal-stack.io/).
