@@ -38,4 +38,5 @@ A minimal physical hardware setup may contain at least the following components:
 | 1x | Unifi      | Edgemax          | Edgerouter Pro       | front router for internet and out-of-band access to servers and switches |
 
 Besides that, a 6HE rack with 1000mm depth and a portable LTE modem is needed.
-This MVP will yield in 12 useable machines, one of them will be reserved as management server.
+
+This MVP will yield in 12 usable machines, one of them will be reserved as management server.
