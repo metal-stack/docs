@@ -31,6 +31,10 @@ At the moment we support the following switch types:
 
 A minimal physical hardware setup may contain at least the following components:
 
+!!! warning
+
+    This setup should work as the components are very similar to the currently supported ones but it's currently untested.
+
 | #   | Vendor      | Series           | Model                | Function                                                                 |
 | :-- | :---------- | :--------------- | :------------------- | :----------------------------------------------------------------------- |
 | 2x  | Edge-Core   | AS5500 Series    | AS5512-54x (10G)     | Leaf / Exit switches                                                     |
