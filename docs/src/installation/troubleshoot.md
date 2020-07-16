@@ -46,7 +46,7 @@ If there are any failing pods, investigate those and look into container logs. T
 
 !!! info
 
-    Sometimes, you see a helm errors like "no deployed releases" or something like this. When a helm chart fails after the first deployment it could be that you have a chart installation still pending. Also, the control plane helm chart uses pre- and post-hooks, which creates [jobs](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/) that helm expects to be completed before attempting another deployment. Delete the helm chart (use Helm 3) with `helm delete -n metal-control-plane metal-control-plane` and delete the jobs in the `metal-control-plane` namespace before retrying the deployment.
+    Sometimes, you see a helm errors like "no deployed releases" or something like this. When a helm chart fails after the first deployment it could be that you have a chart installation still pending. Also, the control plane helm chart uses pre- and post-hooks, which creates [jobs]( https://kubernetes.io/docs/concepts/workloads/controllers/job/) that helm expects to be completed before attempting another deployment. Delete the helm chart (use Helm 3) with `helm delete -n metal-control-plane metal-control-plane` and delete the jobs in the `metal-control-plane` namespace before retrying the deployment.
 
 ### In the mini-lab I can't SSH into the leaf switches anymore
 
@@ -62,7 +62,7 @@ get this error message, please view the documentation for the provider
 you're using.
 ```
 
-This is actually expected behavior. As soon as the metal-core reconfigures the switch interfaces, the `eth0` interface will be reconfigured from DHCP to static. This causes Vagrant not to be able to figure out the IP address of the VM through dnsmasq anymore (which is how Vagrant gets to know the IP address of the VM for libvirt). The IP address of the switch is still the same though. You can still access the VM using SSH with the vagrant user. 
+This is actually expected behavior. As soon as the metal-core reconfigures the switch interfaces, the `eth0` interface will be reconfigured from DHCP to static. This causes Vagrant not to be able to figure out the IP address of the VM through dnsmasq anymore (which is how Vagrant gets to know the IP address of the VM for libvirt). The IP address of the switch is still the same though. You can still access the VM using SSH with the vagrant user.
 
 There are a couple of ways to get to know the IP address of the switch:
 

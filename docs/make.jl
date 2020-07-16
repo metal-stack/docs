@@ -11,11 +11,11 @@ makedocs(
         highlights = ["yaml"],
     ),
     authors = "metal-stack authors and contributors.",
-    linkcheck = true,
+    linkcheck = is_ci_build,
     linkcheck_ignore = [
-        r"metalctl_(.*).md",
+        r"^(?!http)",
     ],
-    #strict = true, # TODO: Should be done soon, links from repos to CONTRIBUTING have to be updated though...
+    #strict = true, # TODO: Should be enabled soon, links from repos to CONTRIBUTING have to be updated though...
     clean = true,
     pages = [
         "Introduction" => "index.md",
