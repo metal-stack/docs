@@ -206,3 +206,9 @@ droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:51 +0000 UTC {"DPT":"800
 ```
 
 You can forward the droptailer logs to any log aggregation infrastructure you have in place.
+
+## Page Tree
+
+```@contents
+Pages = vcat([[joinpath(root, file)[length(@__DIR__)+2:end] for file in files] for (root, dirs, files) in walkdir(@__DIR__)]...)
+```

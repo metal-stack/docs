@@ -18,6 +18,15 @@ function update_repo() {
     rm -rf .git
     find . -type f ! \( -name "*.md" -o -name "*.png" -o -name "*.svg" \) -delete
     popd
+
+    cat << 'EOF' >> ${path}/README.md
+
+## Page Tree
+
+```@contents
+Pages = vcat([[joinpath(root, file)[length(@__DIR__)+2:end] for file in files] for (root, dirs, files) in walkdir(@__DIR__)]...)
+```
+EOF
 }
 
 echo "Getting release vector"
@@ -28,3 +37,9 @@ update_repo "docs/src/external/csi-lvm" "https://github.com/metal-stack/csi-lvm.
 update_repo "docs/src/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" "master"
 update_repo "docs/src/external/metalctl" "https://github.com/metal-stack/metalctl.git" $(yq r /tmp/release.yaml 'binaries.metal-stack.metalctl.version')
 update_repo "docs/src/external/firewall-controller" "https://github.com/metal-stack/firewall-controller.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.gardener.firewall-controller.tag')
+
+echo "Special handling"
+# in metalctl/docs the generated do not start with a top-level heading (#) but with a sub-heading (##)
+# (hard-coded in cobra)
+# due to this reason the search results look very odd because the pages are indexed with the name "-"
+sed -i 's/^##/#/g' docs/src/external/metalctl/docs/*
