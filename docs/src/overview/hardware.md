@@ -26,3 +26,21 @@ At the moment we support the following switch types:
     On our switches we run [Cumulus Linux](https://cumulusnetworks.com/products/cumulus-linux/). The metal-core writes network configuration specifically implemented for this operating system. Please also consider running Cumulus Linux on your switches if you do not want to run into any issues with networking.
 
     Of course, contributions for supporting other switch vendors and operating systems are highly appreciated.
+
+## Portable metal-stack Setup DIY
+
+A minimal physical hardware setup may contain at least the following components:
+
+!!! warning
+
+    This setup should work as the components are very similar to the currently supported ones but it's currently untested.
+
+| #   | Vendor      | Series           | Model                | Function                                                                 |
+| :-- | :---------- | :--------------- | :------------------- | :----------------------------------------------------------------------- |
+| 2x  | Edge-Core   | AS5500 Series    | AS5512-54x (10G)     | Leaf / Exit switches                                                     |
+| 1x  | Supermicro  | Microcloud       | SYS-5039MA16-H12RFT  | Usable machines                                                          |
+| 1x  | Unifi       | Edgemax          | Edgerouter Pro       | Front router for internet and out-of-band access to servers and switches |
+
+Besides that, a 6HE rack with 1000mm depth and a portable LTE modem is needed.
+
+This MVP will yield in 12 usable machines, one of them will be reserved as management server.
