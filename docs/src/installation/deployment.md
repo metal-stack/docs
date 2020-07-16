@@ -1,6 +1,6 @@
 # Deploying metal-stack
 
-We are bootstrapping the [metal control plane](../overview/architecture.md##Metal-Control-Plane-1) as well as our [partitions](../overview/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
+We are bootstrapping the [metal control plane](../overview/architecture.md#Metal-Control-Plane-1) as well as our [partitions](../overview/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
 
 In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles).
 
@@ -85,7 +85,7 @@ markdownTemplate(t, ansible_common, metal_roles)
 
 !!! tip
 
-    The [ansible-common](https://github.com/metal-stack/ansible-common.git) repository contains very general roles and modules that you can also use when extending your deployment further.
+    The [ansible-common](https://github.com/metal-stack/ansible-common) repository contains very general roles and modules that you can also use when extending your deployment further.
 
 Then, there will be an inventory for the control plane deployment in `control-plane/inventory.yaml` that adds the localhost to the `control-plane` host group:
 
@@ -152,7 +152,7 @@ Next, we will define the first playbook in a file called `deploy_metal_control_p
 
 Basically, this playbook does the following:
 
-- Include all the modules, filter plugins, etc. of [ansible-common](https://github.com/metal-stack/ansible-common.git) into the play
+- Include all the modules, filter plugins, etc. of [ansible-common](https://github.com/metal-stack/ansible-common) into the play
 - Deploys an ingress-controller into your cluster
 - Deploys the metal-stack by
   - Running preparation tasks

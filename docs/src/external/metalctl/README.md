@@ -73,3 +73,9 @@ Full documentation is generated out of the cobra command implementation with:
 `metalctl markdown`
 
 generated markdown is [here](docs/metalctl.md)
+
+## Page Tree
+
+```@contents
+Pages = vcat([[joinpath(root, file)[length(@__DIR__)+2:end] for file in files] for (root, dirs, files) in walkdir(@__DIR__)]...)
+```

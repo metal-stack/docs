@@ -50,7 +50,7 @@ Furthermore, requirements such as *operational simplicity* and *network stabilit
 
 ## Concept
 
-The theoretical concept targets the aforementioned requirements. New technologies have been evaluated to apply the best solutions. The process was heavily inspired by the work of Dinesh G. Dutt regarding BGP ([bgp-ebook](https://cumulusnetworks.com/lp/bgp-ebook)) and EVPN ([evpn-ebook](https://cumulusnetworks.com/lp/evpn-data-center-oreilly/)).
+The theoretical concept targets the aforementioned requirements. New technologies have been evaluated to apply the best solutions. The process was heavily inspired by the work of Dinesh G. Dutt regarding BGP ([bgp-ebook](https://cumulusnetworks.com/lp/bgp-ebook/)) and EVPN ([evpn-ebook](https://cumulusnetworks.com/lp/evpn-data-center-oreilly/)).
 
 External BGP together with network overlay concepts as EVPN can address the essential demands. These revolutionary concepts are part of the next evolutionary step in data center design. It overcomes common issues of traditional layer 2 architectures (e.g. VLAN limitations, network visibility for operations, firewall requirements) by introducing a layer 3 based network topology.
 
@@ -688,7 +688,7 @@ line vty
 
 > Listing 11: Fragment of FRR configuration on exit switch to give an example for numbered BGP and route leak.
 
-In addition to the standard BGP setup the exit switches have configured `static route leak` to support internet access during PXE. There is one route leak from `default` VRF into the `mgmt` VRF defined with: `ip route 0.0.0.0/0 192.168.0.254 nexthop-vrf mgmt` and another one from `mgmt` VRF into the `default` VRF: `ip route 10.0.0.0/24 10.0.0.71 nexthop-vrf default`. The first one adds a default route into the `default` VRF and the second one routes traffic destined to the PXE network back from `mgmt` VRF into the `default` VRF.  
+In addition to the standard BGP setup the exit switches have configured `static route leak` to support internet access during PXE. There is one route leak from `default` VRF into the `mgmt` VRF defined with: `ip route 0.0.0.0/0 192.168.0.254 nexthop-vrf mgmt` and another one from `mgmt` VRF into the `default` VRF: `ip route 10.0.0.0/24 10.0.0.71 nexthop-vrf default`. The first one adds a default route into the `default` VRF and the second one routes traffic destined to the PXE network back from `mgmt` VRF into the `default` VRF.
 
 To reach out into external networks each of the exit nodes joins a BGP session with a distinct external router. There is a different latency to each of these routers. To favor routes of exit nodes connected with lower latency over exit nodes with higher latency two route maps `PREPEND-PATH-TO-DISFAVOR-IN` and `PREPEND-PATH-TO-DISFAVOR-OUT` are added to high latency exit nodes. These route maps apply actions to prolong the path of the incoming and outgoing routes. Because of this path extension BGP will calculate a lower weight for these paths and favors paths via other exit nodes. It is important to know that within an address family only one route map (the last) will be applied. To apply more than one actions within a route-map the required entries can be applied to a single route-map.
 
