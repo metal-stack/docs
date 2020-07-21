@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-RELEASE_VERSION := $(or ${RELEASE_VERSION},"v0.1.0")
+RELEASE_VERSION := $(or ${RELEASE_VERSION},"v0.1.1")
 
 .PHONY: build
 build:
