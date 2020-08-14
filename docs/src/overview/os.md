@@ -13,7 +13,7 @@ The supported images currently are:
 | Platform | Distribution | Version |
 | :------- | :----------- | :------ |
 | Linux    | Debian       | 10      |
-| Linux    | Ubuntu       | 19.10   |
+| Linux    | Ubuntu       | 20.04   |
 
 ## Building Your Own Images
 
@@ -27,7 +27,7 @@ There are some conventions though that you need to follow in order to make your 
 1. Consider semantic image versioning, which we use in our algorithms to select latest images (e.g. `os-major.minor.patch` ➡️ `ubuntu-19.10.20191018`)
 1. Consider installing packages used by the metal-stack infrastructure
    - [FRR](https://frrouting.org/) to enable routing-to-the-host in our network topology
-   - [go-lddp](https://github.com/metal-stack/go-lldpd) to enable checking if the machine is still alive after user allocation
+   - [go-lldpd](https://github.com/metal-stack/go-lldpd) to enable checking if the machine is still alive after user allocation
    - [ignition](https://github.com/coreos/ignition) for enabling users to run user-specific initialization instructions before bootup. It's pretty small in size, which is why we use it. However, you are free to use other cloud instance initialization tools if you want to.
 1. You have to provide an `install.sh` script, which applies user-specific configuration in the installed image
    - This script should consume parameters from the `install.yaml` file that the metal-hammer writes to `/etc/metal/install.yaml`

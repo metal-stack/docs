@@ -48,7 +48,7 @@ Please check out the [guide](../external/firewall-controller/README.md) on how t
 
 ## Gardener components
 
-There are some Gardener resources that need be reconciled when you act as a cloud provider for the Gardener. This section briefly describes the controllers implemented for deploying Kubernetes clusters through Gardener. 
+There are some Gardener resources that need be reconciled when you act as a cloud provider for the Gardener. This section briefly describes the controllers implemented for deploying Kubernetes clusters through Gardener.
 
 If you want to learn how to deploy metal-stack with Gardener, please check out the [installation](../installation/deployment.md#Gardener-with-metal-stack-1) section.
 
