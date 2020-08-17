@@ -8,18 +8,20 @@ We came up with a repository called [go-hal](https://github.com/metal-stack/go-h
 
 At the moment we support the following server types:
 
-| Vendor     | Series      | Model            |
-| :--------- | :---------- | :--------------- |
-| Supermicro | Big-Twin    | SYS-2029BT-HNR   |
-| Supermicro | SuperServer | SSG-5019D8-TR12P |
+| Vendor     | Series      | Model            | Status |
+| :--------- | :---------- | :--------------- |:-------|
+| Supermicro | Big-Twin    | SYS-2029BT-HNR   | stable |
+| Supermicro | SuperServer | SSG-5019D8-TR12P | stable |
+| Lenovo     | ThinkSystem | SD530            | devel  |
 
 ## Switches
 
 At the moment we support the following switch types:
 
-| Vendor    | Series        | Model      |
-| :-------- | :------------ | :--------- |
-| Edge-Core | AS7700 Series | AS7712-32X |
+| Vendor    | Series        | Model      | OS             | Status |
+| :-------- | :------------ | :--------- |:---------------|:-------|
+| Edge-Core | AS7700 Series | AS7712-32X | Cumulus 3.7.13 | stable |
+| Edge-Core | AS7700 Series | AS7726-32X | Cumulus 4.1.1  | stable |
 
 !!! warning
 
