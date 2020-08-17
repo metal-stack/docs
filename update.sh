@@ -34,7 +34,7 @@ curl -Lo /tmp/release.yaml "https://raw.githubusercontent.com/metal-stack/releas
 
 echo "Updating external repositories"
 update_repo "docs/src/external/csi-lvm" "https://github.com/metal-stack/csi-lvm.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.kubernetes.csi-lvm-controller.tag')
-update_repo "docs/src/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" "master"
+update_repo "docs/src/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" $(yq r /tmp/release.yaml 'projects.metal-stack.mini-lab.version')
 update_repo "docs/src/external/metalctl" "https://github.com/metal-stack/metalctl.git" $(yq r /tmp/release.yaml 'binaries.metal-stack.metalctl.version')
 update_repo "docs/src/external/firewall-controller" "https://github.com/metal-stack/firewall-controller.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.gardener.firewall-controller.tag')
 
