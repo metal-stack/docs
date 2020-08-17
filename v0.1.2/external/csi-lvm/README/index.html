@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>csi-lvm · metal-stack</title><link rel="canonical" href="https://docs.metal-stack.io/external/csi-lvm/README/"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../../assets/youtube.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.svg" alt="metal-stack logo"/></a><div class="docs-package-name"><span class="docs-autofit">metal-stack</span></div><form class="docs-search" action="../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../">Introduction</a></li><li><span class="tocitem">Overview</span><ul><li><a class="tocitem" href="../../../overview/architecture/">Architecture</a></li><li><a class="tocitem" href="../../../overview/networking/">Networking</a></li><li><a class="tocitem" href="../../../overview/hardware/">Hardware Support</a></li><li><a class="tocitem" href="../../../overview/os/">Operating Systems</a></li><li><a class="tocitem" href="../../../overview/kubernetes/">Kubernetes Integration</a></li></ul></li><li><a class="tocitem" href="../../../quickstart/">Quickstart</a></li><li><span class="tocitem">Installation &amp; Maintenance</span><ul><li><a class="tocitem" href="../../../installation/deployment/">Installation</a></li><li><a class="tocitem" href="../../../installation/monitoring/">Monitoring</a></li><li><a class="tocitem" href="../../../installation/troubleshoot/">Troubleshoot</a></li></ul></li><li><span class="tocitem">User Guides</span><ul><li><a class="tocitem" href="../../mini-lab/README/">mini-lab</a></li><li><a class="tocitem" href="../../metalctl/README/">metalctl</a></li><li class="is-active"><a class="tocitem" href>csi-lvm</a><ul class="internal"><li><a class="tocitem" href="#Overview"><span>Overview</span></a></li><li><a class="tocitem" href="#Compare-to-Local-Path-Provisioner"><span>Compare to Local Path Provisioner</span></a></li><li><a class="tocitem" href="#Requirement"><span>Requirement</span></a></li><li><a class="tocitem" href="#Deployment"><span>Deployment</span></a></li><li><a class="tocitem" href="#Usage"><span>Usage</span></a></li><li><a class="tocitem" href="#Configuration"><span>Configuration</span></a></li><li><a class="tocitem" href="#Uninstall"><span>Uninstall</span></a></li><li><a class="tocitem" href="#Page-Tree"><span>Page Tree</span></a></li></ul></li><li><a class="tocitem" href="../../firewall-controller/README/">firewall-controller</a></li></ul></li><li><a class="tocitem" href="../../../apidocs/apidocs/">API Documentation</a></li><li><span class="tocitem">Development</span><ul><li><a class="tocitem" href="../../../development/client_libraries/">Client Libraries</a></li><li><a class="tocitem" href="../../../development/roadmap/">Roadmap</a></li><li><a class="tocitem" href="../../../development/proposals/">Enhancement Proposals</a></li><li><a class="tocitem" href="../../../development/contributing/">Contributing</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guides</a></li><li class="is-active"><a href>csi-lvm</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>csi-lvm</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/metal-stack/docs/blob/master/docs/src/external/csi-lvm/README.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="CSI-LVM-Provisioner"><a class="docs-heading-anchor" href="#CSI-LVM-Provisioner">CSI LVM Provisioner</a><a id="CSI-LVM-Provisioner-1"></a><a class="docs-heading-anchor-permalink" href="#CSI-LVM-Provisioner" title="Permalink"></a></h1><p><a href="https://goreportcard.com/report/github.com/metal-stack/csi-lvm"><img src="https://goreportcard.com/badge/github.com/metal-stack/csi-lvm" alt="Go Report Card"/></a></p><h2 id="Overview"><a class="docs-heading-anchor" href="#Overview">Overview</a><a id="Overview-1"></a><a class="docs-heading-anchor-permalink" href="#Overview" title="Permalink"></a></h2><p>CSI LVM Provisioner utilizes local storage of Kubernetes nodes to provide persistent storage for pods.</p><p>It automatically creates <code>hostPath</code> based persistent volumes on the nodes and makes use of the <a href="https://kubernetes.io/blog/2018/04/13/local-persistent-volumes-beta/">Local Persistent Volume feature</a> introduced by Kubernetes 1.10 but it&#39;s simpler to use than the built-in <code>local</code> volume feature in Kubernetes.</p><p>Underneath it creates a LVM logical volume on the local disks. A grok pattern, which disks to use can be specified.</p><p>This Provisioner is derived from the <a href="https://github.com/rancher/local-path-provisioner">Local Path Provisioner</a>.</p><h2 id="Compare-to-Local-Path-Provisioner"><a class="docs-heading-anchor" href="#Compare-to-Local-Path-Provisioner">Compare to Local Path Provisioner</a><a id="Compare-to-Local-Path-Provisioner-1"></a><a class="docs-heading-anchor-permalink" href="#Compare-to-Local-Path-Provisioner" title="Permalink"></a></h2><h3 id="Pros"><a class="docs-heading-anchor" href="#Pros">Pros</a><a id="Pros-1"></a><a class="docs-heading-anchor-permalink" href="#Pros" title="Permalink"></a></h3><p>Dynamic provisioning the volume using host path.</p><ul><li>Currently the Kubernetes <a href="https://github.com/kubernetes-incubator/external-storage/tree/master/local-volume">Local Volume provisioner</a> cannot do dynamic provisioning for the host path volumes.</li><li>Support for volume capacity limit.</li><li>Performance speedup if more than one local disk is available because it can create lv´s which are stripe across all physical volumes.</li></ul><h2 id="Requirement"><a class="docs-heading-anchor" href="#Requirement">Requirement</a><a id="Requirement-1"></a><a class="docs-heading-anchor-permalink" href="#Requirement" title="Permalink"></a></h2><p>Kubernetes v1.12+.</p><h2 id="Deployment"><a class="docs-heading-anchor" href="#Deployment">Deployment</a><a id="Deployment-1"></a><a class="docs-heading-anchor-permalink" href="#Deployment" title="Permalink"></a></h2><h3 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h3><p>The deployments consists of two parts:</p><ul><li>A controller deployment, which is registerd as storage controller and schedules the creation and deletion of volumes</li><li>A reviver daemonset, which is responsible for re-creating the mount-structure after a reboot</li></ul><p>In this setup, the directory <code>/tmp/csi-lvm/&lt;name of the pv&gt;</code> will be used across all the nodes as the path for provisioning (a.k.a, store the persistent volume data). The provisioner will be installed in <code>csi-lvm</code> namespace by default.</p><p>The default grok pattern for disks to use is <code>/dev/nvme[0-9]n*</code>, please check if this matches your setup, otherwise, copy <em>controller.yaml</em> to your local machine and modify the value of <code>CSI_LVM_DEVICE_PATTERN</code> accordingly.</p><pre><code class="language-yaml">- name: CSI_LVM_DEVICE_PATTERN
+  value: /dev/nvme[0-9]n*&quot;</code></pre><p>If this is set you can install the csi-lvm with:</p><pre><code class="language-bash">kubectl apply -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/deploy/controller.yaml
+kubectl apply -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/deploy/reviver.yaml
+</code></pre><p>After installation, you should see something like the following:</p><pre><code class="language-bash">$ kubectl -n csi-lvm get pod
+NAME                                     READY     STATUS    RESTARTS   AGE
+csi-lvm-controller-d744ccf98-xfcbk       1/1       Running   0          7m
+csi-lvm-reviver-ndh46                    1/1       Running   0          7m</code></pre><p>Check and follow the provisioner log using:</p><pre><code class="language-bash">$ kubectl -n csi-lvm logs -f csi-lvm-controller-d744ccf98-xfcbk
+I1021 14:09:31.108535       1 main.go:132] Provisioner started
+I1021 14:09:31.108830       1 leaderelection.go:235] attempting to acquire leader lease  csi-lvm/metal-stack.io-csi-lvm...
+I1021 14:09:31.121305       1 leaderelection.go:245] successfully acquired lease csi-lvm/metal-stack.io-csi-lvm
+I1021 14:09:31.124339       1 controller.go:770] Starting provisioner controller metal-stack.io/csi-lvm_csi-lvm-controller-7f94749d78-t5nh8_17d2f7ef-1375-4e36-aa71-82e237430881!
+I1021 14:09:31.126248       1 event.go:258] Event(v1.ObjectReference{Kind:&quot;Endpoints&quot;, Namespace:&quot;csi-lvm&quot;, Name:&quot;metal-stack.io-csi-lvm&quot;, UID:&quot;04da008c-36ec-4966-a4f6-c2028e69cdd5&quot;, APIVersion:&quot;v1&quot;, ResourceVersion:&quot;589&quot;, FieldPath:&quot;&quot;}): type: &#39;Normal&#39; reason: &#39;LeaderElection&#39; csi-lvm-controller-7f94749d78-t5nh8_17d2f7ef-1375-4e36-aa71-82e237430881 became leader
+I1021 14:09:31.225917       1 controller.go:819] Started provisioner controller metal-stack.io/csi-lvm_csi-lvm-controller-7f94749d78-t5nh8_17d2f7ef-1375-4e36-aa71-82e237430881!</code></pre><h2 id="Usage"><a class="docs-heading-anchor" href="#Usage">Usage</a><a id="Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Usage" title="Permalink"></a></h2><p>Create a <code>hostPath</code> backed Persistent Volume and a pod uses it:</p><pre><code class="language-bash">kubectl create -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/example/pvc.yaml
+kubectl create -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/example/pod.yaml</code></pre><p>You should see the PV has been created:</p><pre><code class="language-bash">$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                    STORAGECLASS   REASON    AGE
+pvc-bc3117d9-c6d3-11e8-b36d-7a42907dda78   50Mi       RWO            Delete           Bound     default/lvm-pvc          csi-lvm                  4s</code></pre><p>The PVC has been bound:</p><pre><code class="language-bash">$ kubectl get pvc
+NAME             STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+lvm-pvc          Bound     pvc-bc3117d9-c6d3-11e8-b36d-7a42907dda78   50Mi       RWO            csi-lvm        16s</code></pre><p>And the Pod started running:</p><pre><code class="language-bash">$ kubectl get pod
+NAME          READY     STATUS    RESTARTS   AGE
+volume-test   1/1       Running   0          3s</code></pre><p>Write something into the pod</p><pre><code class="language-bash">kubectl exec volume-test -- sh -c &quot;echo lvm-test &gt; /data/test&quot;</code></pre><p>Now delete the pod using</p><pre><code class="language-bash">kubectl delete -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/example/pod.yaml</code></pre><p>After confirm that the pod is gone, recreated the pod using</p><pre><code class="language-bash">kubectl create -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/example/pod.yaml</code></pre><p>Check the volume content:</p><pre><code class="language-bash">$ kubectl exec volume-test cat /data/test
+lvm-test</code></pre><p>Delete the pod and pvc</p><pre><code class="language-bash">kubectl delete -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/example/pvc.yaml
+kubectl delete -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/example/pod.yaml</code></pre><p>The volume content stored on the node will be automatically cleaned up. You can check the log of <code>csi-lvm-controller-xxx</code> for details.</p><p>Now you&#39;ve verified that the provisioner works as expected.</p><h2 id="Configuration"><a class="docs-heading-anchor" href="#Configuration">Configuration</a><a id="Configuration-1"></a><a class="docs-heading-anchor-permalink" href="#Configuration" title="Permalink"></a></h2><p>The configuration of the csi-lvm-controller is done via Environment variables:</p><pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csi-lvm-controller
+  namespace: csi-lvm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csi-lvm-controller
+  template:
+    metadata:
+      labels:
+        app: csi-lvm-controller
+    spec:
+      serviceAccountName: csi-lvm-controller
+      containers:
+      - name: csi-lvm-controller
+        image: metalstack/csi-lvm-controller:v0.6.1
+        imagePullPolicy: IfNotPresent
+        command:
+        - /csi-lvm-controller
+        args:
+        - start
+        env:
+        - name: CSI_LVM_PROVISIONER_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: CSI_LVM_PROVISIONER_IMAGE
+          value: &quot;metalstack/csi-lvm-provisioner:v0.6.1&quot;
+        - name: CSI_LVM_DEVICE_PATTERN
+          value: &quot;/dev/loop[0,1]&quot;
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: csi-lvm-reviver
+  namespace: csi-lvm
+spec:
+  selector:
+    matchLabels:
+      app: csi-lvm-reviver
+  template:
+    metadata:
+      labels:
+        app: csi-lvm-reviver
+    spec:
+      serviceAccountName: csi-lvm-reviver
+      containers:
+      - name: csi-lvm-reviver
+        image: metalstack/csi-lvm-provisioner:v0.6.1
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+        env:
+          - name: CSI_LVM_MOUNTPOINT
+            value: &quot;/tmp/csi-lvm&quot;
+        command:
+        - /csi-lvm-provisioner
+        args:
+        - revivelvs
+        volumeMounts:
+          - mountPath: /tmp/csi-lvm
+            name: data
+            mountPropagation: Bidirectional
+          - mountPath: /dev
+            name: devices
+          - mountPath: /lib/modules
+            name: modules
+      volumes:
+        - hostPath:
+            path: /tmp/csi-lvm
+            type: DirectoryOrCreate
+          name: data
+        - hostPath:
+            path: /dev
+            type: DirectoryOrCreate
+          name: devices
+        - hostPath:
+            path: /lib/modules
+            type: DirectoryOrCreate
+          name: modules
+</code></pre><h3 id="Definition"><a class="docs-heading-anchor" href="#Definition">Definition</a><a id="Definition-1"></a><a class="docs-heading-anchor-permalink" href="#Definition" title="Permalink"></a></h3><p><code>CSI_LVM_DEVICE_PATTERN</code> is a grok pattern to specify which block devices to use for lvm devices on the node. This can be for example <code>/dev/sd[bcde]</code> if you want to use only /dev/sdb - /dev/sde. ***IMPORTANT***: no wildcard (*) allowed currently.</p><h3 id="PVC-Striped,-Mirrored"><a class="docs-heading-anchor" href="#PVC-Striped,-Mirrored">PVC Striped, Mirrored</a><a id="PVC-Striped,-Mirrored-1"></a><a class="docs-heading-anchor-permalink" href="#PVC-Striped,-Mirrored" title="Permalink"></a></h3><p>By default the LV´s are created in <code>linear</code> mode on the devices specified by the grok pattern, beginning on the first found device. If this is full, the next LV will be created on the next device and so forth.</p><p>If more than 1 device was found with the given pattern, two more options for the created lvs are available:</p><ul><li><code>mirror</code>: all block will be mirrored with one additional copy to a additional disk found if more than one disk is present.</li><li><code>striped</code>: the pvc will be a stripe across all found block devices specified by the above grok pattern. If for example 4 disk where found, all blocks written are spread across 4 devices in chunks. This gives ~4 times the read/write performance for the volume, but also a 4 times higher risk of data loss in case a single disk fails.</li></ul><pre><code class="language-yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lvm-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-lvm
+  resources:
+    requests:
+      storage: 50Mi</code></pre><pre><code class="language-yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lvm-pvc-striped
+  namespace: default
+  annotations:
+    csi-lvm.metal-stack.io/type: &quot;striped&quot;
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-lvm
+  resources:
+    requests:
+      storage: 50Mi</code></pre><pre><code class="language-yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lvm-pvc-mirrored
+  namespace: default
+  annotations:
+    csi-lvm.metal-stack.io/type: &quot;mirror&quot;
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-lvm
+  resources:
+    requests:
+      storage: 50Mi</code></pre><h2 id="Uninstall"><a class="docs-heading-anchor" href="#Uninstall">Uninstall</a><a id="Uninstall-1"></a><a class="docs-heading-anchor-permalink" href="#Uninstall" title="Permalink"></a></h2><p>Before un-installation, make sure the PVs created by the provisioner have already been deleted. Use <code>kubectl get pv</code> and make sure no PV with StorageClass <code>csi-lvm</code>.</p><p>To uninstall, execute:</p><pre><code class="language-bash">kubectl delete -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/deploy/controller.yaml
+kubectl delete -f https://raw.githubusercontent.com/metal-stack/csi-lvm/master/deploy/reviver.yaml</code></pre><h2 id="Page-Tree"><a class="docs-heading-anchor" href="#Page-Tree">Page Tree</a><a id="Page-Tree-1"></a><a class="docs-heading-anchor-permalink" href="#Page-Tree" title="Permalink"></a></h2><ul><li><a href="../DEVELOPMENT/#Local-Development">Local Development</a></li><ul><li><a href="../DEVELOPMENT/#NOTICE-on-block-mount-tests-in-minikube">NOTICE on block mount tests in minikube</a></li></ul><li><a href="../MANUAL_RECOVERY/#Manual-Recovery">Manual Recovery</a></li><li><a href="#CSI-LVM-Provisioner">CSI LVM Provisioner</a></li><ul><li><a href="#Overview">Overview</a></li><li><a href="#Compare-to-Local-Path-Provisioner">Compare to Local Path Provisioner</a></li><li><a href="#Requirement">Requirement</a></li><li><a href="#Deployment">Deployment</a></li><li><a href="#Usage">Usage</a></li><li><a href="#Configuration">Configuration</a></li><li><a href="#Uninstall">Uninstall</a></li><li><a href="#Page-Tree">Page Tree</a></li></ul></ul></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../metalctl/README/">« metalctl</a><a class="docs-footer-nextpage" href="../../firewall-controller/README/">firewall-controller »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 17 August 2020 13:43">Monday 17 August 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
