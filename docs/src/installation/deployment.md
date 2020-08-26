@@ -91,7 +91,7 @@ markdownTemplate(t, releaseVersion())
 
 As metal-stack consists of many microservices all having individual versions, we have come up with a [releases](https://github.com/metal-stack/releases) repository. It contains a YAML file (we often call it release vector) describing the fitting versions of all components for every release of metal-stack.
 
-Ansible role dependencies are also part of a metal-stack release. Therefore, we will now write up s playbook, which dynamically renders a `requirements.yaml` file from the ansible-roles defined in the release repository. The `requirements.yaml` can then be used to resolve the actual role dependencies through [Ansible Galaxy](https://galaxy.ansible.com/). Define the following playbook in `obtain_role_requirements.yaml`:
+Ansible role dependencies are also part of a metal-stack release. Therefore, we will now write up a playbook, which dynamically renders a `requirements.yaml` file from the ansible-roles defined in the release repository. The `requirements.yaml` can then be used to resolve the actual role dependencies through [Ansible Galaxy](https://galaxy.ansible.com/). Define the following playbook in `obtain_role_requirements.yaml`:
 
 ```yaml
 ---
