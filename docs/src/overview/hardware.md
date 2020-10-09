@@ -12,7 +12,7 @@ At the moment we support the following server types:
 | :--------- | :---------- | :--------------- |:-------|
 | Supermicro | Big-Twin    | SYS-2029BT-HNR   | stable |
 | Supermicro | SuperServer | SSG-5019D8-TR12P | stable |
-| Lenovo     | ThinkSystem | SD530            | devel  |
+| Lenovo     | ThinkSystem | SD530            | alpha  |
 
 ## Switches
 

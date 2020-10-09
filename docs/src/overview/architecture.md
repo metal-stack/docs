@@ -61,7 +61,7 @@ We strongly advise to group your hardware into racks that are specifically assem
 
     How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networking](networking.md) document.
 
-The metal-stack has microservices running on the leaf switches in a partition. For this reason, your leaf switches are required to run a Linux distribution that you have full access to. Additionally, there are a servers not added to the pool of user-allocatable machines, which are instead required for running metal-stack and we call them _management servers_. TODO: Explain management network, management firewall and _switch plane_.
+The metal-stack has microservices running on the leaf switches in a partition. For this reason, your leaf switches are required to run a Linux distribution that you have full access to. Additionally, there are a servers not added to the pool of user-allocatable machines, which are instead required for running metal-stack and we call them _management servers_. We also call the entirety of switches inside a partition the _switch plane_.
 
 The microservices running inside a partition are:
 

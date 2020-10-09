@@ -15,7 +15,7 @@ Depth = 5
 
 !!! warning
 
-    Probably you need to learn writing Ansible playbooks if you want to be able to deploy the metal-stack as presented in this documentation. Even when starting without any knowledge about Ansible it should not be too hard to follow these docs. In case you need further explanations regarding Ansible please refer to [docs.ansible.com](https://docs.ansible.com/).
+    Probably you need to learn writing Ansible playbooks if you want to be able to deploy the metal-stack as presented in this documentation. However, even when starting without any knowledge about Ansible it should be possible to follow these docs. In case you need further explanations regarding Ansible please refer to [docs.ansible.com](https://docs.ansible.com/).
 
 !!! info
 
@@ -47,32 +47,32 @@ And create the following files and folder structures:
 ├── ansible.cfg
 ├── deploy_metal_control_plane.yaml
 ├── files
-│   ├── certs
-│   │   ├── ca-config.json
-│   │   ├── ca-csr.json
-│   │   ├── metal-api-grpc
-│   │   │   ├── client.json
-│   │   │   ├── server.json
-│   │   ├── masterdata-api
-│   │   │   ├── client.json
-│   │   │   ├── server.json
-│   │   └── roll_certs.sh
-├── group_vars
-│   ├── all
-│   │   └── images.yaml
-│   └── control-plane
-│       ├── metal.yaml
-│       └── common.yaml
+│   └── certs
+│       ├── ca-config.json
+│       ├── ca-csr.json
+│       ├── metal-api-grpc
+│       │   ├── client.json
+│       │   ├── server.json
+│       ├── masterdata-api
+│       │   ├── client.json
+│       │   ├── server.json
+│       └── roll_certs.sh
 ├── inventories
-│   └── control-plane.yaml
-├── obtain_role_requirements.yaml
+│   ├── control-plane.yaml
+│   └── group_vars
+│       ├── all
+│       │   └── images.yaml
+│       └── control-plane
+│           ├── common.yaml
+│           └── metal.yml
+├── generate_role_requirements.yaml
 └── roles
     └── ingress-controller
         └── tasks
             └── main.yaml
 ```
 
-You can already define the `group_vars/all/images.yaml` file. It contains the metal-stack version you are gonna deploy:
+You can already define the `inventories/group_vars/all/images.yaml` file. It contains the metal-stack version you are gonna deploy:
 
 ````@eval
 using Docs
@@ -91,11 +91,11 @@ markdownTemplate(t, releaseVersion())
 
 As metal-stack consists of many microservices all having individual versions, we have come up with a [releases](https://github.com/metal-stack/releases) repository. It contains a YAML file (we often call it release vector) describing the fitting versions of all components for every release of metal-stack.
 
-Ansible role dependencies are also part of a metal-stack release. Therefore, we will now write up a playbook, which dynamically renders a `requirements.yaml` file from the ansible-roles defined in the release repository. The `requirements.yaml` can then be used to resolve the actual role dependencies through [Ansible Galaxy](https://galaxy.ansible.com/). Define the following playbook in `obtain_role_requirements.yaml`:
+Ansible role dependencies are also part of a metal-stack release. Therefore, we will now write up a playbook, which dynamically renders a `requirements.yaml` file from the ansible-roles defined in the release repository. The `requirements.yaml` can then be used to resolve the actual role dependencies through [Ansible Galaxy](https://galaxy.ansible.com/). Define the following playbook in `generate_role_requirements.yaml`:
 
 ```yaml
 ---
-- name: provide requirements.yaml
+- name: generate requirements.yaml
   hosts: control-plane
   connection: local
   gather_facts: false
@@ -119,11 +119,11 @@ Ansible role dependencies are also part of a metal-stack release. Therefore, we 
           {% endfor %}
 ```
 
-This playbook will always be run before the actual metal-stack deployment and provide you with the correct Ansible role dependencies.
+This playbook will always be run before the actual metal-stack deployment and provide you with the proper versions of the Ansible role dependencies.
 
 ### Inventory
 
-Then, there will be an inventory for the control plane deployment in `control-plane/inventory.yaml` that adds the localhost to the `control-plane` host group:
+Then, there will be an inventory for the control plane deployment in `inventories/control-plane.yaml` that adds the localhost to the `control-plane` host group:
 
 ```yaml
 ---
@@ -133,9 +133,9 @@ control-plane:
       ansible_python_interpreter: "{{ ansible_playbook_python }}"
 ```
 
-We do this since we are deploying to Kubernetes and do not need to SSH-connect to any hosts for the deployment (which is what Ansible typically does). This inventory is also necessary to pick up the variables inside `group_vars/control-plane` during the deployment.
+We do this since we are deploying to Kubernetes and do not need to SSH-connect to any hosts for the deployment (which is what Ansible typically does). This inventory is also necessary to pick up the variables inside `inventories/group_vars/control-plane` during the deployment.
 
-We also recommend using the following `ansible.cfg`:
+We recommend using the following `ansible.cfg`:
 
 ```ini
 [defaults]
@@ -200,9 +200,9 @@ Basically, this playbook does the following:
   - Deploying the postgres database for the masterdata-api (wrapped in a backup-restore-sidecar)
   - Applying the metal control plane helm chart
 
-### An ingress-controller
+### Setup an ingress-controller
 
-As a next step you have to add a task for deploying an ingress-controller into your cluster. [nginx-ingress](https://kubernetes.github.io/ingress-nginx/) is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use nginx-ingress, make sure to also deploy it to the default namespace ingress-nginx.
+As a next step you have to add a task for deploying an ingress-controller into your cluster. [nginx-ingress](https://kubernetes.github.io/ingress-nginx/) is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use ingress-nginx, make sure to also deploy it to the default namespace ingress-nginx.
 
 This is how your `roles/ingress-controller/tasks/main.yaml` could look like:
 
@@ -227,7 +227,7 @@ Now you can parametrize the referenced roles to fit your environment. The role p
 
 ```yaml
 ---
-metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also use <ingress-ip>.xip.io
+metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also start with <ingress-ip>.xip.io
 ```
 
 ### Providing Certificates
@@ -490,20 +490,20 @@ markdownTemplate(t, base_image)
 
 ### Providing Images
 
-After the deployment has finished (hopefully without any issues!), you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes and operating system images. You can do this by further parametrizing the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal). We will just add an operating system for demonstration purposes. Add the following variable to your `group_vars/control-plane/common.yaml`:
+After the deployment has finished (hopefully without any issues!), you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes and operating system images. You can do this by further parametrizing the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal). We will just add an operating system for demonstration purposes. Add the following variable to your `inventories/group_vars/control-plane/common.yaml`:
 
 ```
 metal_api_images:
-- id: firewall-ubuntu-2.0.20200824
-  name: Firewall 2 Ubuntu 20200824
-  description: Firewall 2 Ubuntu 20200824
-  url: http://images.metal-stack.io/metal-os/master/firewall/2.0-ubuntu/20200824/img.tar.lz4
+- id: firewall-ubuntu-2.0.20201004
+  name: Firewall 2 Ubuntu 20201004
+  description: Firewall 2 Ubuntu 20201004
+  url: http://images.metal-stack.io/metal-os/master/firewall/2.0-ubuntu/20201004/img.tar.lz4
   features:
     - firewall
-- id: ubuntu-20.04.20200824
-  name: Ubuntu 20.04 20200824
-  description: Ubuntu 20.04 20200824
-  url: http://images.metal-stack.io/metal-os/master/ubuntu/20.04/20200824/img.tar.lz4
+- id: ubuntu-20.04.20201004
+  name: Ubuntu 20.04 20201004
+  description: Ubuntu 20.04 20201004
+  url: http://images.metal-stack.io/metal-os/master/ubuntu/20.04/20201004/img.tar.lz4
   features:
     - machine
 ```
@@ -574,11 +574,17 @@ If you decided to set up a dex server, you can parametrize the [metal role](http
 
 ## Bootstrapping a Partition
 
+Documentation will follow soon. Please come to our Slack channel when you have come to this point and require any help.
+
 ## Partition Deployment
+
+Documentation will follow soon. Please come to our Slack channel when you have come to this point and require any help.
 
 ## Gardener with metal-stack
 
-If you want to deploy metal-stack as a cloud provider for [Gardener](https://gardener.cloud/), you should follow the regular Gardener installation instructions and setup a Gardener cluster first. You can find installation instructions in their [docs](https://gardener.cloud/about/). metal-stack is an out-of-tree provider and therefore you will not find example files for metal-stack resources in the Gardener repositories. The following list describes the resources and components that you need to deploy into the Gardener cluster in order to make Gardener work with metal-stack:
+If you want to deploy metal-stack as a cloud provider for [Gardener](https://gardener.cloud/), you should follow the regular Gardener installation instructions and setup a Gardener cluster first. It's perfectly fine to setup the Gardener cluster in the same cluster that you use for hosting metal-stack.
+
+You can find installation instructions for Gardener on the Gardener website beneath [docs](https://gardener.cloud/documentation/home/). metal-stack is an out-of-tree provider and therefore you will not find example files for metal-stack resources in the Gardener repositories. The following list describes the resources and components that you need to deploy into the Gardener cluster in order to make Gardener work with metal-stack:
 
 !!! warning
 
@@ -611,7 +617,7 @@ If you want to deploy metal-stack as a cloud provider for [Gardener](https://gar
               enabled: false
    ```
 1. For your seed cluster you will need to provide the provider secret for metal-stack containing the key `metalAPIHMac`, which is the API HMAC to grant editor access to the metal-api
-1. Checkout our current provider configuration for [infratructure](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/pkg/apis/metal/v1alpha1/types_infrastructure.go) and [control-plane](https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/pkg/apis/metal/v1alpha1/types_controlplane.go) before deploying your shoot
+1. Checkout our current provider configuration for [infrastructure](https://github.com/metal-stack/gardener-extension-provider-metal/blob/master/pkg/apis/metal/v1alpha1/types_infrastructure.go) and [control-plane](https://github.com/metal-stack/gardener-extension-provider-metal/blob/master/pkg/apis/metal/v1alpha1/types_controlplane.go) before deploying your shoot
 
 !!! tip
 

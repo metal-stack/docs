@@ -61,3 +61,7 @@ The project also contains a validator for metal-type Gardener resources, which y
 ### os-metal-extension
 
 Due to the reason we use ignition in our operating system images for userdata, we had to provide an own extension controller for metal-stack, which you can find at Github in the [os-metal-extension](https://github.com/metal-stack/os-metal-extension) repository.
+
+### machine-controller-manager-provider-metal
+
+Worker nodes are managed through Gardener's [machine-controller-manager](https://github.com/gardener/machine-controller-manager) (MCM). The MCM allows out-of-tree provider implementation via sidecar, which is what we implemented in the [machine-controller-manager-provider-metal](https://github.com/metal-stack/machine-controller-manager-provider-metal) repository.
