@@ -30,7 +30,7 @@ Firewalls that access shared networks need to:
 - import the prefixes of the shared VRF to the private VRF with the BGP attribute `no-export` so that flows to the shared network find their way out of the private VRF (but those prefixes are only of interest locally, they don't need to be propagated with BGP: `no-export` attribute)
 - import the prefixes of the private VRF to the shared VRF so that flows originating in the private VRF that were SNATted find their way back (but those prefixes are only of interest locally, they don't need to be propagated with BGP: `no-export` attribute)
 
-[Shared Networks](./shared.png)
+![Shared Networks](./shared.png)
 
 ## Getting internet acccess
 
