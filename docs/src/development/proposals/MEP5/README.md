@@ -18,7 +18,7 @@ They do not necessarily need another firewall. This would avoid having two firew
 
 ## Should shared networks be private
 
-If we implemented shared networks by extending functions around plain, old, private networks we would not have to manage another CIDR (mini point).
+If we implemented shared networks by extending functions around plain, old, private networks we would not have to manage another CIDR (mini point) and it would be possible to create a k8s cluster with a private network, mark the network as `shared` and produce shared services from this k8s cluster.
 
 If shared networks are implemented as first class networks we could customize the VRF and also accomplish an other goal of our roadmap: being able to create machines directly in an external network.
 
@@ -37,5 +37,5 @@ Firewalls that access shared networks need to:
 Machines contained in a shared network can access the internet with different scenarios:
 
 - if they have an own firewall: this is internet accessibility, as common
-- if they don't have an own firewall, an external HTTP proxy is needed that has an endpoint in the shared network (metal-ccm needs to allow services in shared networks)
+- if they don't have an own firewall, an external HTTP proxy is needed that has an endpoint in the shared network (metal-ccm ndeeds to allow services in shared networks)
 - if the shared network is "the internet", internet access is trivial because machines have a public address at their loopback interface
