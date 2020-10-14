@@ -15,7 +15,7 @@ They do not necessarily need another firewall. This would avoid having two firew
     - this might be a shared network
     - OR a plain, unshared private network
 - firewalls may participate in multiple shared networks
-- machines must be allocated with a primary network using auto IP allocation; additional static IPs might be specified as well
+- machines can be allocated with a primary network using auto IP allocation or with `noauto` and a specific IP
 
 ## Should shared networks be private
 
@@ -23,7 +23,7 @@ They do not necessarily need another firewall. This would avoid having two firew
 
 **Alternative 2:** If shared networks are implemented as first class networks we could customize the VRF and also accomplish an other goal of our roadmap: being able to create machines directly in an external network.
 
-Together with Stefan and Gerrit we decided to continue to implement  **Alternative 1**.
+Together with @majst01 and @Gerrit91 we decided to continue to implement  **Alternative 1**.
 
 ## Firewalls accessing a shared network
 
