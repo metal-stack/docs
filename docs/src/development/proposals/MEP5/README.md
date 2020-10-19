@@ -12,8 +12,8 @@ They do not necessarily need another firewall. This would avoid having two firew
 - networks may be marked as shared after network allocation (but there should be no way back from shared to unshared)
 - neither machines nor firewalls may have multiple private, unshared networks configured
 - machines must have a single primary network configured
-    - this might be a shared network
-    - OR a plain, unshared private network
+  - this might be a shared network
+  - OR a plain, unshared private network
 - firewalls may participate in multiple shared networks
 - machines can be allocated with a primary network using auto IP allocation or with `noauto` and a specific IP
 
@@ -29,9 +29,8 @@ Together with @majst01 and @Gerrit91 we decided to continue to implement  **Alte
 
 Firewalls that access shared networks need to:
 
-- hide the private network behind an ip address of the shared network, otherwise we would need to know the changing list of private networks in the shared network's VRF for having a route back.
-- import the prefixes of the shared VRF to the private VRF with the BGP attribute `no-export` so that flows to the shared network find their way out of the private VRF (but those prefixes are only of interest locally, they don't need to be propagated with BGP: `no-export` attribute)
-- import the prefixes of the private VRF to the shared VRF so that flows originating in the private VRF that were SNATted find their way back
+- hide the private network behind an ip address of the shared network if the shared network was configured with `nat=true`.
+- import the prefixes of the shared VRF to the private VRF and import the prefixes of the private VRF to the shared VRF so that the communication between the two is working in both directions. As long as no `nat=true` was set on the shared VRF, the original machine ips are visible in both communication directions.
 
 ## Setup with shared networks and single consumer
 
