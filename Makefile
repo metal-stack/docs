@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-RELEASE_VERSION := $(or ${RELEASE_VERSION},"v0.2.1")
+RELEASE_VERSION := $(or ${RELEASE_VERSION},"v0.3.0")
 
 ifeq ($(CI),true)
 DOCKER_TTY_ARG=
