@@ -1,5 +1,5 @@
 ---
-name: Devel Documentation
+name: Deploy Documentation
 
 on:
   push:
@@ -24,3 +24,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: julia --color=yes --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.resolve(); include("docs/make.jl")'
+
