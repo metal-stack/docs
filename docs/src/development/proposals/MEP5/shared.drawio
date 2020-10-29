@@ -1,6 +1,6 @@
-<mxfile host="65bd71144e" modified="2020-10-14T08:04:30.991Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.2 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="g4T9KfFrwBPo7GdMOJUP" version="13.6.5">
+<mxfile host="65bd71144e" modified="2020-10-19T11:30:15.865Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.50.1 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="QdRCkx7VyLAVlk2yTqH8" version="13.6.5">
     <diagram id="U_yS-JqjanbA2Suw0eFM" name="Page-1">
-        <mxGraphModel dx="1058" dy="705" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="367" dy="248" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -82,8 +82,8 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="24" value="SNAT&lt;br&gt;10.0.0.0/24 to 10.0.99.3" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=10;" parent="1" vertex="1">
-                    <mxGeometry x="326" y="381" width="120" height="30" as="geometry"/>
+                <mxCell id="24" value="no NAT&lt;br&gt;&lt;br&gt;SNAT if nat=true in shared network&lt;br&gt;10.0.0.0/24 to 10.0.99.3" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="301" y="360" width="170" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="26" value="" style="endArrow=classic;startArrow=none;html=1;endFill=1;startFill=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="27" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -91,7 +91,7 @@
                         <mxPoint x="436" y="288" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="27" value="&lt;span style=&quot;color: rgb(0 , 0 , 0) ; font-family: &amp;#34;helvetica&amp;#34; ; font-size: 7.2px ; font-style: normal ; font-weight: 400 ; letter-spacing: normal ; text-align: center ; text-indent: 0px ; text-transform: none ; word-spacing: 0px ; background-color: rgb(255 , 255 , 255) ; display: inline ; float: none&quot;&gt;import 10.99.0.0/24 no-export&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                <mxCell id="27" value="&lt;span style=&quot;color: rgb(0 , 0 , 0) ; font-family: &amp;#34;helvetica&amp;#34; ; font-size: 7.2px ; font-style: normal ; font-weight: 400 ; letter-spacing: normal ; text-align: center ; text-indent: 0px ; text-transform: none ; word-spacing: 0px ; background-color: rgb(255 , 255 , 255) ; display: inline ; float: none&quot;&gt;import 10.99.0.0/24&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="326" y="267" width="100" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="28" value="" style="endArrow=none;startArrow=classic;html=1;endFill=0;startFill=1;" parent="1" edge="1">
@@ -111,6 +111,9 @@
                 </mxCell>
                 <mxCell id="31" value="Shared VRF B" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#82b366;dashed=1;dashPattern=1 4;fillColor=#EAFFE9;fontColor=#666666;" parent="1" vertex="1">
                     <mxGeometry x="120" y="490" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="&lt;font style=&quot;font-size: 10px&quot;&gt;no-export in both directions if nat=true in shared-network&lt;/font&gt;" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+                    <mxGeometry x="325" y="190" width="120" height="80" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
