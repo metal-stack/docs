@@ -97,7 +97,7 @@ deploy-control-plane |
 deploy-control-plane exited with code 2
 ```
 
-Some home routers has a security feature that prevents DNS Servers to resolve anything in the routers local IP Range (DNS-Rebind-Protection).
+Some home routers have a security feature that prevents DNS Servers to resolve anything in the router's local IP range (DNS-Rebind-Protection).
 You need to add an exception for `xip.io` in your router configuration.
 
 #### FritzBox
