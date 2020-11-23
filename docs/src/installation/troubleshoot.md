@@ -76,3 +76,30 @@ $ python3 -c 'import pickle; print(pickle.load(open(".ansible_vagrant_cache", "r
 192.168.121.25
 $ ssh vagrant@192.168.121.25 # password is vagrant
 ```
+
+### In the mini-lab the control-plane deployment fails because my system can't resolve api.0.0.0.0.xip.io
+
+The control-plane returns an error like this:
+
+```
+deploy-control-plane | fatal: [localhost]: FAILED! => changed=false
+deploy-control-plane |   attempts: 60
+deploy-control-plane |   content: ''
+deploy-control-plane |   elapsed: 0                                                                   
+deploy-control-plane |   msg: 'Status code was -1 and not [200]: Request failed: <urlopen error [Errno -5] No address associated with hostname>'
+deploy-control-plane |   redirected: false
+deploy-control-plane |   status: -1                                                                                                                                       
+deploy-control-plane |   url: http://api.0.0.0.0.xip.io:8080/metal/v1/health
+deploy-control-plane |                                                                                                            
+deploy-control-plane | PLAY RECAP *********************************************************************                                                                          
+deploy-control-plane | localhost                  : ok=29   changed=4    unreachable=0    failed=1    skipped=7    rescued=0    ignored=0                      
+deploy-control-plane |                                                                                                                                                                                             
+deploy-control-plane exited with code 2
+```
+
+Some home routers has a security feature that prevents DNS Servers to resolve anything in the routers local IP Range (DNS-Rebind-Protection).
+You need to add an exception for `xip.io` in your router configuration.
+
+#### FritzBox
+
+`Home Network -> Network -> Network Settings -> Additional Settings -> Host name exceptions -> xip.io`
