@@ -79,7 +79,7 @@ $ ssh vagrant@192.168.121.25 # password is vagrant
 
 ### In the mini-lab the control-plane deployment fails because my system can't resolve api.0.0.0.0.xip.io
 
-The control-plane returns an error like this:
+The control-plane deployment returns an error like this:
 
 ```
 deploy-control-plane | fatal: [localhost]: FAILED! => changed=false
