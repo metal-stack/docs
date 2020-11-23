@@ -102,4 +102,4 @@ You need to add an exception for `xip.io` in your router configuration.
 
 #### FritzBox
 
-`Home Network -> Network -> Network Settings -> Additional Settings -> Host name exceptions -> xip.io`
+`Home Network -> Network -> Network Settings -> Additional Settings -> DNS Rebind Protection -> Host name exceptions -> xip.io`
