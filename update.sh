@@ -36,7 +36,11 @@ echo "Updating external repositories"
 update_repo "docs/src/external/csi-lvm" "https://github.com/metal-stack/csi-lvm.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.kubernetes.csi-lvm-controller.tag')
 update_repo "docs/src/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" $(yq r /tmp/release.yaml 'projects.metal-stack.mini-lab.version')
 update_repo "docs/src/external/metalctl" "https://github.com/metal-stack/metalctl.git" $(yq r /tmp/release.yaml 'binaries.metal-stack.metalctl.version')
-update_repo "docs/src/external/firewall-controller" "https://github.com/metal-stack/firewall-controller.git" $(yq r /tmp/release.yaml 'docker-images.metal-stack.gardener.firewall-controller.tag')
+
+# TODO: For next release enable:
+# echo "Getting GEPM image vector"
+# curl -Lo /tmp/gepm-images.yaml "https://raw.githubusercontent.com/metal-stack/gardener-extension-provider-metal/$(yq r /tmp/release.yaml 'docker-images.metal-stack.gardener.gardener-extension-provider-metal.tag')/charts/images.yaml"
+# update_repo "docs/src/external/firewall-controller" "https://github.com/metal-stack/firewall-controller.git" $(yq r /tmp/gepm-images.yaml 'images.(name==firewall-controller).tag')
 
 echo "Special handling"
 # in metalctl/docs the generated do not start with a top-level heading (#) but with a sub-heading (##)
