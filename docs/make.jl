@@ -25,6 +25,7 @@ makedocs(
             "Hardware Support" => "overview/hardware.md",
             "Operating Systems" => "overview/os.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
+            "Storage" => "overview/storage.md",
         ],
         "Quickstart" => "quickstart.md",
         "Installation & Maintenance" => Any[
