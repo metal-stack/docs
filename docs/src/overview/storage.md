@@ -1,8 +1,8 @@
 # Storage
 
-When working with bare-metal servers, providing cloud storage is a challenge. With physical machines there is no opportunity that a hypervisor can mount storage devices into the servers and thus, we have to implement other mechanisms that are capable of dynamically mounting redundant storage onto the machines.
+When working with bare-metal servers, providing cloud storage is a challenge. With physical machines there is no opportunity that a hypervisor can mount storage devices into the servers and thus, we have to implement other mechanisms that are capable of dynamically mounting storage onto the machines.
 
-In the meantime, we have started to integrate third-party solutions into our metal-stack landscape. They help us to provide well-integrated, scalable storage solutions to our end-users.
+In the meantime, we have started to integrate third-party solutions into our metal-stack landscape. They help us to provide redundant, well-integrated and scalable storage solutions to our end-users.
 
 ```@contents
 Pages = ["persistent_storage.md"]
