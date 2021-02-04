@@ -25,4 +25,20 @@ With the integration in place, the extension-provider deploys a [duros-controlle
 
 If you wish to quickly start off with cluster provisioning without caring so much about complex cloud storage solutions, we recommend using a small storage driver we wrote called [csi-driver-lvm](https://github.com/metal-stack/csi-driver-lvm). It provides a storage class that manages node-local storage through [LVM](https://en.wikipedia.org/wiki/Logical_Volume_Manager_(Linux)).
 
-The solution does not provide cloud-storage or whatsoever, but it improves the user's accessibility of local storage on bare-metal machines through Kubernetes. Check out the driver's documentation [here](../external/csi-lvm).
+A definition of a PVC can look like this:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: csi-lvm-sc-linear
+```
+
+The solution does not provide cloud-storage or whatsoever, but it improves the user's accessibility of local storage on bare-metal machines through Kubernetes. Check out the driver's documentation [here](../external/csi-driver-lvm).
