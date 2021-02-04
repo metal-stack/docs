@@ -33,7 +33,6 @@ We incorporate community feedback into the roadmap. If you think that important 
 - metal-stack dashboard (UI)
 - Offer our metal-stack extensions as enterprise products (accounting, cluster-api, S3) (neither of them will ever be required for running metal-stack, they just add extra value for certain enterprises)
 - Partition managed by Kubernetes (with Kubelets joining the control plane cluster)
-- Persistent storage solution for metal-stack partitions
 - Public offering / demo playground
 - Resource scoping in the metal-api (MEP-4)
 - Service / API tokens (for scoped technical user access)

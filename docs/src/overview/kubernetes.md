@@ -15,27 +15,6 @@ CCM stands for [cloud-controller-manager](https://kubernetes.io/docs/concepts/ar
 
 We implemented the [cloud provider interface](https://github.com/kubernetes/cloud-provider/blob/master/cloud.go) in the [metal-ccm](https://github.com/metal-stack/metal-ccm) repository. With the help of the cloud-controller-controller we provide metal-stack-specific properties for Kubernetes clusters, e.g. load balancer configuration through MetalLB or node properties.
 
-## csi-lvm
-
-When dealing with local storage, it can be pretty useful not to write directly on to the host system using hostpath. Instead, we wrote a storage plugin that enables your pods to write to logical volumes. A definition of a PVC can look like this:
-
-```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: lvm-pvc
-  namespace: default
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: csi-lvm
-  resources:
-    requests:
-      storage: 50Mi
-```
-
-Checkout the csi-lvm repository [here](https://github.com/metal-stack/csi-lvm) for more details or follow the [guide](../external/csi-lvm/README.md).
-
 ## firewall-controller
 
 To make the firewalls created with metal-stack easily configurable through Kubernetes resources, we add our [firewall-controller](https://github.com/metal-stack/firewall-controller) to the firewall image. The controller watches special CRDs, enabling users to manage:

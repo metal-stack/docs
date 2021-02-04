@@ -25,6 +25,7 @@ makedocs(
             "Hardware Support" => "overview/hardware.md",
             "Operating Systems" => "overview/os.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
+            "Storage" => "overview/storage.md",
         ],
         "Quickstart" => "quickstart.md",
         "Installation & Maintenance" => Any[
@@ -35,7 +36,7 @@ makedocs(
         "User Guides" => Any[
             "mini-lab" => "external/mini-lab/README.md",
             "metalctl" => "external/metalctl/README.md",
-            "csi-lvm" => "external/csi-lvm/README.md",
+            "csi-driver-lvm" => "external/csi-driver-lvm/README.md",
             "firewall-controller" => "external/firewall-controller/README.md",
         ],
         "API Documentation" => "apidocs/apidocs.md",
