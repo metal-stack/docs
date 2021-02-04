@@ -36,7 +36,7 @@ makedocs(
         "User Guides" => Any[
             "mini-lab" => "external/mini-lab/README.md",
             "metalctl" => "external/metalctl/README.md",
-            "csi-lvm" => "external/csi-lvm/README.md",
+            "csi-driver-lvm" => "external/csi-driver-lvm/README.md",
             "firewall-controller" => "external/firewall-controller/README.md",
         ],
         "API Documentation" => "apidocs/apidocs.md",
