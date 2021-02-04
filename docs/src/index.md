@@ -1,19 +1,43 @@
-# Introduction
+# Welcome to the metal-stack docs!
 
-metal-stack is a software that provides an API for provisioning and managing physical servers in the data center. To categorize this product, we commonly use the terms _Metal-as-a-Service (MaaS)_ or _bare metal cloud_.
+metal-stack is a open source software that provides an API for provisioning and managing physical servers in the data center. To categorize this product, we use the terms _Metal-as-a-Service (MaaS)_ or _bare metal cloud_.
 
-From the perspective of a user, the metal-stack does not feel different from working with any other cloud provider. Users manage their resources (machines, networks and ip addresses, etc.) by themselves, turning your data center into an elastic cloud infrastructure. The major difference to other cloud providers is that compute power and data reside in your own data center.
+From the perspective of a user, the metal-stack does not feel any different from working with a conventional cloud provider. Users manage their resources (machines, networks and ip addresses, etc.) by themselves, which effectively turns your data center into an elastic cloud infrastructure.
+
+The major difference to other cloud providers is that compute power and data reside in your own data center.
 
 ```@contents
 Pages = ["index.md"]
 Depth = 5
 ```
 
-## Key Characteristics
+## Releases
+
+````@eval
+using Docs
+
+version = releaseVersion()
+
+t = raw"""
+Your are currently reading the documentation for the metal-stack `%s` release.
+"""
+
+markdownTemplate(t, version)
+````
+
+Releases and integration tests are published through our [release repository](https://github.com/metal-stack/releases). You can also find the [release notes](https://github.com/metal-stack/releases/releases) for this metal-stack version in there. The release notes contain information about new features, upgrade paths and bug fixes.
+
+If you want, you can sign up at our Slack channel where we are announcing every new release. Often, we provide additional information for metal-stack administrators and adopters at this place, too.
+
+## Why metal-stack?
+
+Before we started with our mission to implement the metal-stack, we decided on a couple of key characteristics and constraints that we think are unique in the domain (otherwise we would definitely have chosen an existing solution).
+
+We hope that the following properties appeal to you as well.
 
 ### On-Premise
 
-Running on-premise gives you data sovereignty and usually a better price/performance ratio than with hyperscalers (especially the larger your environment gets). Another benefit of running on-premise is an easier connectivity to existing company networks.
+Running on-premise gives you data sovereignty and usually a better price / performance ratio than with hyperscalers — especially the larger you grow your environment. Another benefit of running on-premise is an easier connectivity to existing company networks.
 
 ### Fast Provisioning
 
@@ -37,7 +61,7 @@ Not only does the metal-stack run smoothly on [Kubernetes](https://kubernetes.io
 
 From the perspective of the Gardener, the metal-stack is just another cloud provider. The time savings compared to providing machines and Kubernetes by hand are significant. We actually want to be able to compete with offers of public cloud providers, especially regarding speed and usability.
 
-Of course, you can use metal-stack only for machine provisioning as well and just put something else on top of the metal infrastructure.
+Of course, you can use metal-stack only for machine provisioning as well and just put something else on top of your metal infrastructure.
 
 ### Open Source
 
@@ -45,7 +69,7 @@ The metal-stack is open source and free of constraints regarding vendors and thi
 
 ## Why Bare Metal?
 
-Bare metal has several advantages over virtual environments and overcomes several drawbacks of virtual machines.
+Bare metal has several advantages over virtual environments and overcomes several drawbacks of virtual machines. We also listed drawbacks of the bare metal approach. Bare in mind though that it is still possible to virtualize on bare metal environments when you have your stack up and running.
 
 ### Virtual Environment Drawbacks
 
@@ -57,7 +81,7 @@ Bare metal has several advantages over virtual environments and overcomes severa
 ### Bare Metal Advantages
 
 - Guaranteed and fastest possible performance (especially disk i/o)
-- Reduced stack depth (Host ➡️ VM ➡️ Application vs. Host ➡️ Container)
+- Reduced stack depth (Host / VM / Application vs. Host / Container)
   - Reduced attack surface
   - Lower costs, higher performance
   - No VM live-migrations
@@ -67,7 +91,3 @@ Bare metal has several advantages over virtual environments and overcomes severa
 
 - Hardware defects have direct impact (should be considered by design) and can not be mitigated by live-migration as in virtual environments
 - Capacity planning is more difficult (no resource overbooking possible)
-
-### Conclusion
-
-In the end, we have come to the conclusion that most of the drawbacks of bare metal machines can be mitigated best when running K8s on the machines. K8s will take care of high-availability in case of hardware failures and also supervises machine resources. We are certain that the chosen approach can satisfy the needs of the future users to a higher degree than virtual machines could do.

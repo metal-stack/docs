@@ -28,7 +28,7 @@ makedocs(
             "Storage" => "overview/storage.md",
         ],
         "Quickstart" => "quickstart.md",
-        "Installation & Maintenance" => Any[
+        "Installation & Administration" => Any[
             "Installation" => "installation/deployment.md",
             "Monitoring" => "installation/monitoring.md",
             "Troubleshoot" => "installation/troubleshoot.md",

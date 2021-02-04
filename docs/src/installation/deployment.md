@@ -31,7 +31,7 @@ The metal control plane is typically deployed in a Kubernetes cluster. Therefore
 
 !!! tip
 
-    For metal-stack it does not matter where your control plane Kubernetes cluster is located. You can of course use a cluster managed by a hyperscaler. This has the advantage of not having to setup a Kubernetes by yourself and could even become beneficial in terms of fail-safe operation. The only requirement from metal-stack is that your partitions can establish network connections to the metal control plane.
+    For metal-stack it does not matter where your control plane Kubernetes cluster is located. You can of course use a cluster managed by a hyperscaler. This has the advantage of not having to setup Kubernetes by yourself and could even become beneficial in terms of fail-safe operation. The only requirement from metal-stack is that your partitions can establish network connections to the metal control plane. If you are interested, you can find a reasoning behind this deployment decision [here](../overview/architecture.md#Target-Deployment-Platforms).
 
 Let's start off with a fresh folder for your deployment:
 
@@ -40,7 +40,7 @@ mkdir -p metal-stack-deployment
 cd metal-stack-deployment
 ```
 
-And create the following files and folder structures:
+At the end of this section we are gonna end up with the following files and folder structures:
 
 ```
 .
@@ -508,7 +508,7 @@ metal_api_images:
     - machine
 ```
 
-Then, re-run the deployment.
+Then, re-run the deployment to apply your changes. Our playbooks are idempotent.
 
 !!! info
 

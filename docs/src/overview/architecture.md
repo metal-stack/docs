@@ -9,9 +9,25 @@ Pages = ["architecture.md"]
 Depth = 5
 ```
 
+## Target Deployment Platforms
+
+For our environments, we chose to deploy the metal-stack into a Kubernetes cluster. This means that also our entire installation was developed for being run on Kubernetes. Running applications on Kubernetes gives you a lot of benefits regarding ease-of-deployment, scalability, reliability and so on.
+
+However, very early we decided that we do not want to depend on technical Kubernetes functionality with our software (i.e. we did not implement the stack "kube-native" by using controllers and Kubernetes CRDs and things like that). With the following paragraph we want to point out the reasoning behind this "philosophical" decision that may sound conservative at first glance. But not relying on Kubernetes technology:
+
+- Makes deployments of the stack without Kubernetes theoretically possible.
+  - We believe that cloud providers should be able to act beneath Kubernetes
+  - This way it is possible to use metal-stack for providing your own Kubernetes offering without relying on Kubernetes yourself (breaks the chicken-egg problem)
+- Follows an important claim in microservice development: "Be agnostic to your choice of technology"
+  - For applications that are purely made for being run on Kubernetes, it does not matter to rely on this technology (we even do the same a lot with our applications that integrate the metal-stack with Gardener) but as soon as you start using things like the underlying reconciliation abilities (which admittedly are fanstatic) you are locking your code into a certain technology
+  - We don't know what comes after Kubernetes but we believe that a cloud offering should have the potential to survive a choice of technology
+  - By this decision we ensured that we can migrate the stack to another future technology and survive the change
+
+One more word towards determining the location for your metal control plane: It is not strictly required to run the control plane inside the same data center as your servers. It even makes sense not to do so because this way you can place your control plane and your servers into a different failure domains, which makes your installation more robust to data center meltdown. Externally hosting the control plane brings you up and running quickly plus having the advantage of higher security.
+
 ## Metal Control Plane
 
-The foundation of the metal-stack is what we call the _metal control plane_. The metal control plane is typically deployed in a Kubernetes cluster and is not strictly required to run inside your data center. It even makes sense not to place the metal control plane in the same failure domain with your servers that you are going to manage with the metal-stack. The control plane does not depend on Kubernetes functionality, such that deployments to other target platforms are theoretically possible.
+The foundation of the metal-stack is what we call the _metal control plane_.
 
 The control plane contains of a couple of essential microservices for the metal-stack including:
 
