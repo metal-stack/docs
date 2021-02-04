@@ -23,7 +23,7 @@ However, very early we decided that we do not want to depend on technical Kubern
   - We don't know what comes after Kubernetes but we believe that a cloud offering should have the potential to survive a choice of technology
   - By this decision we ensured that we can migrate the stack to another future technology and survive the change
 
-One more word towards determining the location for your metal control plane: It is not strictly required to run the control plane inside the same data center as your servers. It even makes sense not to do so because this way you can place your control plane and your servers into a different failure domains, which makes your installation more robust to data center meltdown. Externally hosting the control plane brings you up and running quickly plus having the advantage of higher security.
+One more word towards determining the location for your metal control plane: It is not strictly required to run the control plane inside the same data center as your servers. It even makes sense not to do so because this way you can place your control plane and your servers into a different failure domains, which makes your installation more robust to data center meltdown. Externally hosting the control plane brings you up and running quickly plus having the advantage of higher security through geo-distribution.
 
 ## Metal Control Plane
 
