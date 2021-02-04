@@ -11,7 +11,7 @@ Depth = 5
 
 ## Target Deployment Platforms
 
-For our environments, we chose to deploy the metal-stack into a Kubernetes cluster. This means that also our entire installation was developed for being run on Kubernetes. Running applications on Kubernetes gives you a lot of benefits regarding ease-of-deployment, scalability, reliability and so on.
+For our environments, we chose to deploy the metal-stack into a Kubernetes cluster. This means that also our entire installation was developed for metal-stack being run on Kubernetes. Running applications on Kubernetes gives you a lot of benefits regarding ease-of-deployment, scalability, reliability and so on.
 
 However, very early we decided that we do not want to depend on technical Kubernetes functionality with our software (i.e. we did not implement the stack "kube-native" by using controllers and Kubernetes CRDs and things like that). With the following paragraph we want to point out the reasoning behind this "philosophical" decision that may sound conservative at first glance. But not relying on Kubernetes technology:
 
