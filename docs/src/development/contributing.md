@@ -62,7 +62,7 @@ Docker images are published on Docker Hub using the [metalstack](https://hub.doc
 
 Binary artifacts or images are uploaded to GKE buckets.
 
-When building Docker images, please consider our build tool [docker-make](https://github.com/fi-ts/docker-make) or the specific [docker-make action](https://github.com/metal-stack/action-docker-make) respectively.
+When building Docker images, please consider our build tool [docker-make](https://github.com/fi-ts/docker-make) or the specific [docker-make action](https://github.com/fi-ts/action-docker-make) respectively.
 
 ### APIs
 
