@@ -24,7 +24,7 @@ We incorporate community feedback into the roadmap. If you think that important 
 
     By no means this list is a promise of what is being worked on in the near future. It is just a summary of ideas that was agreed on to be "nice to have". It is up to the investors, maintainers and the community to choose topics from this list and to implement them or to remove them from the list.
 
-- Add metal-stack to [Gardener conformance test grid](https://gardener.cloud/about/#k8s-conformance-test-coverage)
+- Add metal-stack to [Gardener conformance test grid](https://testgrid.k8s.io/gardener-all)
 - Autoscaler for metal control plane components
 - CI dashboard and public integration testing
 - Cilium as the default CNI for metal-stack on Gardener K8s clusters
