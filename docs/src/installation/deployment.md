@@ -628,7 +628,7 @@ After the gitlab CI runner has been installed, you can trigger your Playbooks fr
 ### Management Spines
 
 The purpose of these switches is to connect the management interfaces of all switches to the management servers. The management spine's own management interface is connected to the management firewall for the bootstraping of the management spine itself. The management firewall will provide a DHCP address and DHCP options to start Cumulus' [Zero Touch Provisioning](https://docs.cumulusnetworks.com/cumulus-linux-42/Installation-Management/Zero-Touch-Provisioning-ZTP/); the images for all switches are downloaded from the management server (minio/webserver).
-Each management leaf is connected to both management spines to provide redundant connectivity to both management servers. BGP is used as a routing protocol so that, when a link goes down, an alternate path is used.
+Each management leaf is connected to both management spines to provide redundant connectivity to both management servers. BGP is used as a routing protocol such that, when a link goes down, an alternate path is used.
 In the picture above you can see that there are also switch management interfaces connected to the management spine. This has to be done so that we can bootstrap these switches; the management spine relays the DHCP requests from these switches to the management servers so that they are able to ONIE boot and get their ZTP scripts.
 
 ### Management Leaves
