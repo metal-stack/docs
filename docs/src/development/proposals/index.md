@@ -12,14 +12,15 @@ Possible states are:
 - `Accepted`
 - `Declined`
 - `In Progress`
+- `Paused`
 - `Completed`
 
 Once a proposal was accepted, an issue should be raised and the implementation should be done in a separate PR.
 
-| Name                              | Description                                    |      State      | Issue | PR  |
-|:--------------------------------- |:---------------------------------------------- |:---------------:|:-----:|:---:|
-| [MEP-1](MEP1/README.md) | Distributed Control Plane Deployment           | `In Discussion` |  N/A  | N/A |
-| [MEP-2](MEP2/README.md) | Two Factor Authentication                      |  `In Progress`  |  N/A  | N/A |
-| [MEP-3](MEP3/README.md) | Machine Re-Installation to preserve local data |   `Completed`   |  N/A  | N/A |
-| [MEP-4](MEP4/README.md) | Multi-tenancy for the metal-api                |   `In Progress`    |  N/A  | N/A |
-| [MEP-5](MEP5/README.md) | Shared Networks                                |   `Completed`    |  N/A  | N/A |
+| Name                    | Description                                    |      State      |
+|:----------------------- |:---------------------------------------------- |:---------------:|
+| [MEP-1](MEP1/README.md) | Distributed Control Plane Deployment           | `In Discussion` |
+| [MEP-2](MEP2/README.md) | Two Factor Authentication                      |    `Paused`     |
+| [MEP-3](MEP3/README.md) | Machine Re-Installation to preserve local data |   `Completed`   |
+| [MEP-4](MEP4/README.md) | Multi-tenancy for the metal-api                |  `In Progress`  |
+| [MEP-5](MEP5/README.md) | Shared Networks                                |   `Completed`   |
