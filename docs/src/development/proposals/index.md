@@ -21,5 +21,5 @@ Once a proposal was accepted, an issue should be raised and the implementation s
 | [MEP-1](MEP1/README.md) | Distributed Control Plane Deployment           | `In Discussion` |  N/A  | N/A |
 | [MEP-2](MEP2/README.md) | Two Factor Authentication                      |  `In Progress`  |  N/A  | N/A |
 | [MEP-3](MEP3/README.md) | Machine Re-Installation to preserve local data |   `Completed`   |  N/A  | N/A |
-| [MEP-4](MEP4/README.md) | Multi-tenancy for the metal-api                |   `Accepted`    |  N/A  | N/A |
+| [MEP-4](MEP4/README.md) | Multi-tenancy for the metal-api                |   `In Progress`    |  N/A  | N/A |
 | [MEP-5](MEP5/README.md) | Shared Networks                                |   `Completed`    |  N/A  | N/A |
