@@ -108,3 +108,4 @@ The firewall of application workloads intersects its private network for attache
    - import the DMZ network to the internet network and adjusting NAT rules (DMZ Firewall)
    - import destination prefixes of the DMZ network to the private primary network (DMZ Firewall, Application Firewall)
    - import DMZ-IPs of the private primary network to the DMZ network (DMZ Firewall, Application Firewall)
+- `gardener-extension-provider-metal` needs to be able to delete DMZ clusters (but skip the network deletion part)
