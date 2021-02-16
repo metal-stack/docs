@@ -102,10 +102,15 @@ The firewall of application workloads intersects its private network for attache
 
 ## Code Changes
 
-- metal-networker and metal-ccm assume that there is only one network providing the default-route
-- metal-networker needs to
+- `metal-networker` and `metal-ccm` assume that there is only one network providing the default-route
+- `metal-networker` needs to
    - import the default route from the internet network to the dmz network (DMZ Firewall)
    - import the DMZ network to the internet network and adjusting NAT rules (DMZ Firewall)
    - import destination prefixes of the DMZ network to the private primary network (DMZ Firewall, Application Firewall)
    - import DMZ-IPs of the private primary network to the DMZ network (DMZ Firewall, Application Firewall)
-- `gardener-extension-provider-metal` needs to be able to delete DMZ clusters (but skip the network deletion part)
+- `metal-api`: destination prefixes of private networks need to be configurable (`allocateNetwork`, `updateNetwork`)
+- `gardener-extension-provider-metal`: needs to be able to delete DMZ clusters (but skip the network deletion part)
+
+## Decision
+
+We decided to follow the second approach with private DMZ networks.
