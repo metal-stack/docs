@@ -81,7 +81,7 @@ privatesuper: false
 projectid: ""
 vrf: 4711
 vrfshared: false
-nat: false
+nat: true
 shared: true # it's usable from multiple projects
 underlay: false
 ```
@@ -100,7 +100,7 @@ The firewall of the DMZ will intersect its private network for attached machines
 
 The firewall of application workloads intersects its private network for attached machines and the DMZ network. 
 
-## Code Changes
+## Code Changes / Implications
 
 - `metal-networker` and `metal-ccm` assume that there is only one network providing the default-route
 - `metal-networker` needs to
@@ -108,8 +108,9 @@ The firewall of application workloads intersects its private network for attache
    - import the DMZ network to the internet network and adjusting NAT rules (DMZ Firewall)
    - import destination prefixes of the DMZ network to the private primary network (DMZ Firewall, Application Firewall)
    - import DMZ-IPs of the private primary network to the DMZ network (DMZ Firewall, Application Firewall)
-- `metal-api`: destination prefixes of private networks need to be configurable (`allocateNetwork`, `updateNetwork`)
+- `metal-api`: destination prefixes of private networks need to be configurable (`allocateNetwork`)
 - `gardener-extension-provider-metal`: needs to be able to delete DMZ clusters (but skip the network deletion part)
+- the application firewall is not publicly reachable - for debugging purposes a hop over the DMZ firewall is needed
 
 ## Decision
 
