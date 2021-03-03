@@ -50,7 +50,7 @@ The firewall of the DMZ will intersect its private network for attached machines
    - the default route from the internet network
    - the DMZ network
 - The internet network must import the DMZ network
-- The DMZ network provides the default route for a tenant's clusters in a partition. It imports the default route from the internet network
+- The DMZ network provides the default route for tenant's clusters in a partition. It imports the default route from the internet network
 
 ### Application Firewall
 
@@ -94,7 +94,7 @@ The firewall of the DMZ will intersect its private network for attached machines
    - the default route from the internet network
    - the DMZ network
 - The internet network must import the DMZ network (only locally, no-export)
-- The DMZ network provides the default route for a tenant's clusters in a partition. It imports the default route from the internet network
+- The DMZ network provides the default route for tenant's clusters in a partition. It imports the default route from the internet network
 
 ### Application Firewall
 
