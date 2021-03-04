@@ -605,15 +605,9 @@ The Edgerouters has to fulfill some requirements including:
 
 - provide and restrict access to the Out-Of-Band-Network from the internet with a firewall ruleset
 - provide destination NAT to the management server and its IPMI interface
-<<<<<<< HEAD
 - provide onieboot and ztp via DHCP options for the management spine
 - provide DHCP management addresses for management spine, management server and ipmi interface of the management server
 - Hairpin-NAT for the management server to access itself via its puplic IP, needed by the gitlab-runner to delegate CI-Jobs.
-=======
-- provide onieboot and ztp via dhcp options for the management spine
-- provide dhcp management addresses for management spine, management server and ipmi interface of the management server
-- Hairpin-NAT for the management server to access itself via its puplic IP, needed by the CI runner to delegate CI jobs.
->>>>>>> c534fe61a79e2110fe8a96614c581e8cbaa8b719
 - propagate a default gateway via BGP
 
 ### Management Servers
@@ -632,6 +626,10 @@ After the gitlab CI runner has been installed, you can trigger your Playbooks fr
 - DHCP addresses for switches
 
 ### Management Spines
+
+!!! tip
+
+    If you are using Cumulus switches, you should make use of Zero Touch Provisioning and Onie Boot
 
 The purpose of these switches is to connect the management interfaces of all switches to the management servers. The management spine's own management interface is connected to the management firewall for the bootstraping of the management spine itself. The management firewall will provide a DHCP address and DHCP options to start Cumulus' [Zero Touch Provisioning](https://docs.cumulusnetworks.com/cumulus-linux-42/Installation-Management/Zero-Touch-Provisioning-ZTP/); the images for all switches are downloaded from the management server (minio/webserver).
 Each management leaf is connected to both management spines to provide redundant connectivity to both management servers. BGP is used as a routing protocol such that, when a link goes down, an alternate path is used.
