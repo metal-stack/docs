@@ -600,24 +600,24 @@ This document assumes that all cabling is done. Here is a quick overview of the 
 
 ### Management Firewalls
 
-As you can see, the management firewalls are the first bastion hosts in a partition to provide access to our infrastructure. There are two of them in each partition to guarantee high availability and load balancing. The very first configuration of these routers has to be done manually to solve the chicken and egg problem that you need the management firewalls in place to deploy the partition. Manually means that we generate a configuration template with ansible that we deploy with copy/paste, and the load, through the machine console. Once the management server has been deployed, we are able to deploy this configuration via gitlab-runner and ansible. For this you need the user and the ssh-key, which is deployed with the configuration file mentioned above.
+As you can see, the management firewalls are the first bastion hosts in a partition to provide access to our infrastructure. There are two of them in each partition to guarantee high availability and load balancing. The very first configuration of these routers has to be done manually to solve the chicken and egg problem that you need the management firewalls in place to deploy the partition. Manually means that we generate a configuration template with ansible that we deploy with copy/paste, and the load, through the machine console. Once the management server has been deployed, we are able to deploy this configuration via CI runner and ansible. For this you need the user and the ssh-key, which is deployed with the configuration file mentioned above.
 The Edgerouters has to fulfill some requirements including:
 
 - provide and restrict access to the Out-Of-Band-Network from the internet with a firewall ruleset
 - provide destination NAT to the management server and its IPMI interface
 - provide Onie Boot and ztp via DHCP options for the management spine
 - provide DHCP management addresses for management spine, management server and ipmi interface of the management server
-- Hairpin-NAT for the management server to access itself via its puplic IP, needed by the gitlab-runner to delegate CI-Jobs.
+- Hairpin-NAT for the management server to access itself via its puplic IP, needed by the CI runner to delegate CI Jobs.
 - propagate a default gateway via BGP
 
 ### Management Servers
 
-The second bastion hosts are the management servers. They are the main bootstrapping components of the Out-Of-Band-Network. They also act as jump hosts for all components in a partition. Once they are installed and deployed, we are able to bootstrap all the other components. To bootstrap the management servers, we generate an ISO image which will automatically install an OS and an ansible user with ssh keys. It is preconfigured with a preseed file to allow an unattended OS installation for our needs. This is why we need remote access to the IPMI interface of the management servers: The generated ISO is attached via the virtual media function of the BMC. Ater that, all we have to do is boot from that virtual CD-ROM and wait for the installation to finish. Deployment jobs (Gitlab-CI) in a partition are delegated to the appropriate management servers, therefore we need a gitlabci-runner active on each management server.
-After the gitlab CI runner has been installed, you can trigger your Playbooks from the Gitlab-CI. The Ansible-Playbooks have to make sure that these functionalities are present on the management servers:
+The second bastion hosts are the management servers. They are the main bootstrapping components of the Out-Of-Band-Network. They also act as jump hosts for all components in a partition. Once they are installed and deployed, we are able to bootstrap all the other components. To bootstrap the management servers, we generate an ISO image which will automatically install an OS and an ansible user with ssh keys. It is preconfigured with a preseed file to allow an unattended OS installation for our needs. This is why we need remote access to the IPMI interface of the management servers: The generated ISO is attached via the virtual media function of the BMC. Ater that, all we have to do is boot from that virtual CD-ROM and wait for the installation to finish. Deployment jobs (Gitlab-CI) in a partition are delegated to the appropriate management servers, therefore we need a CI runner active on each management server.
+After the CI runner has been installed, you can trigger your Playbooks from the the CI. The Ansible-Playbooks have to make sure that these functionalities are present on the management servers:
 
 - BMC proxy / BMC reverse proxy
 - Prometheus and exporters
-- gitlab-runner
+- CI runner
 - bmc-catcher
 - image-cache
 - simple webserver to provide images
