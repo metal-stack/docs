@@ -621,9 +621,9 @@ After the gitlab CI runner has been installed, you can trigger your Playbooks fr
 - bmc-catcher
 - image-cache
 - simple webserver to provide images
-- Onieboot and ZTP for cumulus switches
+- [Onie Boot](http://onie.org/) and ZTP ([Demo](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)) for cumulus switches
 - DHCP addresses for ipmi interfaces of the workers
-- DHCP addresses for cumulus switches
+- DHCP addresses for switches
 
 ### Management Spines
 
