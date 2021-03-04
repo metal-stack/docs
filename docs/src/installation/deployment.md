@@ -605,8 +605,8 @@ The Edgerouters has to fulfill some requirements including:
 
 - provide and restrict access to the Out-Of-Band-Network from the internet with a firewall ruleset
 - provide destination NAT to the management server and its IPMI interface
-- provide onieboot and ztp via dhcp options for the management spine
-- provide dhcp management addresses for management spine, management server and ipmi interface of the management server
+- provide onieboot and ztp via DHCP options for the management spine
+- provide DHCP management addresses for management spine, management server and ipmi interface of the management server
 - Hairpin-NAT for the management server to access itself via its puplic IP, needed by the gitlab-runner to delegate CI-Jobs.
 - propagate a default gateway via BGP
 
