@@ -577,7 +577,7 @@ If you decided to set up a dex server, you can parametrize the [metal role](http
 ### Out-Of-Band-Network
 
 To be able to deploy and maintain a metal-stack partition, you need to bootstrap the Out-Of-Band-Network first.
-Some considerations must be made to fullfill the requirements of our infrastructure, a partition is designed to be:
+Some considerations must be made to fulfill the requirements of our infrastructure, a partition is designed to be:
 
 - secure
 - fully routable (BGP)
