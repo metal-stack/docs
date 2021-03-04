@@ -607,7 +607,7 @@ The Edgerouters has to fulfill some requirements including:
 - provide destination NAT to the management server and its IPMI interface
 - provide onieboot and ztp via dhcp options for the management spine
 - provide dhcp management addresses for management spine, management server and ipmi interface of the management server
-- Hairpin-NAT for the management server to access itself via its puplic IP, needed by the gitlab-runner to delegate CI-Jobs.
+- Hairpin-NAT for the management server to access itself via its puplic IP, needed by the CI runner to delegate CI jobs.
 - propagate a default gateway via BGP
 
 ### Management Servers
