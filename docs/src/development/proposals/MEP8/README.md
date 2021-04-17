@@ -15,7 +15,6 @@ A `filesystemlayout` will have the following properties
 
 type FilesystemLayout {
   ID          string
-  Name        string
   Description string
   Filesystems []Filesystem
   Disks       []Disk
@@ -67,10 +66,10 @@ Example `metalctl` outputs:
 
 ```bash
 $ metalctl filesystemlayouts ls
-ID        NAME     DESCRIPTION         SIZES                         IMAGES
-default   default  default fs layout   c1-large-x86, c1-xlarge-x86   *
-ceph      ceph     fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
-firewall  firewall firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
+ID        DESCRIPTION         SIZES                         IMAGES
+default   default fs layout   c1-large-x86, c1-xlarge-x86   *
+ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
+firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
 
 $ metalctl filesystemlayouts describe default
 ---
