@@ -242,12 +242,15 @@ raid:
 
 - metal-hammer:
   - change implementation from build in hard coded logic
+  - move logic to create fstab from install.sh to metal-hammer
 - metal-api:
   - new endpoint `filesystemlayouts`
   - add optional spec of `filesystemlayout` during `allocation` with validation if given `filesystemlayout` is possible on given size.
+  - add `allocation.filesystemlayout` in the response, based on either the specified `filesystemlayout` or the calculated one.
   - implement `filesystemlayouts` validation for:
     - matching to disks in the size
     - no overlapping with the sizes/imagefilter specified in `filesystemlayouts`
+    - all devices specified exists from top to bottom (fs -> disks -> device || fs -> raid -> devices)
 - metalctl:
   - implement `filesystemlayouts`
 - metal-go:
