@@ -71,6 +71,7 @@ type Disk struct {
 }
 
 // Raid is optional, if given the devices must match.
+// TODO inherit GPTType from underlay device ?
 type Raid struct {
   // Name of the raid device, most often this will be /dev/md0 and so forth
   Name    string
@@ -92,7 +93,7 @@ type Partition struct {
   // Label to enhance readability
   Label     *string
   // Size given in kubernetes resource metrics
-  // if "-1" is given the rest of the device will be used
+  // if "-1" is given the rest of the device will be used, this requires Number to be the highest in this partition
   Size      string
   // GUID of this partition
   GUID      *GUID
@@ -117,7 +118,7 @@ const (
   // GPTLinux Linux Partition
   GPTLinux = GPTType("8300")
   // GPTLinuxRaid Linux Raid Partition
-  GPTLinuxRaid = GPTType("FD00")
+  GPTLinuxRaid = GPTType("fd00")
   // GPTLinux Linux Partition
   GPTLinuxLVM = GPTType("8e00")
   // EFISystemPartition see https://en.wikipedia.org/wiki/EFI_system_partition
