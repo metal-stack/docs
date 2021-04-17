@@ -68,6 +68,8 @@ const (
   GPTBoot = GPTType(&quot;ef00&quot;)
   // GPTLinux Linux Partition
   GPTLinux = GPTType(&quot;8300&quot;)
+  // GPTLinuxRaid Linux Raid Partition
+  GPTLinuxRaid = GPTType(&quot;FD00&quot;)
   // GPTLinux Linux Partition
   GPTLinuxLVM = GPTType(&quot;8e00&quot;)
   // EFISystemPartition see https://en.wikipedia.org/wiki/EFI_system_partition
@@ -77,6 +79,7 @@ ID        DESCRIPTION         SIZES                         IMAGES
 default   default fs layout   c1-large-x86, c1-xlarge-x86   *
 ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
 firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
+storage   storage fs layout   s3-large-x86                  centos*
 
 $ metalctl filesystemlayouts describe default
 ---
@@ -118,7 +121,7 @@ disks:
 
 $ metalctl filesystemlayouts describe firewall
 ---
-id: default
+id: firewall
 sizes:
   - c1-large-x86
   - c1-xlarge-x86
@@ -156,4 +159,61 @@ disks:
       - number: 1
         label: &quot;var&quot;
         size: &quot;-1&quot;
-        type: GPTLinux</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul><h2 id="TODO"><a class="docs-heading-anchor" href="#TODO">TODO</a><a id="TODO-1"></a><a class="docs-heading-anchor-permalink" href="#TODO" title="Permalink"></a></h2><ul><li>[ ] Partition UUIDs are required to be able to create fstab, make them public ?</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 17 April 2021 10:10">Saturday 17 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+        type: GPTLinux
+
+$ metalctl filesystemlayouts describe storage
+---
+id: storage
+sizes:
+  - s3-large-x86
+images:
+  - &quot;centos*&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/md1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F32&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/md2&quot;
+    format: &quot;ext4&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    partitionprefix: &quot;/dev/sda&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: &quot;500M&quot;
+        guid: EFISystemPartition
+        type: GPTLinuxRaid
+      - number: 2
+        label: &quot;root&quot;
+        size: &quot;5G&quot;
+        type: GPTLinuxRaid
+  - device: &quot;/dev/sdb&quot;
+    partitionprefix: &quot;/dev/sdb&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: &quot;500M&quot;
+        guid: EFISystemPartition
+        type: GPTLinuxRaid
+      - number: 2
+        label: &quot;root&quot;
+        size: &quot;5G&quot;
+        type: GPTLinuxRaid
+raid:
+  - name: &quot;/dev/md1&quot;
+    level: 1
+    devices:
+      - &quot;/dev/sda1&quot;
+      - &quot;/dev/sdb1&quot;
+    options: &quot;--metadata=1.0&quot;
+  - name: &quot;/dev/md2&quot;
+    level: 1
+    devices:
+      - &quot;/dev/sda2&quot;
+      - &quot;/dev/sdb2&quot;
+    options: &quot;--metadata=1.0&quot;
+</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul><h2 id="TODO"><a class="docs-heading-anchor" href="#TODO">TODO</a><a id="TODO-1"></a><a class="docs-heading-anchor-permalink" href="#TODO" title="Permalink"></a></h2><ul><li>[ ] Partition UUIDs are required to be able to create fstab, make them public ?</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 17 April 2021 11:56">Saturday 17 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
