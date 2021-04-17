@@ -12,14 +12,22 @@ The API will get a new endpoint `filesystemlayouts` (TODO naming) to create/upda
 A `filesystemlayout` will have the following properties
 
 ```go
-
+// FilesystemLayout to be created on the given machine
 type FilesystemLayout {
+  // ID unique layout identifier
   ID          string
+  // Description is human readable
   Description string
+  // Filesystems to create on the server
   Filesystems []Filesystem
+  // Disks to configure in the server with their partitions
   Disks       []Disk
+  // Raid if not empty, create raid arrays out of the individual disks, to place filesystems onto
   Raid        []Raid
+  // Sizes defines the list of sizes this layout applies to
   Sizes       []Size
+  // Images defines a list of image glob patterns this layout should apply
+  // the most specific combination of sizes and images will be picked fo a allocation
   Images      []string
 }
 
@@ -32,40 +40,67 @@ type Format string
 type GUID string
 type GPTType string
 
+// Filesystem defines a single filesystem to be mounted
 type Filesystem struct {
+  // Path defines the mountpoint, if nil, it will not be mounted
   Path           *string
+  // Device where the filesystem is created on, must be the full device path seen by the OS
   Device         Device
+  // Format is the type of filesystem should be created
   Format         Format
+  // Label is optional enhances readability
   Label          *string
+  // MountOptions which might be required
   MountOptions   []MountOption
+  // Options during filesystem creation
   Options        []FilesystemOption
 }
 
+// Disk represents a single block device visible from the OS, required
 type Disk struct {
+  // Device is the full device path
   Device          Device
+  // PartitionPrefix specifies which prefix is used if device is partitioned
+  // e.g. device /dev/sda, first partition will be /dev/sda1, prefix is therefore /dev/sda
+  // for nvme drives this is different, the prefix there is typically /dev/nvme0n1p
   PartitionPrefix string
+  // Partitions to create on this device
   Partitions      []Partition
-  WipeTable       *bool
+  // Wipe, if set to true the partition table will be erase before new partitions will be created
+  Wipe            bool
 }
 
+// Raid is optional, if given the devices must match.
 type Raid struct {
-  Devices []Device
-  Level   RaidLevel
+  // Name of the raid device, most often this will be /dev/md0 and so forth
   Name    string
+  // Devices the devices to form a raid device
+  Devices []Device
+  // Level the raidlevel to use, can be one of 0,1,5,10 
+  // TODO what should be support
+  Level   RaidLevel
+  // Options required during raid creation, example: --metadata=1.0 for uefi boot partition
   Options []RaidOption
-  Spares  *int
+  // Spares defaults to 0
+  Spares  int
 }
 
+// Partition is a single partition on a device, only GPT partition types are supported
 type Partition struct {
+  // Number of this partition, will be added to partitionprefix
   Number    int
+  // Label to enhance readability
   Label     *string
+  // Size given in kubernetes resource metrics
+  // if "-1" is given the rest of the device will be used
   Size      string
+  // GUID of this partition
   GUID      *GUID
+  // GPTType defines the GPT partition type
   GPTType   *GPTType
 }
 
 const (
-  FAT32 = Format("fat32")
   // VFAT is used for the UEFI boot partition
   VFAT = Format("vfat")
   // EXT3 is usually only used for /boot
