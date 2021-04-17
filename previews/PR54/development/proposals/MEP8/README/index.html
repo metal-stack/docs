@@ -114,4 +114,46 @@ disks:
       - number: 3
         label: &quot;varlib&quot;
         size: &quot;-1&quot; # to end of partition
-        type: GPTLinux</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul><h2 id="TODO"><a class="docs-heading-anchor" href="#TODO">TODO</a><a id="TODO-1"></a><a class="docs-heading-anchor-permalink" href="#TODO" title="Permalink"></a></h2><ul><li>[ ] Partition UUIDs are required to be able to create fstab, make them public ?</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 17 April 2021 10:07">Saturday 17 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+        type: GPTLinux
+
+$ metalctl filesystemlayouts describe firewall
+---
+id: default
+sizes:
+  - c1-large-x86
+  - c1-xlarge-x86
+images:
+  - &quot;firewall*&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sda1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F 32&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/sda2&quot;
+    format: &quot;ext4&quot;
+  - path: &quot;/var&quot;
+    device: &quot;/dev/nvme0n1p1&quot;
+    format: &quot;ext4&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    partitionprefix: &quot;/dev/sda&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: &quot;500M&quot;
+        guid: EFISystemPartition
+        type: GPTBoot
+      - number: 2
+        label: &quot;root&quot;
+        size: &quot;5G&quot;
+        type: GPTLinux
+  - device: &quot;/dev/nvme0n1&quot;
+    partitionprefix: &quot;/dev/nvme0n1p&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;var&quot;
+        size: &quot;-1&quot;
+        type: GPTLinux</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul><h2 id="TODO"><a class="docs-heading-anchor" href="#TODO">TODO</a><a id="TODO-1"></a><a class="docs-heading-anchor-permalink" href="#TODO" title="Permalink"></a></h2><ul><li>[ ] Partition UUIDs are required to be able to create fstab, make them public ?</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 17 April 2021 10:10">Saturday 17 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
