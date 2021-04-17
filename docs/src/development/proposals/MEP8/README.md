@@ -99,8 +99,11 @@ default   default fs layout   c1-large-x86, c1-xlarge-x86   *
 ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
 firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
 storage   storage fs layout   s3-large-x86                  centos*
+```
 
-$ metalctl filesystemlayouts describe default
+The `default` layout reflects what is actually implemented in metal-hammer to guarantee backward compatibility.
+
+```yaml
 ---
 id: default
 sizes:
@@ -137,8 +140,11 @@ disks:
         label: "varlib"
         size: "-1" # to end of partition
         type: GPTLinux
+```
 
-$ metalctl filesystemlayouts describe firewall
+The `firewall` layout reuses the built in nvme disk to store the logs, which is way faster and larger than what the sata-dom ssd provides.
+
+```yaml
 ---
 id: firewall
 sizes:
@@ -179,8 +185,11 @@ disks:
         label: "var"
         size: "-1"
         type: GPTLinux
+```
 
-$ metalctl filesystemlayouts describe storage
+The `storage` layout will be used for the storage servers, which must have mirrored boot disks.
+
+```yaml
 ---
 id: storage
 sizes:
@@ -235,7 +244,6 @@ raid:
       - "/dev/sda2"
       - "/dev/sdb2"
     options: "--metadata=1.0"
-
 ```
 
 ## Components which requires modifications
