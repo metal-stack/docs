@@ -13,7 +13,7 @@ A `filesystemlayout` will have the following properties
 
 ```go
 // FilesystemLayout to be created on the given machine
-type FilesystemLayout {
+type FilesystemLayout struct {
   // ID unique layout identifier
   ID          string
   // Description is human readable
