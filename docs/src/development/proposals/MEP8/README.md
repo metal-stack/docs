@@ -125,3 +125,7 @@ disks:
   - implement `filesystemlayouts`
 - metal-go:
   - adopt api changes
+
+## TODO
+
+- [ ] Partition UUIDs are required to be able to create fstab, make them public ?
