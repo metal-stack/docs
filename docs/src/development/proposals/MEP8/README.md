@@ -28,11 +28,14 @@ type MountOption string
 type RaidOption string
 type RaidLevel string
 type Device string
+type Format string
+type GUID string
+type GPTType string
 
 type Filesystem struct {
   Path           *string
   Device         Device
-  Format         *string
+  Format         Format
   Label          *string
   MountOptions   []MountOption
   Options        []FilesystemOption
@@ -54,12 +57,35 @@ type Raid struct {
 }
 
 type Partition struct {
-  Number             int
-  Label              *string
-  Size               string
-  GUID               *string
-  TypeGUID           *string
+  Number    int
+  Label     *string
+  Size      string
+  GUID      *GUID
+  GPTType   *GPTType
 }
+
+const (
+  FAT32 = Format("fat32")
+  // VFAT is used for the UEFI boot partition
+  VFAT = Format("vfat")
+  // EXT3 is usually only used for /boot
+  EXT3 = Format("ext3")
+  // EXT4 is the default fs
+  EXT4 = Format("ext4")
+  // SWAP is for the swap partition
+  SWAP = Format("swap")
+  // None
+  NONE = Format("none")
+
+  // GPTBoot EFI Boot Partition
+  GPTBoot = GPTType("ef00")
+  // GPTLinux Linux Partition
+  GPTLinux = GPTType("8300")
+  // GPTLinux Linux Partition
+  GPTLinuxLVM = GPTType("8e00")
+  // EFISystemPartition see https://en.wikipedia.org/wiki/EFI_system_partition
+  EFISystemPartition = GUID("C12A7328-F81F-11D2-BA4B-00A0C93EC93B")
+)
 ```
 
 Example `metalctl` outputs:
