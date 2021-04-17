@@ -81,6 +81,8 @@ const (
   GPTBoot = GPTType("ef00")
   // GPTLinux Linux Partition
   GPTLinux = GPTType("8300")
+  // GPTLinuxRaid Linux Raid Partition
+  GPTLinuxRaid = GPTType("FD00")
   // GPTLinux Linux Partition
   GPTLinuxLVM = GPTType("8e00")
   // EFISystemPartition see https://en.wikipedia.org/wiki/EFI_system_partition
@@ -96,6 +98,7 @@ ID        DESCRIPTION         SIZES                         IMAGES
 default   default fs layout   c1-large-x86, c1-xlarge-x86   *
 ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
 firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
+storage   storage fs layout   s3-large-x86                  centos*
 
 $ metalctl filesystemlayouts describe default
 ---
@@ -137,7 +140,7 @@ disks:
 
 $ metalctl filesystemlayouts describe firewall
 ---
-id: default
+id: firewall
 sizes:
   - c1-large-x86
   - c1-xlarge-x86
@@ -176,6 +179,63 @@ disks:
         label: "var"
         size: "-1"
         type: GPTLinux
+
+$ metalctl filesystemlayouts describe storage
+---
+id: storage
+sizes:
+  - s3-large-x86
+images:
+  - "centos*"
+filesystems:
+  - path: "/boot/efi"
+    device: "/dev/md1"
+    format: "vfat"
+    options: "-F32"
+  - path: "/"
+    device: "/dev/md2"
+    format: "ext4"
+disks:
+  - device: "/dev/sda"
+    partitionprefix: "/dev/sda"
+    wipe: true
+    partitions:
+      - number: 1
+        label: "efi"
+        size: "500M"
+        guid: EFISystemPartition
+        type: GPTLinuxRaid
+      - number: 2
+        label: "root"
+        size: "5G"
+        type: GPTLinuxRaid
+  - device: "/dev/sdb"
+    partitionprefix: "/dev/sdb"
+    wipe: true
+    partitions:
+      - number: 1
+        label: "efi"
+        size: "500M"
+        guid: EFISystemPartition
+        type: GPTLinuxRaid
+      - number: 2
+        label: "root"
+        size: "5G"
+        type: GPTLinuxRaid
+raid:
+  - name: "/dev/md1"
+    level: 1
+    devices:
+      - "/dev/sda1"
+      - "/dev/sdb1"
+    options: "--metadata=1.0"
+  - name: "/dev/md2"
+    level: 1
+    devices:
+      - "/dev/sda2"
+      - "/dev/sdb2"
+    options: "--metadata=1.0"
+
 ```
 
 ## Components which requires modifications
