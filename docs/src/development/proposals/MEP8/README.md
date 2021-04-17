@@ -134,6 +134,48 @@ disks:
         label: "varlib"
         size: "-1" # to end of partition
         type: GPTLinux
+
+$ metalctl filesystemlayouts describe firewall
+---
+id: default
+sizes:
+  - c1-large-x86
+  - c1-xlarge-x86
+images:
+  - "firewall*"
+filesystems:
+  - path: "/boot/efi"
+    device: "/dev/sda1"
+    format: "vfat"
+    options: "-F 32"
+  - path: "/"
+    device: "/dev/sda2"
+    format: "ext4"
+  - path: "/var"
+    device: "/dev/nvme0n1p1"
+    format: "ext4"
+disks:
+  - device: "/dev/sda"
+    partitionprefix: "/dev/sda"
+    wipe: true
+    partitions:
+      - number: 1
+        label: "efi"
+        size: "500M"
+        guid: EFISystemPartition
+        type: GPTBoot
+      - number: 2
+        label: "root"
+        size: "5G"
+        type: GPTLinux
+  - device: "/dev/nvme0n1"
+    partitionprefix: "/dev/nvme0n1p"
+    wipe: true
+    partitions:
+      - number: 1
+        label: "var"
+        size: "-1"
+        type: GPTLinux
 ```
 
 ## Components which requires modifications
