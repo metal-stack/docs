@@ -40,9 +40,10 @@ type Filesystem struct {
 }
 
 type Disk struct {
-  Device     Device
-  Partitions []Partition
-  WipeTable  *bool
+  Device          Device
+  PartitionPrefix string
+  Partitions      []Partition
+  WipeTable       *bool
 }
 
 type Raid struct {
@@ -92,6 +93,7 @@ filesystems:
     format: "ext4"
 disks:
   - device: "/dev/sda"
+    partitionprefix: "/dev/sda"
     wipe: true
     partitions:
       - number: 1
