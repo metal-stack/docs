@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Configurable Filesystem layout for Machine Allocation · metal-stack</title><link rel="canonical" href="https://docs.metal-stack.io/development/proposals/MEP8/README/"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../../assets/documenter.js"></script><script src="../../../../siteinfo.js"></script><script src="../../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../../assets/themeswap.js"></script><link href="../../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../../../assets/youtube.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../../"><img src="../../../../assets/logo.svg" alt="metal-stack logo"/></a><div class="docs-package-name"><span class="docs-autofit">metal-stack</span></div><form class="docs-search" action="../../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../../">Introduction</a></li><li><span class="tocitem">Overview</span><ul><li><a class="tocitem" href="../../../../overview/architecture/">Architecture</a></li><li><a class="tocitem" href="../../../../overview/networking/">Networking</a></li><li><a class="tocitem" href="../../../../overview/hardware/">Hardware Support</a></li><li><a class="tocitem" href="../../../../overview/os/">Operating Systems</a></li><li><a class="tocitem" href="../../../../overview/kubernetes/">Kubernetes Integration</a></li><li><a class="tocitem" href="../../../../overview/storage/">Storage</a></li></ul></li><li><a class="tocitem" href="../../../../quickstart/">Quickstart</a></li><li><span class="tocitem">Installation &amp; Administration</span><ul><li><a class="tocitem" href="../../../../installation/deployment/">Installation</a></li><li><a class="tocitem" href="../../../../installation/monitoring/">Monitoring</a></li><li><a class="tocitem" href="../../../../installation/troubleshoot/">Troubleshoot</a></li></ul></li><li><span class="tocitem">User Guides</span><ul><li><a class="tocitem" href="../../../../external/mini-lab/README/">mini-lab</a></li><li><a class="tocitem" href="../../../../external/metalctl/README/">metalctl</a></li><li><a class="tocitem" href="../../../../external/csi-driver-lvm/README/">csi-driver-lvm</a></li><li><a class="tocitem" href="../../../../external/firewall-controller/README/">firewall-controller</a></li></ul></li><li><a class="tocitem" href="../../../../apidocs/apidocs/">API Documentation</a></li><li><span class="tocitem">Development</span><ul><li><a class="tocitem" href="../../../client_libraries/">Client Libraries</a></li><li><a class="tocitem" href="../../../roadmap/">Roadmap</a></li><li><a class="tocitem" href="../../">Enhancement Proposals</a></li><li><a class="tocitem" href="../../../contributing/">Contributing</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Configurable Filesystem layout for Machine Allocation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Configurable Filesystem layout for Machine Allocation</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/metal-stack/docs/blob/master/docs/src/development/proposals/MEP8/README.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Configurable-Filesystem-layout-for-Machine-Allocation"><a class="docs-heading-anchor" href="#Configurable-Filesystem-layout-for-Machine-Allocation">Configurable Filesystem layout for Machine Allocation</a><a id="Configurable-Filesystem-layout-for-Machine-Allocation-1"></a><a class="docs-heading-anchor-permalink" href="#Configurable-Filesystem-layout-for-Machine-Allocation" title="Permalink"></a></h1><p>The current implementation uses a hard coded filesystem layout depending on the specified size and image. This is done in the metal-hammer. This worked well in the past because we had a small amount of sizes and images. But we reached a point where this is to restricted for all use cases we have to fulfill. It also forces us to modify the metal-hammer source code to support a new filesystem layout.</p><p>This proposal tries to address this issue by introducing a filesystem layout struct in the metal-api which is then configurable per machine allocation. The original behavior of automatic filesystem layout decision must still be present, because there must be no API change for existing API consumers. It should be a additional feature during machine allocation.</p><h2 id="API-and-behavior"><a class="docs-heading-anchor" href="#API-and-behavior">API and behavior</a><a id="API-and-behavior-1"></a><a class="docs-heading-anchor-permalink" href="#API-and-behavior" title="Permalink"></a></h2><p>The API will get a new endpoint <code>filesystemlayouts</code> (TODO naming) to create/update/delete a set of available <code>filesystemlayouts</code>.</p><p>A <code>filesystemlayout</code> will have the following properties</p><pre><code class="language-go">
+type FilesystemLayout {
+  ID          string
+  Name        string
+  Description string
+  Filesystems []Filesystem
+  Disks       []Disk
+  Raid        []Raid
+  Sizes       []Size
+  Images      []string
+}
+
+type FilesystemOption string
+type MountOption string
+type RaidOption string
+type RaidLevel string
+type Device string
+
+type Filesystem struct {
+  Path           *string
+  Device         Device
+  Format         *string
+  Label          *string
+  MountOptions   []MountOption
+  Options        []FilesystemOption
+}
+
+type Disk struct {
+  Device     Device
+  Partitions []Partition
+  WipeTable  *bool
+}
+
+type Raid struct {
+  Devices []Device
+  Level   RaidLevel
+  Name    string
+  Options []RaidOption
+  Spares  *int
+}
+
+type Partition struct {
+  Number             int
+  Label              *string
+  Size               string
+  GUID               *string
+  TypeGUID           *string
+}</code></pre><p>Example <code>metalctl</code> outputs:</p><pre><code class="language-bash">$ metalctl filesystemlayouts ls
+ID        NAME     DESCRIPTION         SIZES                         IMAGES
+default   default  default fs layout   c1-large-x86, c1-xlarge-x86   *
+ceph      ceph     fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
+firewall  firewall firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
+
+$ metalctl filesystemlayouts describe default
+---
+id: default
+sizes:
+  - c1-large-x86
+  - c1-xlarge-x86
+images:
+  - &quot;*&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sda1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F 32&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/sda2&quot;
+    format: &quot;ext4&quot;
+  - path: &quot;/var/lib&quot;
+    device: &quot;/dev/sda3&quot;
+    format: &quot;ext4&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: &quot;500M&quot;
+        guid: EFISystemPartition
+        type: GPTBoot
+      - number: 2
+        label: &quot;root&quot;
+        size: &quot;5G&quot;
+        type: GPTLinux
+      - number: 3
+        label: &quot;varlib&quot;
+        size: &quot;-1&quot; # to end of partition
+        type: GPTLinux</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 17 April 2021 09:39">Saturday 17 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
