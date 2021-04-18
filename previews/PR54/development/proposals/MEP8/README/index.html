@@ -11,12 +11,19 @@ type FilesystemLayout struct {
   Disks       []Disk
   // Raid if not empty, create raid arrays out of the individual disks, to place filesystems onto
   Raid        []Raid
+  // Constraints which must match to select this Layout
+  Constraints FilesystemLayoutConstraints
+}
+
+type FilesystemLayoutConstraints struct {
   // Sizes defines the list of sizes this layout applies to
-  Sizes       []Size
+  Sizes map[string]bool
   // Images defines a list of image glob patterns this layout should apply
   // the most specific combination of sizes and images will be picked fo a allocation
-  Images      []string
+  // If prefixed with &quot;!&quot; this image glob is not allowed
+  Images []string
 }
+
 
 type FilesystemOption string
 type MountOption string
@@ -112,16 +119,19 @@ const (
   EFISystemPartition = GUID(&quot;C12A7328-F81F-11D2-BA4B-00A0C93EC93B&quot;)
 )</code></pre><p>Example <code>metalctl</code> outputs:</p><pre><code class="language-bash">$ metalctl filesystemlayouts ls
 ID        DESCRIPTION         SIZES                         IMAGES
-default   default fs layout   c1-large-x86, c1-xlarge-x86   *
+default   default fs layout   c1-large-x86, c1-xlarge-x86   debian*, ubuntu*, centos*
 ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
 firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
 storage   storage fs layout   s3-large-x86                  centos*</code></pre><p>The <code>default</code> layout reflects what is actually implemented in metal-hammer to guarantee backward compatibility.</p><pre><code class="language-yaml">---
 id: default
-sizes:
-  - c1-large-x86
-  - c1-xlarge-x86
-images:
-  - &quot;*&quot;
+constraints:
+  sizes:
+    - c1-large-x86
+    - c1-xlarge-x86
+  images:
+    - &quot;debian*&quot;
+    - &quot;ubuntu*&quot;
+    - &quot;centos*&quot;
 filesystems:
   - path: &quot;/boot/efi&quot;
     device: &quot;/dev/sda1&quot;
@@ -140,23 +150,24 @@ disks:
     partitions:
       - number: 1
         label: &quot;efi&quot;
-        size: &quot;500M&quot;
+        size: 500000000
         guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: &quot;root&quot;
-        size: &quot;5G&quot;
+        size: 5000000000
         type: GPTLinux
       - number: 3
         label: &quot;varlib&quot;
-        size: &quot;-1&quot; # to end of partition
+        size: -1 # to end of partition
         type: GPTLinux</code></pre><p>The <code>firewall</code> layout reuses the built in nvme disk to store the logs, which is way faster and larger than what the sata-dom ssd provides.</p><pre><code class="language-yaml">---
 id: firewall
-sizes:
-  - c1-large-x86
-  - c1-xlarge-x86
-images:
-  - &quot;firewall*&quot;
+constraints:
+  sizes:
+    - c1-large-x86
+    - c1-xlarge-x86
+  images:
+    - &quot;firewall*&quot;
 filesystems:
   - path: &quot;/boot/efi&quot;
     device: &quot;/dev/sda1&quot;
@@ -175,12 +186,12 @@ disks:
     partitions:
       - number: 1
         label: &quot;efi&quot;
-        size: &quot;500M&quot;
+        size: 500000000
         guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: &quot;root&quot;
-        size: &quot;5G&quot;
+        size: 5000000000
         type: GPTLinux
   - device: &quot;/dev/nvme0n1&quot;
     partitionprefix: &quot;/dev/nvme0n1p&quot;
@@ -191,10 +202,11 @@ disks:
         size: &quot;-1&quot;
         type: GPTLinux</code></pre><p>The <code>storage</code> layout will be used for the storage servers, which must have mirrored boot disks.</p><pre><code class="language-yaml">---
 id: storage
-sizes:
-  - s3-large-x86
-images:
-  - &quot;centos*&quot;
+constraints:
+  sizes:
+    - s3-large-x86
+  images:
+    - &quot;centos*&quot;
 filesystems:
   - path: &quot;/boot/efi&quot;
     device: &quot;/dev/md1&quot;
@@ -210,12 +222,12 @@ disks:
     partitions:
       - number: 1
         label: &quot;efi&quot;
-        size: &quot;500M&quot;
+        size: 500000000
         guid: EFISystemPartition
         type: GPTLinuxRaid
       - number: 2
         label: &quot;root&quot;
-        size: &quot;5G&quot;
+        size: 5000000000
         type: GPTLinuxRaid
   - device: &quot;/dev/sdb&quot;
     partitionprefix: &quot;/dev/sdb&quot;
@@ -223,12 +235,12 @@ disks:
     partitions:
       - number: 1
         label: &quot;efi&quot;
-        size: &quot;500M&quot;
+        size: 500000000
         guid: EFISystemPartition
         type: GPTLinuxRaid
       - number: 2
         label: &quot;root&quot;
-        size: &quot;5G&quot;
+        size: 5000000000
         type: GPTLinuxRaid
 raid:
   - name: &quot;/dev/md1&quot;
@@ -242,4 +254,4 @@ raid:
     devices:
       - &quot;/dev/sda2&quot;
       - &quot;/dev/sdb2&quot;
-    options: &quot;--metadata=1.0&quot;</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul><h2 id="TODO"><a class="docs-heading-anchor" href="#TODO">TODO</a><a id="TODO-1"></a><a class="docs-heading-anchor-permalink" href="#TODO" title="Permalink"></a></h2><ul><li>[ ] Partition UUIDs are required to be able to create fstab, make them public ?</li><li>[ ] Clarify compatibility with <code>reinstall</code> feature</li><li>[ ] Migrate existing allocations to use the default fsl, check whether the s2-large are migrated correct.</li><li>[ ] For the s2-large machines we actually figure out which of the /dev/sd* disk has less than 1TB in size and install on this device. This type of flexibility is gone with this approach.</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 18 April 2021 12:55">Sunday 18 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    options: &quot;--metadata=1.0&quot;</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li></ul><h2 id="TODO"><a class="docs-heading-anchor" href="#TODO">TODO</a><a id="TODO-1"></a><a class="docs-heading-anchor-permalink" href="#TODO" title="Permalink"></a></h2><ul><li>[ ] Partition UUIDs are required to be able to create fstab, make them public ?</li><li>[ ] Clarify compatibility with <code>reinstall</code> feature</li><li>[ ] Migrate existing allocations to use the default fsl, check whether the s2-large are migrated correct.</li><li>[ ] For the s2-large machines we actually figure out which of the /dev/sd* disk has less than 1TB in size and install on this device. This type of flexibility is gone with this approach.</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 18 April 2021 16:54">Sunday 18 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
