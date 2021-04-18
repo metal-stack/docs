@@ -24,12 +24,19 @@ type FilesystemLayout struct {
   Disks       []Disk
   // Raid if not empty, create raid arrays out of the individual disks, to place filesystems onto
   Raid        []Raid
+  // Constraints which must match to select this Layout
+  Constraints FilesystemLayoutConstraints
+}
+
+type FilesystemLayoutConstraints struct {
   // Sizes defines the list of sizes this layout applies to
-  Sizes       []Size
+  Sizes map[string]bool
   // Images defines a list of image glob patterns this layout should apply
   // the most specific combination of sizes and images will be picked fo a allocation
-  Images      []string
+  // If prefixed with "!" this image glob is not allowed
+  Images []string
 }
+
 
 type FilesystemOption string
 type MountOption string
@@ -131,7 +138,7 @@ Example `metalctl` outputs:
 ```bash
 $ metalctl filesystemlayouts ls
 ID        DESCRIPTION         SIZES                         IMAGES
-default   default fs layout   c1-large-x86, c1-xlarge-x86   *
+default   default fs layout   c1-large-x86, c1-xlarge-x86   debian*, ubuntu*, centos*
 ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
 firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
 storage   storage fs layout   s3-large-x86                  centos*
@@ -142,11 +149,14 @@ The `default` layout reflects what is actually implemented in metal-hammer to gu
 ```yaml
 ---
 id: default
-sizes:
-  - c1-large-x86
-  - c1-xlarge-x86
-images:
-  - "*"
+constraints:
+  sizes:
+    - c1-large-x86
+    - c1-xlarge-x86
+  images:
+    - "debian*"
+    - "ubuntu*"
+    - "centos*"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sda1"
@@ -165,16 +175,16 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: "500M"
+        size: 500000000
         guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: "root"
-        size: "5G"
+        size: 5000000000
         type: GPTLinux
       - number: 3
         label: "varlib"
-        size: "-1" # to end of partition
+        size: -1 # to end of partition
         type: GPTLinux
 ```
 
@@ -183,11 +193,12 @@ The `firewall` layout reuses the built in nvme disk to store the logs, which is 
 ```yaml
 ---
 id: firewall
-sizes:
-  - c1-large-x86
-  - c1-xlarge-x86
-images:
-  - "firewall*"
+constraints:
+  sizes:
+    - c1-large-x86
+    - c1-xlarge-x86
+  images:
+    - "firewall*"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sda1"
@@ -206,12 +217,12 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: "500M"
+        size: 500000000
         guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: "root"
-        size: "5G"
+        size: 5000000000
         type: GPTLinux
   - device: "/dev/nvme0n1"
     partitionprefix: "/dev/nvme0n1p"
@@ -228,10 +239,11 @@ The `storage` layout will be used for the storage servers, which must have mirro
 ```yaml
 ---
 id: storage
-sizes:
-  - s3-large-x86
-images:
-  - "centos*"
+constraints:
+  sizes:
+    - s3-large-x86
+  images:
+    - "centos*"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/md1"
@@ -247,12 +259,12 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: "500M"
+        size: 500000000
         guid: EFISystemPartition
         type: GPTLinuxRaid
       - number: 2
         label: "root"
-        size: "5G"
+        size: 5000000000
         type: GPTLinuxRaid
   - device: "/dev/sdb"
     partitionprefix: "/dev/sdb"
@@ -260,12 +272,12 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: "500M"
+        size: 500000000
         guid: EFISystemPartition
         type: GPTLinuxRaid
       - number: 2
         label: "root"
-        size: "5G"
+        size: 5000000000
         type: GPTLinuxRaid
 raid:
   - name: "/dev/md1"
