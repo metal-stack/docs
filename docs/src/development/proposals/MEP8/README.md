@@ -30,7 +30,7 @@ type FilesystemLayout struct {
 
 type FilesystemLayoutConstraints struct {
   // Sizes defines the list of sizes this layout applies to
-  Sizes map[string]bool
+  Sizes []string
   // Images defines a list of image glob patterns this layout should apply
   // the most specific combination of sizes and images will be picked fo a allocation
   // If prefixed with "!" this image glob is not allowed
