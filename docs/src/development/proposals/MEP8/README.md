@@ -143,6 +143,7 @@ default   default fs layout   c1-large-x86, c1-xlarge-x86   debian*, ubuntu*, ce
 ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
 firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
 storage   storage fs layout   s3-large-x86                  centos*
+s3        storage fs layout   s2-xlarge-x86                 debian*, ubuntu*, firewall*
 ```
 
 The `default` layout reflects what is actually implemented in metal-hammer to guarantee backward compatibility.
@@ -185,7 +186,7 @@ disks:
         type: GPTLinux
       - number: 3
         label: "varlib"
-        size: -1 # to end of partition
+        size: 0 # to end of partition
         type: GPTLinux
 ```
 
@@ -231,7 +232,7 @@ disks:
     partitions:
       - number: 1
         label: "var"
-        size: "-1"
+        size: 0
         type: GPTLinux
 ```
 
@@ -293,6 +294,50 @@ raid:
       - "/dev/sda2"
       - "/dev/sdb2"
     options: "--metadata=1.0"
+```
+
+The `s3-storage` layout matches the special situation on the s2-xlarge machines.
+
+```yaml
+---
+id: s3-storage
+constraints:
+  sizes:
+    - c1-large-x86
+    - s2-xlarge-x86
+  images:
+    - "debian*"
+    - "ubuntu*"
+    - "firewall*"
+filesystems:
+  - path: "/boot/efi"
+    device: "/dev/sde1"
+    format: "vfat"
+    options: "-F 32"
+  - path: "/"
+    device: "/dev/sde2"
+    format: "ext4"
+  - path: "/var/lib"
+    device: "/dev/sde3"
+    format: "ext4"
+disks:
+  - device: "/dev/sde"
+    partitionprefix: "/dev/sde"
+    wipe: true
+    partitions:
+      - number: 1
+        label: "efi"
+        size: 500000000
+        guid: EFISystemPartition
+        type: GPTBoot
+      - number: 2
+        label: "root"
+        size: 5000000000
+        type: GPTLinux
+      - number: 3
+        label: "varlib"
+        size: 0 # to end of partition
+        type: GPTLinux
 ```
 
 ## Components which requires modifications
