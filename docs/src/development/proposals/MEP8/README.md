@@ -170,6 +170,10 @@ filesystems:
   - path: "/var/lib"
     device: "/dev/sda3"
     format: "ext4"
+  - path: "/tmp"
+    device: "tmpfs"
+    format: "tmpfs"
+    mountoptions: ["defaults","noatime","nosuid","nodev","noexec","mode=1777","size=512M"]
 disks:
   - device: "/dev/sda"
     partitionprefix: "/dev/sda"
