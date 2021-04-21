@@ -44,7 +44,6 @@ type RaidOption string
 type RaidLevel string
 type Device string
 type Format string
-type GUID string
 type GPTType string
 
 // Filesystem defines a single filesystem to be mounted
@@ -101,10 +100,8 @@ type Partition struct {
   // Label to enhance readability
   Label     *string
   // Size given in kubernetes resource metrics
-  // if "-1" is given the rest of the device will be used, this requires Number to be the highest in this partition
+  // if "0" is given the rest of the device will be used, this requires Number to be the highest in this partition
   Size      string
-  // GUID of this partition
-  GUID      *GUID
   // GPTType defines the GPT partition type
   GPTType   *GPTType
 }
@@ -129,8 +126,6 @@ const (
   GPTLinuxRaid = GPTType("fd00")
   // GPTLinux Linux Partition
   GPTLinuxLVM = GPTType("8e00")
-  // EFISystemPartition see https://en.wikipedia.org/wiki/EFI_system_partition
-  EFISystemPartition = GUID("C12A7328-F81F-11D2-BA4B-00A0C93EC93B")
 )
 ```
 
@@ -182,7 +177,6 @@ disks:
       - number: 1
         label: "efi"
         size: 500000000
-        guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: "root"
@@ -224,7 +218,6 @@ disks:
       - number: 1
         label: "efi"
         size: 500000000
-        guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: "root"
@@ -266,7 +259,6 @@ disks:
       - number: 1
         label: "efi"
         size: 500000000
-        guid: EFISystemPartition
         type: GPTLinuxRaid
       - number: 2
         label: "root"
@@ -279,7 +271,6 @@ disks:
       - number: 1
         label: "efi"
         size: 500000000
-        guid: EFISystemPartition
         type: GPTLinuxRaid
       - number: 2
         label: "root"
@@ -332,7 +323,6 @@ disks:
       - number: 1
         label: "efi"
         size: 500000000
-        guid: EFISystemPartition
         type: GPTBoot
       - number: 2
         label: "root"
