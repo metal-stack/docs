@@ -9,6 +9,20 @@ The original behavior of automatic filesystem layout decision must still be pres
 
 The API will get a new endpoint `filesystemlayouts` (TODO naming) to create/update/delete a set of available `filesystemlayouts`.
 
+Constraints:
+
+In order to keep the actual machine allocation api compatible, there must be no difference while allocating a machine. To achieve this every
+`filesystemlayout` defines constraints which specifies for which combination of `sizes` and `images` this layout should be used by default.
+The specified constraints over all `filesystemlayouts` therefore must be collision free, to be more specific, there must be exactly one layout outcome
+for every possible combination of `sizes` and `images`.
+
+The `size` constraint must be a list of the exact size ids, the `image` constraint must be in the semver form of the image. For example:
+
+- `>= debian-10.20210101` or `< debian-1020210101`
+
+It must also be possible to have a `filesystemlayout` in development or for other special purposes, which can be specified during the machine allocation.
+To have such a layout, both constraints `sizes` and `images`must be empty list.
+
 A `filesystemlayout` will have the following properties
 
 ```go
@@ -31,9 +45,8 @@ type FilesystemLayout struct {
 type FilesystemLayoutConstraints struct {
   // Sizes defines the list of sizes this layout applies to
   Sizes []string
-  // Images defines a list of image glob patterns this layout should apply
+  // Images defines a list of image semver expresion this layout should apply
   // the most specific combination of sizes and images will be picked fo a allocation
-  // If prefixed with "!" this image glob is not allowed
   Images []string
 }
 
@@ -133,12 +146,13 @@ Example `metalctl` outputs:
 
 ```bash
 $ metalctl filesystemlayouts ls
-ID        DESCRIPTION         SIZES                         IMAGES
-default   default fs layout   c1-large-x86, c1-xlarge-x86   debian*, ubuntu*, centos*
-ceph      fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian*, ubuntu*
-firewall  firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall*
-storage   storage fs layout   s3-large-x86                  centos*
-s3        storage fs layout   s2-xlarge-x86                 debian*, ubuntu*, firewall*
+ID             DESCRIPTION         SIZES                         IMAGES
+default        default fs layout   c1-large-x86, c1-xlarge-x86   >=debian-10, >=ubuntu-20.04, >=centos-7
+ceph           fs layout for ceph  s2-large-x86, s2-xlarge-x86   >=debian-10, >=ubuntu-20.04
+firewall       firewall fs layout  c1-large-x86, c1-xlarge-x86   >=firewall-2
+storage        storage fs layout   s3-large-x86                  >=centos-7
+s3             storage fs layout   s2-xlarge-x86                 >=debian-10, >=ubuntu-20.04, >=firewall-2
+default-devel  devel fs layout 
 ```
 
 The `default` layout reflects what is actually implemented in metal-hammer to guarantee backward compatibility.
@@ -151,9 +165,9 @@ constraints:
     - c1-large-x86
     - c1-xlarge-x86
   images:
-    - "debian*"
-    - "ubuntu*"
-    - "centos*"
+    - ">=debian-10"
+    - ">=ubuntu-20.04"
+    - ">=centos-7"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sda1"
@@ -198,7 +212,7 @@ constraints:
     - c1-large-x86
     - c1-xlarge-x86
   images:
-    - "firewall*"
+    - ">=firewall-2"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sda1"
@@ -242,7 +256,7 @@ constraints:
   sizes:
     - s3-large-x86
   images:
-    - "centos*"
+    - ">=centos-7"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/md1"
@@ -301,9 +315,9 @@ constraints:
     - c1-large-x86
     - s2-xlarge-x86
   images:
-    - "debian*"
-    - "ubuntu*"
-    - "firewall*"
+    - ">=debian-10"
+    - ">=ubuntu-20.04"
+    - ">=firewall-2"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sde1"
