@@ -9,7 +9,7 @@ The original behavior of automatic filesystem layout decision must still be pres
 
 The API will get a new endpoint `filesystemlayouts` (TODO naming) to create/update/delete a set of available `filesystemlayouts`.
 
-Constraints:
+### Constraints
 
 In order to keep the actual machine allocation api compatible, there must be no difference while allocating a machine. To achieve this every
 `filesystemlayout` defines constraints which specifies for which combination of `sizes` and `images` this layout should be used by default.
@@ -24,6 +24,19 @@ It must also be possible to have a `filesystemlayout` in development or for othe
 To have such a layout, both constraints `sizes` and `images`must be empty list.
 
 A `filesystemlayout` will have the following properties
+
+### Reinstall
+
+The current reinstall implementation the metal-hammer detects during the installation on which disk the OS was installed and reports back to the metal-api the Report struct which has two properties `primarydisk` and `ospartition`.
+Both fields are not required anymore because the logic is now shifted to the `filesystemlayout` definition. If `Disk.WipeOnReinstall` is set to true, this disk will be wiped, default is false and is preserved.
+
+### Handling of s2-xlarge machines
+
+These machines are a bit special compared to our `c1-*` machines because they have rotating hard disks for the mass storage purpose.
+The downside is that the on board SATA-DOM has the same naming as the HDDs and can not be specified as the first /dev/sda disk because all HDDs are also /dev/sd* disks.
+Therefore we had a special SATA-DOM detection algorithm inside metal-hammer which simply checks for the smallest /dev/sd disk and took this to install the OS.
+
+This is not possible with the current approach, but we figured out that the SATA-DOM is always `/dev/sde`. So we can create a special `filesystemlayout` where the installations is made on this disk.
 
 ```go
 // FilesystemLayout to be created on the given machine
@@ -112,7 +125,7 @@ type Partition struct {
   Number    int
   // Label to enhance readability
   Label     *string
-  // Size given in kubernetes resource metrics
+  // Size given in MebiBytes
   // if "0" is given the rest of the device will be used, this requires Number to be the highest in this partition
   Size      string
   // GPTType defines the GPT partition type
@@ -173,12 +186,15 @@ filesystems:
     device: "/dev/sda1"
     format: "vfat"
     options: "-F 32"
+    label: "efi" # required to be compatible with old images
   - path: "/"
     device: "/dev/sda2"
     format: "ext4"
+    label: "root" # required to be compatible with old images
   - path: "/var/lib"
     device: "/dev/sda3"
     format: "ext4"
+    label: "varlib" # required to be compatible with old images
   - path: "/tmp"
     device: "tmpfs"
     format: "tmpfs"
@@ -190,11 +206,11 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: 500000000
+        size: 500
         type: GPTBoot
       - number: 2
         label: "root"
-        size: 5000000000
+        size: 5000
         type: GPTLinux
       - number: 3
         label: "varlib"
@@ -231,11 +247,11 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: 500000000
+        size: 500
         type: GPTBoot
       - number: 2
         label: "root"
-        size: 5000000000
+        size: 5000
         type: GPTLinux
   - device: "/dev/nvme0n1"
     partitionprefix: "/dev/nvme0n1p"
@@ -272,11 +288,11 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: 500000000
+        size: 500
         type: GPTLinuxRaid
       - number: 2
         label: "root"
-        size: 5000000000
+        size: 5000
         type: GPTLinuxRaid
   - device: "/dev/sdb"
     partitionprefix: "/dev/sdb"
@@ -284,11 +300,11 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: 500000000
+        size: 500
         type: GPTLinuxRaid
       - number: 2
         label: "root"
-        size: 5000000000
+        size: 5000
         type: GPTLinuxRaid
 raid:
   - name: "/dev/md1"
@@ -336,11 +352,11 @@ disks:
     partitions:
       - number: 1
         label: "efi"
-        size: 500000000
+        size: 500
         type: GPTBoot
       - number: 2
         label: "root"
-        size: 5000000000
+        size: 5000
         type: GPTLinux
       - number: 3
         label: "varlib"
