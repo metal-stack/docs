@@ -7,7 +7,7 @@ The original behavior of automatic filesystem layout decision must still be pres
 
 ## API and behavior
 
-The API will get a new endpoint `filesystemlayouts` (TODO naming) to create/update/delete a set of available `filesystemlayouts`.
+The API will get a new endpoint `filesystemlayouts`to create/update/delete a set of available `filesystemlayouts`.
 
 ### Constraints
 
@@ -16,14 +16,12 @@ In order to keep the actual machine allocation api compatible, there must be no 
 The specified constraints over all `filesystemlayouts` therefore must be collision free, to be more specific, there must be exactly one layout outcome
 for every possible combination of `sizes` and `images`.
 
-The `size` constraint must be a list of the exact size ids, the `image` constraint must be in the semver form of the image. For example:
+The `size` constraint must be a list of the exact size ids, the `image` constraint must be a map of os to semver compatible version constraint. For example:
 
-- `>= debian-10.20210101` or `< debian-1020210101`
+- `debian: ">=10.20210101"` or `debian: "< 10.20210101"`
 
 It must also be possible to have a `filesystemlayout` in development or for other special purposes, which can be specified during the machine allocation.
 To have such a layout, both constraints `sizes` and `images`must be empty list.
-
-A `filesystemlayout` will have the following properties
 
 ### Reinstall
 
@@ -37,6 +35,8 @@ The downside is that the on board SATA-DOM has the same naming as the HDDs and c
 Therefore we had a special SATA-DOM detection algorithm inside metal-hammer which simply checks for the smallest /dev/sd disk and took this to install the OS.
 
 This is not possible with the current approach, but we figured out that the SATA-DOM is always `/dev/sde`. So we can create a special `filesystemlayout` where the installations is made on this disk.
+
+### Implementation
 
 ```go
 // FilesystemLayout to be created on the given machine
@@ -58,17 +58,12 @@ type FilesystemLayout struct {
 type FilesystemLayoutConstraints struct {
   // Sizes defines the list of sizes this layout applies to
   Sizes []string
-  // Images defines a list of image semver expresion this layout should apply
-  // the most specific combination of sizes and images will be picked fo a allocation
-  Images []string
+  // Images defines a map from os to versionconstraint
+  // the combination of os and versionconstraint per size must be conflict free over all filesystemlayouts
+  Images map[string]string
 }
 
-
-type FilesystemOption string
-type MountOption string
-type RaidOption string
 type RaidLevel string
-type Device string
 type Format string
 type GPTType string
 
@@ -77,21 +72,21 @@ type Filesystem struct {
   // Path defines the mountpoint, if nil, it will not be mounted
   Path           *string
   // Device where the filesystem is created on, must be the full device path seen by the OS
-  Device         Device
+  Device         string
   // Format is the type of filesystem should be created
   Format         Format
   // Label is optional enhances readability
   Label          *string
   // MountOptions which might be required
-  MountOptions   []MountOption
-  // Options during filesystem creation
-  Options        []FilesystemOption
+  MountOptions   []string
+  // CreateOptions during filesystem creation
+  CreateOptions  []string
 }
 
 // Disk represents a single block device visible from the OS, required
 type Disk struct {
   // Device is the full device path
-  Device          Device
+  Device          string
   // PartitionPrefix specifies which prefix is used if device is partitioned
   // e.g. device /dev/sda, first partition will be /dev/sda1, prefix is therefore /dev/sda
   // for nvme drives this is different, the prefix there is typically /dev/nvme0n1p
@@ -106,15 +101,15 @@ type Disk struct {
 // Raid is optional, if given the devices must match.
 // TODO inherit GPTType from underlay device ?
 type Raid struct {
-  // Name of the raid device, most often this will be /dev/md0 and so forth
-  Name    string
+  // ArryName of the raid device, most often this will be /dev/md0 and so forth
+  ArryName    string
   // Devices the devices to form a raid device
   Devices []Device
   // Level the raidlevel to use, can be one of 0,1,5,10 
   // TODO what should be support
   Level   RaidLevel
-  // Options required during raid creation, example: --metadata=1.0 for uefi boot partition
-  Options []RaidOption
+  // CreateOptions required during raid creation, example: --metadata=1.0 for uefi boot partition
+  CreateOptions []string
   // Spares defaults to 0
   Spares  int
 }
@@ -125,7 +120,7 @@ type Partition struct {
   Number    int
   // Label to enhance readability
   Label     *string
-  // Size given in MebiBytes
+  // Size given in MebiBytes (MiB)
   // if "0" is given the rest of the device will be used, this requires Number to be the highest in this partition
   Size      string
   // GPTType defines the GPT partition type
@@ -160,11 +155,11 @@ Example `metalctl` outputs:
 ```bash
 $ metalctl filesystemlayouts ls
 ID             DESCRIPTION         SIZES                         IMAGES
-default        default fs layout   c1-large-x86, c1-xlarge-x86   >=debian-10, >=ubuntu-20.04, >=centos-7
-ceph           fs layout for ceph  s2-large-x86, s2-xlarge-x86   >=debian-10, >=ubuntu-20.04
-firewall       firewall fs layout  c1-large-x86, c1-xlarge-x86   >=firewall-2
-storage        storage fs layout   s3-large-x86                  >=centos-7
-s3             storage fs layout   s2-xlarge-x86                 >=debian-10, >=ubuntu-20.04, >=firewall-2
+default        default fs layout   c1-large-x86, c1-xlarge-x86   debian >=10, ubuntu >=20.04, centos >=7
+ceph           fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian >=10, ubuntu >=20.04
+firewall       firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall >=2
+storage        storage fs layout   s3-large-x86                  centos >=7
+s3             storage fs layout   s2-xlarge-x86                 debian >=10, ubuntu >=20.04, >=firewall-2
 default-devel  devel fs layout 
 ```
 
@@ -178,9 +173,9 @@ constraints:
     - c1-large-x86
     - c1-xlarge-x86
   images:
-    - ">=debian-10"
-    - ">=ubuntu-20.04"
-    - ">=centos-7"
+    debian: ">=10"
+    ubuntu: ">=20.04"
+    centos: ">=7"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sda1"
@@ -228,7 +223,7 @@ constraints:
     - c1-large-x86
     - c1-xlarge-x86
   images:
-    - ">=firewall-2"
+    firewall: ">=2"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sda1"
@@ -272,7 +267,7 @@ constraints:
   sizes:
     - s3-large-x86
   images:
-    - ">=centos-7"
+    centos: ">=7"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/md1"
@@ -331,9 +326,9 @@ constraints:
     - c1-large-x86
     - s2-xlarge-x86
   images:
-    - ">=debian-10"
-    - ">=ubuntu-20.04"
-    - ">=firewall-2"
+    debian: ">=10"
+    ubuntu: ">=20.04"
+    centos: ">=7"
 filesystems:
   - path: "/boot/efi"
     device: "/dev/sde1"
@@ -381,3 +376,5 @@ disks:
   - implement `filesystemlayouts`
 - metal-go:
   - adopt api changes
+- metal-images:
+  - install mdadm for raid support
