@@ -454,14 +454,6 @@ disks:
         label: "root"
         size: 5000
         gpttype: "8300"
-      - number: 3
-        label: "vg1"
-        size: 200
-        gpttype: "8e00"
-      - number: 4
-        label: "vg2"
-        size: 200
-        gpttype: "8e00"
   - device: "/dev/nvmne0n1"
     partitionprefix: "/dev/nvmne0n1p"
     wipeonreinstall: false
