@@ -18,7 +18,13 @@ for every possible combination of `sizes` and `images`.
 
 The `size` constraint must be a list of the exact size ids, the `image` constraint must be a map of os to semver compatible version constraint. For example:
 
-- `debian: ">=10.20210101"` or `debian: "< 10.20210101"`
+- `debian: ">= 10.20210101"` or `debian: "< 10.20210101"`
+
+The general form of a `image` constraint is a map from `os` to `versionconstraint` where:
+
+`os` must match the first part of the image without the version.
+`versionconstraint` must be the comparator, a space and the version, or simply `*` to match all versions of this `os`.
+The comparator must be one of: "=", "!=", ">", "<", ">=", "=>", "<=", "=<", "~", "~>", "^"
 
 It must also be possible to have a `filesystemlayout` in development or for other special purposes, which can be specified during the machine allocation.
 To have such a layout, both constraints `sizes` and `images`must be empty list.
