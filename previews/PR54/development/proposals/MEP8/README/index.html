@@ -11,6 +11,10 @@ type FilesystemLayout struct {
   Disks       []Disk
   // Raid if not empty, create raid arrays out of the individual disks, to place filesystems onto
   Raid        []Raid
+  // VolumeGroups to create
+  VolumeGroups []VolumeGroup
+  // LogicalVolumes to create on top of VolumeGroups
+  LogicalVolumes []LogicalVolume
   // Constraints which must match to select this Layout
   Constraints FilesystemLayoutConstraints
 }
@@ -74,6 +78,29 @@ type Raid struct {
   Spares  int
 }
 
+
+// VolumeGroup is optional, if given the devices must match.
+type VolumeGroup struct {
+  // Name of the volumegroup without the /dev prefix
+  Name string
+  // Devices the devices to form a volumegroup device
+  Devices []string
+  // Tags to attach to the volumegroup
+  Tags []string
+}
+
+// LogicalVolume is a block devices created with lvm on top of a volumegroup
+type LogicalVolume struct {
+  // Name the name of the logical volume, without /dev prefix, will be accessible at /dev/vgname/lvname
+  Name string
+  // VolumeGroup the name of the volumegroup
+  VolumeGroup string
+  // Size of this LV in mebibytes (MiB)
+  Size uint64
+  // LVMType can be either striped or raid1
+  LVMType LVMType
+}
+
 // Partition is a single partition on a device, only GPT partition types are supported
 type Partition struct {
   // Number of this partition, will be added to partitionprefix
@@ -107,6 +134,13 @@ const (
   GPTLinuxRaid = GPTType(&quot;fd00&quot;)
   // GPTLinux Linux Partition
   GPTLinuxLVM = GPTType(&quot;8e00&quot;)
+
+  // LVMTypeLinear append across all physical volumes
+  LVMTypeLinear = LVMType(&quot;linear&quot;)
+  // LVMTypeStriped stripe across all physical volumes
+  LVMTypeStriped = LVMType(&quot;striped&quot;)
+  // LVMTypeStripe mirror with raid across all physical volumes
+  LVMTypeRaid1 = LVMType(&quot;raid1&quot;)
 )</code></pre><p>Example <code>metalctl</code> outputs:</p><pre><code class="language-bash">$ metalctl filesystemlayouts ls
 ID             DESCRIPTION         SIZES                         IMAGES
 default        default fs layout   c1-large-x86, c1-xlarge-x86   debian &gt;=10, ubuntu &gt;=20.04, centos &gt;=7
@@ -286,4 +320,69 @@ disks:
       - number: 3
         label: &quot;varlib&quot;
         size: 0 # to end of partition
-        type: GPTLinux</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li><li>metal-images:<ul><li>install mdadm for raid support</li></ul></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 26 April 2021 09:22">Monday 26 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+        type: GPTLinux</code></pre><p>A sample <code>lvm</code> layout which puts <code>/var/lib</code> as stripe on the nvme device</p><pre><code class="language-yaml">---
+id: lvm
+description: &quot;lvm layout&quot;
+constraints:
+  size:
+    - s2-xlarge-x86
+  images:
+    debian: &quot;&gt;=10&quot;
+    ubuntu: &quot;&gt;=20.04&quot;
+    centos: &quot;&gt;=7&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sda1&quot;
+    format: &quot;vfat&quot;
+    createoptions: 
+      - &quot;-F 32&quot;
+    label: &quot;efi&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/sda2&quot;
+    format: &quot;ext4&quot;
+    label: &quot;root&quot;
+  - path: &quot;/var/lib&quot;
+    device: &quot;/dev/vg00/varlib&quot;
+    format: &quot;ext4&quot;
+    label: &quot;varlib&quot;
+  - path: &quot;/tmp&quot;
+    device: &quot;tmpfs&quot;
+    format: &quot;tmpfs&quot;
+    mountoptions: [&quot;defaults&quot;,&quot;noatime&quot;,&quot;nosuid&quot;,&quot;nodev&quot;,&quot;noexec&quot;,&quot;mode=1777&quot;,&quot;size=512M&quot;]
+volumegroups:
+  - name: &quot;vg00&quot;
+    devices:
+      - &quot;/dev/nvmne0n1&quot;
+      - &quot;/dev/nvmne0n2&quot;
+logicalvolumes:
+  - name: &quot;varlib&quot;
+    volumegroup: &quot;vg00&quot;
+    size: 200
+    lvmtype: &quot;striped&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    partitionprefix: &quot;/dev/sda&quot;
+    wipeonreinstall: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        gpttype: &quot;ef00&quot;
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        gpttype: &quot;8300&quot;
+      - number: 3
+        label: &quot;vg1&quot;
+        size: 200
+        gpttype: &quot;8e00&quot;
+      - number: 4
+        label: &quot;vg2&quot;
+        size: 200
+        gpttype: &quot;8e00&quot;
+  - device: &quot;/dev/nvmne0n1&quot;
+    partitionprefix: &quot;/dev/nvmne0n1p&quot;
+    wipeonreinstall: false
+  - device: &quot;/dev/nvmne0n2&quot;
+    partitionprefix: &quot;/dev/nvmne0n2p&quot;
+    wipeonreinstall: false</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li><li>metal-images:<ul><li>install mdadm for raid support</li></ul></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 28 April 2021 08:36">Wednesday 28 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
