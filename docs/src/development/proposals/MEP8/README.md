@@ -51,6 +51,10 @@ type FilesystemLayout struct {
   Disks       []Disk
   // Raid if not empty, create raid arrays out of the individual disks, to place filesystems onto
   Raid        []Raid
+  // VolumeGroups to create
+  VolumeGroups []VolumeGroup
+  // LogicalVolumes to create on top of VolumeGroups
+  LogicalVolumes []LogicalVolume
   // Constraints which must match to select this Layout
   Constraints FilesystemLayoutConstraints
 }
@@ -114,6 +118,29 @@ type Raid struct {
   Spares  int
 }
 
+
+// VolumeGroup is optional, if given the devices must match.
+type VolumeGroup struct {
+  // Name of the volumegroup without the /dev prefix
+  Name string
+  // Devices the devices to form a volumegroup device
+  Devices []string
+  // Tags to attach to the volumegroup
+  Tags []string
+}
+
+// LogicalVolume is a block devices created with lvm on top of a volumegroup
+type LogicalVolume struct {
+  // Name the name of the logical volume, without /dev prefix, will be accessible at /dev/vgname/lvname
+  Name string
+  // VolumeGroup the name of the volumegroup
+  VolumeGroup string
+  // Size of this LV in mebibytes (MiB)
+  Size uint64
+  // LVMType can be either striped or raid1
+  LVMType LVMType
+}
+
 // Partition is a single partition on a device, only GPT partition types are supported
 type Partition struct {
   // Number of this partition, will be added to partitionprefix
@@ -147,6 +174,13 @@ const (
   GPTLinuxRaid = GPTType("fd00")
   // GPTLinux Linux Partition
   GPTLinuxLVM = GPTType("8e00")
+
+  // LVMTypeLinear append across all physical volumes
+  LVMTypeLinear = LVMType("linear")
+  // LVMTypeStriped stripe across all physical volumes
+  LVMTypeStriped = LVMType("striped")
+  // LVMTypeStripe mirror with raid across all physical volumes
+  LVMTypeRaid1 = LVMType("raid1")
 )
 ```
 
@@ -357,6 +391,77 @@ disks:
         label: "varlib"
         size: 0 # to end of partition
         type: GPTLinux
+```
+
+A sample `lvm` layout which puts `/var/lib` as stripe on the nvme device
+
+```yaml
+---
+id: lvm
+description: "lvm layout"
+constraints:
+  size:
+    - s2-xlarge-x86
+  images:
+    debian: ">=10"
+    ubuntu: ">=20.04"
+    centos: ">=7"
+filesystems:
+  - path: "/boot/efi"
+    device: "/dev/sda1"
+    format: "vfat"
+    createoptions: 
+      - "-F 32"
+    label: "efi"
+  - path: "/"
+    device: "/dev/sda2"
+    format: "ext4"
+    label: "root"
+  - path: "/var/lib"
+    device: "/dev/vg00/varlib"
+    format: "ext4"
+    label: "varlib"
+  - path: "/tmp"
+    device: "tmpfs"
+    format: "tmpfs"
+    mountoptions: ["defaults","noatime","nosuid","nodev","noexec","mode=1777","size=512M"]
+volumegroups:
+  - name: "vg00"
+    devices:
+      - "/dev/nvmne0n1"
+      - "/dev/nvmne0n2"
+logicalvolumes:
+  - name: "varlib"
+    volumegroup: "vg00"
+    size: 200
+    lvmtype: "striped"
+disks:
+  - device: "/dev/sda"
+    partitionprefix: "/dev/sda"
+    wipeonreinstall: true
+    partitions:
+      - number: 1
+        label: "efi"
+        size: 500
+        gpttype: "ef00"
+      - number: 2
+        label: "root"
+        size: 5000
+        gpttype: "8300"
+      - number: 3
+        label: "vg1"
+        size: 200
+        gpttype: "8e00"
+      - number: 4
+        label: "vg2"
+        size: 200
+        gpttype: "8e00"
+  - device: "/dev/nvmne0n1"
+    partitionprefix: "/dev/nvmne0n1p"
+    wipeonreinstall: false
+  - device: "/dev/nvmne0n2"
+    partitionprefix: "/dev/nvmne0n2p"
+    wipeonreinstall: false
 ```
 
 ## Components which requires modifications
