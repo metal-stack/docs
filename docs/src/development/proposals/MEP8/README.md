@@ -97,10 +97,6 @@ type Filesystem struct {
 type Disk struct {
   // Device is the full device path
   Device          string
-  // PartitionPrefix specifies which prefix is used if device is partitioned
-  // e.g. device /dev/sda, first partition will be /dev/sda1, prefix is therefore /dev/sda
-  // for nvme drives this is different, the prefix there is typically /dev/nvme0n1p
-  PartitionPrefix string
   // Partitions to create on this device
   Partitions      []Partition
   // WipeOnReinstall, if set to true the whole disk will be erased if reinstall happens
@@ -149,7 +145,7 @@ type LogicalVolume struct {
 
 // Partition is a single partition on a device, only GPT partition types are supported
 type Partition struct {
-  // Number of this partition, will be added to partitionprefix
+  // Number of this partition, will be added to the device once partitioned
   Number    int
   // Label to enhance readability
   Label     *string
@@ -236,7 +232,6 @@ filesystems:
     mountoptions: ["defaults","noatime","nosuid","nodev","noexec","mode=1777","size=512M"]
 disks:
   - device: "/dev/sda"
-    partitionprefix: "/dev/sda"
     wipe: true
     partitions:
       - number: 1
@@ -277,7 +272,6 @@ filesystems:
     format: "ext4"
 disks:
   - device: "/dev/sda"
-    partitionprefix: "/dev/sda"
     wipe: true
     partitions:
       - number: 1
@@ -289,7 +283,6 @@ disks:
         size: 5000
         type: GPTLinux
   - device: "/dev/nvme0n1"
-    partitionprefix: "/dev/nvme0n1p"
     wipe: true
     partitions:
       - number: 1
@@ -318,7 +311,6 @@ filesystems:
     format: "ext4"
 disks:
   - device: "/dev/sda"
-    partitionprefix: "/dev/sda"
     wipe: true
     partitions:
       - number: 1
@@ -330,7 +322,6 @@ disks:
         size: 5000
         type: GPTLinuxRaid
   - device: "/dev/sdb"
-    partitionprefix: "/dev/sdb"
     wipe: true
     partitions:
       - number: 1
@@ -382,7 +373,6 @@ filesystems:
     format: "ext4"
 disks:
   - device: "/dev/sde"
-    partitionprefix: "/dev/sde"
     wipe: true
     partitions:
       - number: 1
@@ -443,7 +433,6 @@ logicalvolumes:
     lvmtype: "striped"
 disks:
   - device: "/dev/sda"
-    partitionprefix: "/dev/sda"
     wipeonreinstall: true
     partitions:
       - number: 1
@@ -455,10 +444,8 @@ disks:
         size: 5000
         gpttype: "8300"
   - device: "/dev/nvmne0n1"
-    partitionprefix: "/dev/nvmne0n1p"
     wipeonreinstall: false
   - device: "/dev/nvmne0n2"
-    partitionprefix: "/dev/nvmne0n2p"
     wipeonreinstall: false
 ```
 
