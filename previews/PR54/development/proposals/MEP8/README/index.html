@@ -51,10 +51,6 @@ type Filesystem struct {
 type Disk struct {
   // Device is the full device path
   Device          string
-  // PartitionPrefix specifies which prefix is used if device is partitioned
-  // e.g. device /dev/sda, first partition will be /dev/sda1, prefix is therefore /dev/sda
-  // for nvme drives this is different, the prefix there is typically /dev/nvme0n1p
-  PartitionPrefix string
   // Partitions to create on this device
   Partitions      []Partition
   // WipeOnReinstall, if set to true the whole disk will be erased if reinstall happens
@@ -103,7 +99,7 @@ type LogicalVolume struct {
 
 // Partition is a single partition on a device, only GPT partition types are supported
 type Partition struct {
-  // Number of this partition, will be added to partitionprefix
+  // Number of this partition, will be added to the device once partitioned
   Number    int
   // Label to enhance readability
   Label     *string
@@ -178,7 +174,6 @@ filesystems:
     mountoptions: [&quot;defaults&quot;,&quot;noatime&quot;,&quot;nosuid&quot;,&quot;nodev&quot;,&quot;noexec&quot;,&quot;mode=1777&quot;,&quot;size=512M&quot;]
 disks:
   - device: &quot;/dev/sda&quot;
-    partitionprefix: &quot;/dev/sda&quot;
     wipe: true
     partitions:
       - number: 1
@@ -213,7 +208,6 @@ filesystems:
     format: &quot;ext4&quot;
 disks:
   - device: &quot;/dev/sda&quot;
-    partitionprefix: &quot;/dev/sda&quot;
     wipe: true
     partitions:
       - number: 1
@@ -225,7 +219,6 @@ disks:
         size: 5000
         type: GPTLinux
   - device: &quot;/dev/nvme0n1&quot;
-    partitionprefix: &quot;/dev/nvme0n1p&quot;
     wipe: true
     partitions:
       - number: 1
@@ -248,7 +241,6 @@ filesystems:
     format: &quot;ext4&quot;
 disks:
   - device: &quot;/dev/sda&quot;
-    partitionprefix: &quot;/dev/sda&quot;
     wipe: true
     partitions:
       - number: 1
@@ -260,7 +252,6 @@ disks:
         size: 5000
         type: GPTLinuxRaid
   - device: &quot;/dev/sdb&quot;
-    partitionprefix: &quot;/dev/sdb&quot;
     wipe: true
     partitions:
       - number: 1
@@ -306,7 +297,6 @@ filesystems:
     format: &quot;ext4&quot;
 disks:
   - device: &quot;/dev/sde&quot;
-    partitionprefix: &quot;/dev/sde&quot;
     wipe: true
     partitions:
       - number: 1
@@ -361,7 +351,6 @@ logicalvolumes:
     lvmtype: &quot;striped&quot;
 disks:
   - device: &quot;/dev/sda&quot;
-    partitionprefix: &quot;/dev/sda&quot;
     wipeonreinstall: true
     partitions:
       - number: 1
@@ -373,8 +362,6 @@ disks:
         size: 5000
         gpttype: &quot;8300&quot;
   - device: &quot;/dev/nvmne0n1&quot;
-    partitionprefix: &quot;/dev/nvmne0n1p&quot;
     wipeonreinstall: false
   - device: &quot;/dev/nvmne0n2&quot;
-    partitionprefix: &quot;/dev/nvmne0n2p&quot;
-    wipeonreinstall: false</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li><li>metal-images:<ul><li>install mdadm for raid support</li></ul></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 28 April 2021 08:59">Wednesday 28 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    wipeonreinstall: false</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li><li>metal-images:<ul><li>install mdadm for raid support</li></ul></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 29 April 2021 04:59">Thursday 29 April 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
