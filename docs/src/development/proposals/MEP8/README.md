@@ -42,6 +42,15 @@ Therefore we had a special SATA-DOM detection algorithm inside metal-hammer whic
 
 This is not possible with the current approach, but we figured out that the SATA-DOM is always `/dev/sde`. So we can create a special `filesystemlayout` where the installations is made on this disk.
 
+### Possible Filesystemlayout hierarchies
+
+It is only possible to create a filesystem on top of a block device. The creation of a block device can be done on multiple ways, depending on the requirements regarding performance, space and redundancy of the filesystem.
+It also depends on the disks available on the server.
+
+The current approach implements the following hierarchies:
+
+![filesystems](filesystems.png)
+
 ### Implementation
 
 ```go
