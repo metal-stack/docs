@@ -15,7 +15,7 @@ Depth = 5
 
 ### Ansible fails when the metal control plane helm chart gets applied
 
-There can be many reasons for this. Since you are deploying the metal control plane into a Kubernetes cluster, the first step should be to install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and check the pods in your cluster. Depending on the metal-stack version and Kubernetes cluster, your control-plane should look something like this after the deployment (this is in a Kind cluster):
+There can be many reasons for this. Since you are deploying the metal control plane into a Kubernetes cluster, the first step should be to install [kubectl](https://kubernetes.io/docs/tasks/tools/) and check the pods in your cluster. Depending on the metal-stack version and Kubernetes cluster, your control-plane should look something like this after the deployment (this is in a Kind cluster):
 
 ```bash
 kubectl get pod -A
