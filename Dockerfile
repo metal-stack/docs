@@ -1,4 +1,4 @@
-FROM julia:1.4.2
+FROM julia:1.6.1
 WORKDIR /workdir
 COPY Project.toml Project.toml
 COPY docs/Project.toml docs/Project.toml
