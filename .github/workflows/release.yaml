@@ -16,7 +16,7 @@ jobs:
           lfs: true
       - uses: julia-actions/setup-julia@latest
         with:
-          version: 1.4.2
+          version: 1.6.1
       - name: Install dependencies
         run: julia --color=yes --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()))'
       - name: Build and deploy
