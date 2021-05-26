@@ -8,11 +8,13 @@ We came up with a repository called [go-hal](https://github.com/metal-stack/go-h
 
 At the moment we support the following server types:
 
-| Vendor     | Series      | Model            | Status |
-| :--------- | :---------- | :--------------- |:-------|
-| Supermicro | Big-Twin    | SYS-2029BT-HNR   | stable |
-| Supermicro | SuperServer | SSG-5019D8-TR12P | stable |
-| Lenovo     | ThinkSystem | SD530            | alpha  |
+| Vendor     | Series      | Model            | Board Type | Status |
+| :--------- | :---------- | :--------------- |:-----------|:-------|
+| Supermicro | Big-Twin    | SYS-2029BT-HNR   | X11DPT-B | stable |
+| Supermicro | SuperServer | SSG-5019D8-TR12P | X11SDV-8C-TP8F | stable |
+| Supermicro | SuperServer | 2029UZ-TN20R25M  | X11DPU | stable |
+| Supermicro | Microcloud  | 5039MD8-H8TNR    | X11SDD-8C-F | stable |
+| Lenovo     | ThinkSystem | SD530            | |  alpha  |
 
 ## Switches
 
