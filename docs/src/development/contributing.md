@@ -40,7 +40,7 @@ This section contains language-agnostic topics that all metal-stack projects are
 
 The code base is owned by the entire team and every member is allowed to contribute changes to any of the projects. This is considered as collective code ownership[^1].
 
-As a matter of fact, there are persons in a project, which already have experience with the sources. These are defined directly in the repository's [CODEOWNERS](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners.) file. If you want to merge changes into the master branch, it is advisable to include code owners into the proecess of discussion and merging.
+As a matter of fact, there are persons in a project, which already have experience with the sources. These are defined directly in the repository's [CODEOWNERS](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners) file. If you want to merge changes into the master branch, it is advisable to include code owners into the proecess of discussion and merging.
 
 ### Microservices
 
