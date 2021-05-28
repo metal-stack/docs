@@ -50,7 +50,7 @@ Furthermore, requirements such as *operational simplicity* and *network stabilit
 
 ## Concept
 
-The theoretical concept targets the aforementioned requirements. New technologies have been evaluated to apply the best solutions. The process was heavily inspired by the work of Dinesh G. Dutt regarding BGP ([bgp-ebook](https://cumulusnetworks.com/lp/bgp-ebook/)) and EVPN ([evpn-ebook](https://cumulusnetworks.com/lp/evpn-data-center-oreilly/)).
+The theoretical concept targets the aforementioned requirements. New technologies have been evaluated to apply the best solutions. The process was heavily inspired by the work of Dinesh G. Dutt regarding BGP ([bgp-ebook](https://www.nvidia.com/en-us/networking/border-gateway-protocol/)) and EVPN ([evpn-ebook](https://www.nvidia.com/en-us/networking/evpn-ebook/)).
 
 External BGP together with network overlay concepts as EVPN can address the essential demands. These revolutionary concepts are part of the next evolutionary step in data center design. It overcomes common issues of traditional layer 2 architectures (e.g. VLAN limitations, network visibility for operations, firewall requirements) by introducing a layer 3 based network topology.
 
