@@ -227,7 +227,7 @@ Now you can parametrize the referenced roles to fit your environment. The role p
 
 ```yaml
 ---
-metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also start with <ingress-ip>.xip.io
+metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS entry, you could also start with <ingress-ip>.nip.io
 ```
 
 ### Providing Certificates
