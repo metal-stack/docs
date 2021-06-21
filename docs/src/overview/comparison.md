@@ -29,7 +29,7 @@ Is an [IaaS](https://en.wikipedia.org/wiki/Infrastructure_as_a_service) provider
 
 ## VMWare
 
-The most used virtualization technology in the Enterprise Datacenters.
+The most used virtualization technology in the enterprise data centers.
 
 ## Comparison of Gardener on Metal Stack vs. Openshift on VMWare
 
