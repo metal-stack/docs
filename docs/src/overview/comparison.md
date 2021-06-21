@@ -23,7 +23,7 @@ It manages not only the creation and deletion of a Kubernetes Cluster, it also t
 
 A fork of Kubernetes with proprietary addons, created by RedHat. For all details see: [https://en.wikipedia.org/wiki/OpenShift](https://en.wikipedia.org/wiki/OpenShift).
 
-## Metal Stack
+## metal-stack
 
 Is an [IaaS](https://en.wikipedia.org/wiki/Infrastructure_as_a_service) provider for bare metal focused to create Kubernetes cluster on premise. Gardener support is built in.
 
