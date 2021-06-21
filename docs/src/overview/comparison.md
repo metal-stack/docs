@@ -33,27 +33,26 @@ The most used virtualization technology in the enterprise data centers.
 
 ## Comparison of Gardener on Metal Stack vs. Openshift on VMWare
 
-| Feature                        | Gardener on Metal Stack                                                            | Openshift on VMWare                                         |
-|--------------------------------|------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| Container Runtime              | docker, containerd, gvisor                                                         | cri-o                                                       |
-| Host Operating System          | Ubuntu, Debian                                                                     | RHEL, Fedora-Core                                           |
-| Network Plugins                | Calico, Cilium                                                                     | Openshift SDN                                               |
-| Storage                        | Local NVME, Lightbits NVMEoTCP, all CSI compatible Solutions                       | CSI compatible                                              |
-| Loadbalancing                  | BGP built in                                                                       | requires extra HW like F5, VMWare NSX                       |
-| IO at Native Speed             | Pods run on bare metal                                                             | all IO must go through the Hypervisor                       |
-| Hard Multitenancy              | Workers, firewall and load balancers are dedicated for every cluster on bare metal | Shared virtualization hosts, shared load balancers          |
-| UI                             | Gardener Dashboard                                                                 | Openshift Console                                           |
-| Multi-cluster management       | Yes (through Gardener)                                                             | Requires extra licences SW: Redhat Advanced Cluster Manager |
-| Automatic Kubernetes Updates   | Yes                                                                                | Yes                                                         |
-| Automatic Worker Nodes Updates | Yes                                                                                | Yes                                                         |
-| Supported IaaS Providers       | GCP, AWS, Azure, Alibaba, Openstack, VMWare, metal-stack and more                  | GCP, AWS, Azure Openstack, VMWare                           |
-| Monitoring / Logging Stack     | Grafana/Loki, Kibana/Elastic                                                       | Kibana/Elastic                                              |
-| GitOPS                         | Tool of choice via Helm Install                                                    | Openshift GitOPS                                            |
-| Container Registry             | all public accessible registries, private deployed registry of choice              | all public accessible registries, in cluster registry       |
-| CI/CD                          | Tool of choice via Helm Install                                                    | Jenkins                                                     |
-| Security                       | PSP enabled by default                                                             | Strong cluster defaults                                     |
-| CNCF Kubernetes certified      | Yes (Gardener)                                                                     | Yes                                                         |
-| Local development              | minikube, kind                                                                     | minishift                                                   |
-| Proprietary extensions         | No                                                                                 | DeploymentConfig and others                                 |
-| kubectl access                 | Yes                                                                                | Yes                                                         |
-| helm3 support                  | Yes                                                                                | Yes                                                         |
+| Feature                        | Gardener on Metal Stack                                                                                       | Openshift on VMWare                                         |
+|:-------------------------------|:--------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------|
+| Container Runtime              | docker, containerd, gvisor                                                                                    | cri-o                                                       |
+| Host Operating System          | Ubuntu, Debian                                                                                                | RHEL, Fedora-Core                                           |
+| Network Plugins                | Calico, Cilium                                                                                                | Openshift SDN                                               |
+| Storage                        | Local NVME, Lightbits NVMEoTCP, all CSI compatible Solutions                                                  | CSI compatible                                              |
+| Loadbalancing                  | BGP built in                                                                                                  | requires extra HW like F5, VMWare NSX                       |
+| IO at Native Speed             | Pods run on bare metal                                                                                        | all IO must go through the Hypervisor                       |
+| Hard Multitenancy              | Workers, firewall and load balancers are dedicated for every cluster on bare metal                            | Shared virtualization hosts, shared load balancers          |
+| UI                             | Gardener Dashboard                                                                                            | Openshift Console                                           |
+| Multi-cluster management       | Yes (through Gardener)                                                                                        | Requires extra licences SW: Redhat Advanced Cluster Manager |
+| Automatic Kubernetes Updates   | Yes                                                                                                           | Yes                                                         |
+| Automatic Worker Nodes Updates | Yes                                                                                                           | Yes                                                         |
+| Supported IaaS Providers       | GCP, AWS, Azure, Alibaba, Openstack, VMWare, metal-stack and more                                             | GCP, AWS, Azure Openstack, VMWare                           |
+| Monitoring / Logging Stack     | Grafana/Loki, Kibana/Elastic                                                                                  | Kibana/Elastic                                              |
+| GitOPS                         | Tool of choice via Helm Install                                                                               | Openshift GitOPS                                            |
+| Container Registry             | all public accessible registries, private deployed registry of choice                                         | all public accessible registries, in cluster registry       |
+| CI/CD                          | Tool of choice via Helm Install                                                                               | Jenkins                                                     |
+| Security                       | PSP enabled by default                                                                                        | Strong cluster defaults                                     |
+| CNCF Kubernetes certified      | Yes (Gardener)                                                                                                | Yes                                                         |
+| Local development              | [minikube](https://minikube.sigs.k8s.io/docs/start/), [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) | [minishift](https://www.okd.io/minishift)                   |
+| Proprietary extensions         | No                                                                                                            | DeploymentConfig and others                                 |
+| kubectl access                 | Yes                                                                                                           | Yes                                                         |
