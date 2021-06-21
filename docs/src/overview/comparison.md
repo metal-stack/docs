@@ -17,7 +17,7 @@ It manages not only the creation and deletion of a Kubernetes Cluster, it also t
 
 ## Kubernetes
 
-[Kubernetes](https://kubernetes.io) is the de facto Open Source standard for Container Scheduling and Orchestration in the Datacenter.
+[Kubernetes](https://kubernetes.io) is the de facto open-source standard for container scheduling and orchestration in the data center.
 
 ## Openshift
 
@@ -57,4 +57,3 @@ The most used virtualization technology in the Enterprise Datacenters.
 | Proprietary extensions         | No                                                                                 | DeploymentConfig and others                                 |
 | kubectl access                 | Yes                                                                                | Yes                                                         |
 | helm3 support                  | Yes                                                                                | Yes                                                         |
-
