@@ -25,7 +25,7 @@ A fork of Kubernetes with proprietary addons, created by RedHat. For all details
 
 ## Metal Stack
 
-Is a [IaaS](https://en.wikipedia.org/wiki/Infrastructure_as_a_service) provider for bare metal focused to create Kubernetes Cluster On Premise. Gardener support is built in.
+Is an [IaaS](https://en.wikipedia.org/wiki/Infrastructure_as_a_service) provider for bare metal focused to create Kubernetes cluster on premise. Gardener support is built in.
 
 ## VMWare
 
