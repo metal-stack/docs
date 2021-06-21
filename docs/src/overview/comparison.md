@@ -21,7 +21,7 @@ It manages not only the creation and deletion of a Kubernetes Cluster, it also t
 
 ## Openshift
 
-A Fork of Kubernetes with proprietary addons, created by RedHat. For all Details see: [https://en.wikipedia.org/wiki/OpenShift](https://en.wikipedia.org/wiki/OpenShift).
+A fork of Kubernetes with proprietary addons, created by RedHat. For all details see: [https://en.wikipedia.org/wiki/OpenShift](https://en.wikipedia.org/wiki/OpenShift).
 
 ## Metal Stack
 
