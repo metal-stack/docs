@@ -26,6 +26,7 @@ makedocs(
             "Operating Systems" => "overview/os.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
             "Storage" => "overview/storage.md",
+            "Comparison" => "overview/comparison.md",
         ],
         "Quickstart" => "quickstart.md",
         "Installation & Administration" => Any[
