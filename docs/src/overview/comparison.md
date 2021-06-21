@@ -36,9 +36,9 @@ The most used virtualization technology in the enterprise data centers.
 | Feature                        | Gardener on Metal Stack                                                                                       | Openshift on VMWare                                         |
 |:-------------------------------|:--------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------|
 | Container Runtime              | docker, containerd, gvisor                                                                                    | cri-o                                                       |
-| Host Operating System          | Ubuntu, Debian                                                                                                | RHEL, Fedora-Core                                           |
+| Host Operating System          | Ubuntu, Debian , also see [OS](os.md)                                                                         | RHEL, Fedora-Core                                           |
 | Network Plugins                | Calico, Cilium                                                                                                | Openshift SDN                                               |
-| Storage                        | Local NVME, Lightbits NVMEoTCP, all CSI compatible Solutions                                                  | CSI compatible                                              |
+| Storage                        | Local NVME, Lightbits NVMEoTCP, all CSI compatible Solutions, also see [Storage](storage.md)                  | CSI compatible                                              |
 | Loadbalancing                  | BGP built in                                                                                                  | requires extra HW like F5, VMWare NSX                       |
 | IO at Native Speed             | Pods run on bare metal                                                                                        | all IO must go through the Hypervisor                       |
 | Hard Multitenancy              | Workers, firewall and load balancers are dedicated for every cluster on bare metal                            | Shared virtualization hosts, shared load balancers          |
