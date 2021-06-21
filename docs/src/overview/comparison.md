@@ -13,7 +13,7 @@ Comparison between Gardener on Metal Stack and Openshift running on VMWare.
 ## Gardener
 
 [Gardener](https://gardener.cloud) is a Kubernetes cluster manager to organize a fleet of Kubernetes clusters at scale. It is designed to scale to thousands of clusters at a variety of IaaS Providers regardless where - in the cloud or on premise, virtualized or bare metal.
-It manages not only the creation and deletion of a Kubernetes Cluster, it also takes care of updates and upgrades of kubernetes and the Operating System of the involved Worker Nodes in a automatic Manner. Its designed Cloud Native as it defines Clustes, Workers and all other Components like Pods and Deployments as Kubernetes Resources which are reconciled to the desired state.
+It not only manages the creation and deletion of Kubernetes clusters, it also takes care of updating or upgrading Kubernetes and the operating system of the involved worker nodes in a automatic manner. Gardener is designed cloud-native and as such, it defines clusters, workers and all other components as Kubernetes resources (like pods and deployments) and reconciles these resources to the desired state.
 
 ## Kubernetes
 
