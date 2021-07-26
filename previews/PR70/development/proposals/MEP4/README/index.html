@@ -123,10 +123,17 @@ Permissions:
   metal.v2.machine.create
   metal.v2.machine.delete
 Resources:
-  *</code></pre></li></ul><p>General question: Should there be a <code>masterdatactl</code> (something like an extension of <code>metalctl</code>) to maintain tenants, projects, quotas, users, roles and accounting details?</p><h2 id="Centralized-vs.-Decentralized-User-Management"><a class="docs-heading-anchor" href="#Centralized-vs.-Decentralized-User-Management">Centralized vs. Decentralized User Management</a><a id="Centralized-vs.-Decentralized-User-Management-1"></a><a class="docs-heading-anchor-permalink" href="#Centralized-vs.-Decentralized-User-Management" title="Permalink"></a></h2><ul><li>TBD (Dex, Keycloak, User Management)</li><li>Initial user workflow</li><li>Connect to external user management?</li></ul><p>Advantages of Centralized:</p><ul><li>Much easier to adopt</li><li>More developer-friendly</li><li>Better to unit test</li></ul><p>Advantages of Decentralized:</p><ul><li>Compliance (regulatory compliance)</li></ul><h3 id="Global-and-User-Scopes-for-Resources"><a class="docs-heading-anchor" href="#Global-and-User-Scopes-for-Resources">Global &amp; User Scopes for Resources</a><a id="Global-and-User-Scopes-for-Resources-1"></a><a class="docs-heading-anchor-permalink" href="#Global-and-User-Scopes-for-Resources" title="Permalink"></a></h3><p>The admins / operators of the metal-stack should be able to provide &quot;global&quot; resources that users are able to use. This means, that users can view and use these resources, but they are not allowed to create, modify or delete them.</p><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>When a project ID is empty on a resource, the resource is considered &quot;global&quot;.</p></div></div><p>Where possible, users should be capable of creating their own resource entities.</p><table><tr><th style="text-align: left">Resource</th><th style="text-align: left">User</th><th style="text-align: left">Global</th></tr><tr><td style="text-align: left">File System Layout</td><td style="text-align: left">yes</td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Firewall</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Firmware</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">OS Image</td><td style="text-align: left">yes</td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Machine</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Network (Base)</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Network (Children)</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">IP</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Partition</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Project</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Size</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Switch</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr></table><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>A user can make use of the file system layouts provided by the admins, but can also create own layouts. Same applies for images. As soon as a user creates own resources, the user takes over the responsibility for the machine provisioning to succeed.</p></div></div><h3 id="Auditing"><a class="docs-heading-anchor" href="#Auditing">Auditing</a><a id="Auditing-1"></a><a class="docs-heading-anchor-permalink" href="#Auditing" title="Permalink"></a></h3><p>With the new API we also have the chance of introducing API auditing throughout the resources.</p><p>The auditing can be configured with different emitters, like:</p><ul><li>Rethinkdb (can be accessed through <code>metalctl audit ls</code>)</li><li>Splunk</li><li>Elasticsearch</li><li>...</li></ul><p>And contain:</p><ul><li>User information (name, mail)</li><li>Requested endpoint path</li><li>Permissions</li><li>OPA decision</li><li>Status code</li></ul><h2 id="Implementation"><a class="docs-heading-anchor" href="#Implementation">Implementation</a><a id="Implementation-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation" title="Permalink"></a></h2><ul><li>Introducing API V2</li><li>Introducing OPA</li><li>Common filter queries for all resources</li></ul><h3 id="API-v2"><a class="docs-heading-anchor" href="#API-v2">API v2</a><a id="API-v2-1"></a><a class="docs-heading-anchor-permalink" href="#API-v2" title="Permalink"></a></h3><p>We will need an API v2, which gives all components and users time to slowly change to the new API while maintaining the current functionality of the endpoints in the metal-api.</p><ul><li>Introduce new paths that allow decisions about access very early in the game (only from endpoint and the user permissions)</li><li>Get rid off layer HMAC auth (replaced by project tokens)</li><li>Move internal endpoints to gRPC (e.g. register machine), remove daisy-chained swagger client from metal-core</li><li>Remove request wrapper structs from metal-go (https://github.com/metal-stack/metal-go/issues/33)</li></ul><p>We can start working on this for every resource individually. The work will potentially turn into a new shared layer with common functionality between v1/v2 (e.g. code for machine creation) with the API-specific packages only becoming responsible for mapping requests.</p><h3 id="Resource-Paths"><a class="docs-heading-anchor" href="#Resource-Paths">Resource Paths</a><a id="Resource-Paths-1"></a><a class="docs-heading-anchor-permalink" href="#Resource-Paths" title="Permalink"></a></h3><p>Suggested convention for path layout: <code>/:api-version/:resource/:id[/&lt;operation&gt;][?project-id=:projectid]</code></p><p>The project ID has to become part of the path layout because extracting the project from the request payload is hard to achieve.</p><p>In order to create the input for OPA, we need a call to the backend on the user name + project ID. The response contains the permissions and resources on this project.</p><h4 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h4><p>Let&#39;s imagine a user issuing the following request:</p><pre><code class="language-none">metalctl machine describe 00000000-0000-0000-0000-ac1f6b7befb2</code></pre><p>This will call <code>GET /v2/machine/00000000-0000-0000-0000-ac1f6b7befb2?project-id=my-project</code>.</p><p>Here is an example rule set for OPA (you can try it on the <a href="https://play.openpolicyagent.org/">rego playground</a>):</p><pre><code class="language-none">package api.v2.metalstack.io.authz
+  *</code></pre></li></ul><p>General question: Should there be a <code>masterdatactl</code> (something like an extension of <code>metalctl</code>) to maintain tenants, projects, quotas, users, roles and accounting details?</p><h2 id="Centralized-vs.-Decentralized-User-Management"><a class="docs-heading-anchor" href="#Centralized-vs.-Decentralized-User-Management">Centralized vs. Decentralized User Management</a><a id="Centralized-vs.-Decentralized-User-Management-1"></a><a class="docs-heading-anchor-permalink" href="#Centralized-vs.-Decentralized-User-Management" title="Permalink"></a></h2><ul><li>TBD (Dex, Keycloak, User Management)</li><li>Initial user workflow</li><li>Connect to external user management?</li></ul><p>Advantages of Centralized:</p><ul><li>Much easier to adopt</li><li>More developer-friendly</li><li>Better to unit test</li></ul><p>Advantages of Decentralized:</p><ul><li>Compliance (regulatory compliance)</li></ul><h3 id="Global-and-User-Scopes-for-Resources"><a class="docs-heading-anchor" href="#Global-and-User-Scopes-for-Resources">Global &amp; User Scopes for Resources</a><a id="Global-and-User-Scopes-for-Resources-1"></a><a class="docs-heading-anchor-permalink" href="#Global-and-User-Scopes-for-Resources" title="Permalink"></a></h3><p>The admins / operators of the metal-stack should be able to provide &quot;global&quot; resources that users are able to use. This means, that users can view and use these resources, but they are not allowed to create, modify or delete them.</p><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>When a project ID is empty on a resource, the resource is considered &quot;global&quot;.</p></div></div><p>Where possible, users should be capable of creating their own resource entities.</p><table><tr><th style="text-align: left">Resource</th><th style="text-align: left">User</th><th style="text-align: left">Global</th></tr><tr><td style="text-align: left">File System Layout</td><td style="text-align: left">yes</td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Firewall</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Firmware</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">OS Image</td><td style="text-align: left">yes</td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Machine</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Network (Base)</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Network (Children)</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">IP</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Partition</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Project</td><td style="text-align: left">yes</td><td style="text-align: left"></td></tr><tr><td style="text-align: left">Size</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr><tr><td style="text-align: left">Switch</td><td style="text-align: left"></td><td style="text-align: left">yes</td></tr></table><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>A user can make use of the file system layouts provided by the admins, but can also create own layouts. Same applies for images. As soon as a user creates own resources, the user takes over the responsibility for the machine provisioning to succeed.</p></div></div><h3 id="Auditing"><a class="docs-heading-anchor" href="#Auditing">Auditing</a><a id="Auditing-1"></a><a class="docs-heading-anchor-permalink" href="#Auditing" title="Permalink"></a></h3><p>With the new API we also have the chance of introducing API auditing throughout the resources.</p><p>The auditing can be configured with different emitters, like:</p><ul><li>Rethinkdb (can be accessed through <code>metalctl audit ls</code>)</li><li>Splunk</li><li>Elasticsearch</li><li>...</li></ul><p>And contain:</p><ul><li>User information (name, mail)</li><li>Requested endpoint path</li><li>Permissions</li><li>OPA decision</li><li>Status code</li></ul><h2 id="Implementation"><a class="docs-heading-anchor" href="#Implementation">Implementation</a><a id="Implementation-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation" title="Permalink"></a></h2><ul><li>Introducing API V2</li><li>Introducing OPA</li><li>Common filter queries for all resources</li></ul><h3 id="API-v2"><a class="docs-heading-anchor" href="#API-v2">API v2</a><a id="API-v2-1"></a><a class="docs-heading-anchor-permalink" href="#API-v2" title="Permalink"></a></h3><p>We will need an API v2, which gives all components and users time to slowly change to the new API while maintaining the current functionality of the endpoints in the metal-api.</p><ul><li>Introduce new paths that allow decisions about access very early in the game (only from endpoint and the user permissions)</li><li>Get rid off layer HMAC auth (replaced by project tokens)</li><li>Move internal endpoints to gRPC (e.g. register machine), remove daisy-chained swagger client from metal-core</li><li>Remove request wrapper structs from metal-go (https://github.com/metal-stack/metal-go/issues/33)</li></ul><p>We can start working on this for every resource individually. The work will potentially turn into a new shared layer with common functionality between v1/v2 (e.g. code for machine creation) with the API-specific packages only becoming responsible for mapping requests.</p><h3 id="Resource-Paths"><a class="docs-heading-anchor" href="#Resource-Paths">Resource Paths</a><a id="Resource-Paths-1"></a><a class="docs-heading-anchor-permalink" href="#Resource-Paths" title="Permalink"></a></h3><p>Suggested convention for path layout: <code>/:api-version/:resource/:id[/&lt;operation&gt;][?project-id=:projectid]</code></p><p>The project ID has to become part of the path layout because extracting the project from the request payload is hard to achieve.</p><p>In order to create the input for OPA, we need a call to the backend on the user name + project ID. The response contains the permissions and resources on this project.</p><h4 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h4><p>Let&#39;s imagine a user issuing the following request:</p><pre><code class="language-none">metalctl image describe ubuntu-20.04.20210606</code></pre><p>This will call <code>GET /v2/image/ubuntu-20.04.20210606?project-id=my-project</code>.</p><p>Here is an example rule set for OPA (you can try it on the <a href="https://play.openpolicyagent.org/">rego playground</a>):</p><pre><code class="language-none">package api.v2.metalstack.io.authz
 
 permissions = {
-  &quot;metal.v2.machine.get&quot;
+  &quot;metal.v2.image.get&quot;,
+  &quot;metal.v2.image.list&quot;,
+  &quot;metal.v2.image.create&quot;,
+  &quot;metal.v2.image.update&quot;,
+  &quot;metal.v2.image.delete&quot;,
+  &quot;metal.v2.admin.image.create&quot;,
+  &quot;metal.v2.admin.image.update&quot;,
+  &quot;metal.v2.admin.image.delete&quot;
 }
 
 default decision = {&quot;allow&quot;: false}
@@ -137,13 +144,6 @@ match(e) {
 
 decision = {&quot;allow&quot;: true} {
   match(e.permission)
-  input.request.project != &quot;&quot;
-}
-
-decision = {&quot;allow&quot;: true} {
-  match(e.permission)
-  input.backend.admin
-  input.request.project == &quot;&quot;
 }
 
 decision = {&quot;allow&quot;: false, &quot;reason&quot;: reason} {
@@ -151,17 +151,63 @@ decision = {&quot;allow&quot;: false, &quot;reason&quot;: reason} {
   reason := sprintf(&quot;missing permission on %s&quot;, [e.permission])
 }
 
-decision = {&quot;allow&quot;: false, &quot;reason&quot;: reason} {
-  not input.backend.admin
-  input.request.project == &quot;&quot;
-  reason := &quot;global resource access requires admin rights&quot;
-}
-
-
-e = {&quot;permission&quot;: permissions[&quot;metal.v2.machine.get&quot;]} {
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.image.get&quot;]} {
   some id
   input.request.method = &quot;GET&quot;
-  input.request.path = [&quot;v2&quot;, &quot;machine&quot;, id]
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  glob.match(input.backend.resources, [&quot;,&quot;], id)
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.image.list&quot;]} {
+  input.request.method = &quot;GET&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;]
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.image.create&quot;]} {
+  some id
+  input.request.method = &quot;PUT&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  input.request.project != &quot;&quot;
+  glob.match(input.backend.resources, [&quot;,&quot;], id)
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.image.update&quot;]} {
+  some id
+  input.request.method = &quot;POST&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  input.request.project != &quot;&quot;
+  glob.match(input.backend.resources, [&quot;,&quot;], id)
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.image.delete&quot;]} {
+  some id
+  input.request.method = &quot;DELETE&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  input.request.project != &quot;&quot;
+  glob.match(input.backend.resources, [&quot;,&quot;], id)
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.admin.image.create&quot;]} {
+  some id
+  input.request.method = &quot;PUT&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  input.request.project == &quot;&quot;
+  glob.match(input.backend.resources, [&quot;,&quot;], id)
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.admin.image.update&quot;]} {
+  some id
+  input.request.method = &quot;POST&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  input.request.project == &quot;&quot;
+  glob.match(input.backend.resources, [&quot;,&quot;], id)
+}
+
+e = {&quot;permission&quot;: permissions[&quot;metal.v2.admin.image.delete&quot;]} {
+  some id
+  input.request.method = &quot;DELETE&quot;
+  input.request.path = [&quot;v2&quot;, &quot;image&quot;, id]
+  input.request.project == &quot;&quot;
   glob.match(input.backend.resources, [&quot;,&quot;], id)
 }</code></pre><p>OPA input:</p><pre><code class="language-json">{
   &quot;token&quot;: {
@@ -169,12 +215,12 @@ e = {&quot;permission&quot;: permissions[&quot;metal.v2.machine.get&quot;]} {
     &quot;tenant&quot;: &quot;my-tenant&quot;
   },
   &quot;request&quot;: {
-    &quot;method&quot;: &quot;GET&quot;,                                                   // from request
-    &quot;path&quot;: [&quot;v2&quot;, &quot;machine&quot;, &quot;00000000-0000-0000-0000-ac1f6b7befb2&quot;], // split on request path
-    &quot;project&quot;: &quot;my-project&quot;                                            // from request query param
+    &quot;method&quot;: &quot;GET&quot;,                                                 // from request
+    &quot;path&quot;: [&quot;v2&quot;, &quot;image&quot;, &quot;00000000-0000-0000-0000-ac1f6b7befb2&quot;], // split on request path
+    &quot;project&quot;: &quot;793bb6cd-8b46-479d-9209-0fedca428fe1&quot;                // from request query param
   },
   &quot;backend&quot;: { // composed from role permissions of the project-id from query param, formed to a glob matching pattern
-    &quot;permissions&quot;: &quot;{metal.v2.machine.list,metal.v2.machine.get,metal.v2.machine.create,metal.v2.machine.update,metal.v2.machine.delete}&quot;,
+    &quot;permissions&quot;: &quot;{metal.v2.image.*}&quot;,
     &quot;resources&quot;: &quot;{*}&quot;,
     &quot;admin&quot;: false
   }
@@ -183,10 +229,17 @@ e = {&quot;permission&quot;: permissions[&quot;metal.v2.machine.get&quot;]} {
         &quot;allow&quot;: true
     },
     &quot;e&quot;: {
-        &quot;permission&quot;: &quot;metal.v2.machine.get&quot;
+        &quot;permission&quot;: &quot;metal.v2.image.get&quot;
     },
     &quot;permissions&quot;: [
-        &quot;metal.v2.machine.get&quot;
+        &quot;metal.v2.admin.image.create&quot;,
+        &quot;metal.v2.admin.image.delete&quot;,
+        &quot;metal.v2.admin.image.update&quot;,
+        &quot;metal.v2.image.create&quot;,
+        &quot;metal.v2.image.delete&quot;,
+        &quot;metal.v2.image.get&quot;,
+        &quot;metal.v2.image.list&quot;,
+        &quot;metal.v2.image.update&quot;
     ]
 }</code></pre><h3 id="Permission-Wildcards"><a class="docs-heading-anchor" href="#Permission-Wildcards">Permission Wildcards</a><a id="Permission-Wildcards-1"></a><a class="docs-heading-anchor-permalink" href="#Permission-Wildcards" title="Permalink"></a></h3><p>Permissions should be able to match wildcards.</p><p>Example for admin user:</p><pre><code class="language-none">$ metalctl project show-permissions
 Roles:
@@ -194,4 +247,4 @@ Roles:
 Permissions:
   metal.v2.*
 Resources:
-  *</code></pre><h3 id="Scoping"><a class="docs-heading-anchor" href="#Scoping">Scoping</a><a id="Scoping-1"></a><a class="docs-heading-anchor-permalink" href="#Scoping" title="Permalink"></a></h3><p>We want a common scoping logic on the database for all resources. Therefore, all resources must use the same database fields that can be used for filtering.</p><table><tr><th style="text-align: right">Scope</th><th style="text-align: right">Field Name</th></tr><tr><td style="text-align: right">Tenant</td><td style="text-align: right">tenant_id</td></tr><tr><td style="text-align: right">Project</td><td style="text-align: right">project_id</td></tr><tr><td style="text-align: right">Resource</td><td style="text-align: right">id</td></tr></table><h2 id="Migration-Path"><a class="docs-heading-anchor" href="#Migration-Path">Migration Path</a><a id="Migration-Path-1"></a><a class="docs-heading-anchor-permalink" href="#Migration-Path" title="Permalink"></a></h2><h3 id="Migrate-Existing-Gardener-Projects-to-New-API"><a class="docs-heading-anchor" href="#Migrate-Existing-Gardener-Projects-to-New-API">Migrate Existing Gardener Projects to New API</a><a id="Migrate-Existing-Gardener-Projects-to-New-API-1"></a><a class="docs-heading-anchor-permalink" href="#Migrate-Existing-Gardener-Projects-to-New-API" title="Permalink"></a></h3><ul><li>Do not point the secret bindings to a the shared provider secret in a partition. Create an individual provider-secret for the logged in tenant. The Gardener needs to use this tenant-specific provider secret to talk to the metal-api, do not give the Gardener HMAC access anymore.</li><li>The provider secret partition mapping can be removed from the cloud-api config and from the deployment</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 23 July 2021 12:52">Friday 23 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  *</code></pre><h3 id="Scoping"><a class="docs-heading-anchor" href="#Scoping">Scoping</a><a id="Scoping-1"></a><a class="docs-heading-anchor-permalink" href="#Scoping" title="Permalink"></a></h3><p>We want a common scoping logic on the database for all resources. Therefore, all resources must use the same database fields that can be used for filtering.</p><table><tr><th style="text-align: right">Scope</th><th style="text-align: right">Field Name</th></tr><tr><td style="text-align: right">Tenant</td><td style="text-align: right">tenant_id</td></tr><tr><td style="text-align: right">Project</td><td style="text-align: right">project_id</td></tr><tr><td style="text-align: right">Resource</td><td style="text-align: right">id</td></tr></table><h2 id="Migration-Path"><a class="docs-heading-anchor" href="#Migration-Path">Migration Path</a><a id="Migration-Path-1"></a><a class="docs-heading-anchor-permalink" href="#Migration-Path" title="Permalink"></a></h2><h3 id="Migrate-Existing-Gardener-Projects-to-New-API"><a class="docs-heading-anchor" href="#Migrate-Existing-Gardener-Projects-to-New-API">Migrate Existing Gardener Projects to New API</a><a id="Migrate-Existing-Gardener-Projects-to-New-API-1"></a><a class="docs-heading-anchor-permalink" href="#Migrate-Existing-Gardener-Projects-to-New-API" title="Permalink"></a></h3><ul><li>Do not point the secret bindings to a the shared provider secret in a partition. Create an individual provider-secret for the logged in tenant. The Gardener needs to use this tenant-specific provider secret to talk to the metal-api, do not give the Gardener HMAC access anymore.</li><li>The provider secret partition mapping can be removed from the cloud-api config and from the deployment</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 26 July 2021 06:53">Monday 26 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
