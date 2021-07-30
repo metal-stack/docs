@@ -99,8 +99,31 @@ deploy-control-plane exited with code 2
 
 Some home routers have a security feature that prevents DNS Servers to resolve anything in the router's local IP range (DNS-Rebind-Protection).
 
-You need to add an exception for `xip.io` in your router configuration.
+You need to add an exception for `nip.io` in your router configuration.
 
 #### FritzBox
 
-`Home Network -> Network -> Network Settings -> Additional Settings -> DNS Rebind Protection -> Host name exceptions -> xip.io`
+`Home Network -> Network -> Network Settings -> Additional Settings -> DNS Rebind Protection -> Host name exceptions -> nip.io`
+
+## Operations
+
+### A machine has registered with a different UUID after reboot
+
+metal-stack heavily relies on steady machine UUIDs as the UUID is the primary key of the machine entity in the metal-api.
+
+For further reference also see [metal-stack/metal-hammer#52](https://github.com/metal-stack/metal-hammer/issues/52).
+
+#### Reasons
+
+There are some scenarios (can be vendor-specific), which can cause a machine UUID to change over time, e.g.:
+
+- When the UUID partly contains of a network card's mac address, it can happen when:
+    - Exchanging network cards
+    - Disabling network cards through BIOS
+- Changing the UUID through vendor-specific CLI tool
+
+#### Solution
+
+1. After five minutes, the orphaned machine UUID will be marked dead (💀) because machine events will be sent only to the most recent UUID
+1. Identify the dead machine through `metalctl machine ls`
+1. Remove the dead machine forcefully with `metalctl machine rm --remove-from-database --yes-i-really-mean-it <uuid>`
