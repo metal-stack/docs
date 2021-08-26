@@ -121,7 +121,7 @@ In the following sections, you can look up the machine issues that are returned 
 
 When a machine has no partition, the [metal-hammer](https://github.com/metal-stack/metal-hammer) has not yet registered the machine at the [metal-api](https://github.com/metal-stack/metal-api). Instead, the machine was created through metal-stack's event machinery, which does not have a lot of information about a machine (e.g. a PXE boot event was reported from the pixiecore).
 
-This can usually happen on the very first boot of a machine and the machine type is not supported by metal-stack, leading to the [bmc-catcher](https://github.com/metal-stack/bmc-catcher) being unable to report BMC details to the metal-api (a bmc-catcher report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
+This can usually happen on the very first boot of a machine and the machine's [hardware is not supported](../overview/hardware.md) by metal-stack, leading to the [bmc-catcher](https://github.com/metal-stack/bmc-catcher) being unable to report BMC details to the metal-api (a bmc-catcher report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
 
 To resolve this issue, you need to identify the machine in your metal-stack partition that emits PXE boot events and find the reason why it is not properly booting into the metal-hammer. The console logs of this machine should enable you to find out the root cause.
 
@@ -133,7 +133,7 @@ Reasons for this can be:
 
 - The network connection between the partition and metal-stack control plane is interrupted
 - The machine was removed from your data center
-- The machine has changed its UUID (https://github.com/metal-stack/metal-hammer/issues/52)
+- The machine has changed its UUID [metal-hammer#52](https://github.com/metal-stack/metal-hammer/issues/52)
 - The machine is turned off
 - The machine hangs / freezes
 - The machine booted to BIOS or UEFI shell and does not try to PXE boot again
@@ -151,7 +151,7 @@ If the machine is dead for a long time and you are sure that it will never come 
 
 #### liveliness-unknown
 
-For machines that are allocated by a user, the ownership has gone over to this user and as an operator you cannot access the machine anymore. This makes it harder to detect whether a machine is in a healthy state or not. Typically, all official metal-stack OS images deploy an LLDP daemon, that consistently emits alive messages. These messages are caught by the [metal-core](https://github.com/metal-stack/metal-core) and turned into a `Phoned Home`. Internally, the metal-api uses these events as an indicator to decide whether the machine is still responsive or not.
+For machines that are allocated by a user, the ownership has gone over to this user and as an operator you cannot access the machine anymore. This makes it harder to detect whether a machine is in a healthy state or not. Typically, all official metal-stack OS images deploy an LLDP daemon, that consistently emits alive messages. These messages are caught by the [metal-core](https://github.com/metal-stack/metal-core) and turned into a `Phoned Home` event. Internally, the metal-api uses these events as an indicator to decide whether the machine is still responsive or not.
 
 When the LLDP daemon stopped sending packages, the reasons are identical to those of [dead machines](#liveliness-dead). However, it's not possible anymore to decide whether the user is responsible for reaching this state or not.
 
@@ -159,11 +159,11 @@ In most of the cases, there is not much that can be done from the operator's per
 
 #### failed-machine-reclaim
 
-If a machine remains in the "Phoned Home" state without having an allocation, this indicates that the metal-core was not able to put the machine back into PXE boot mode after `metalctl machine rm`. The machine is still running the operating system and it does not return back into the allocatable machine pool. Effectively, you lost a machine in your environment and no-one pays for it. Therefore, you should resolve this issue as soon as possible.
+If a machine remains in the `Phoned Home` state without having an allocation, this indicates that the [metal-core](https://github.com/metal-stack/metal-core) was not able to put the machine back into PXE boot mode after `metalctl machine rm`. The machine is still running the operating system and it does not return back into the allocatable machine pool. Effectively, you lost a machine in your environment and no-one pays for it. Therefore, you should resolve this issue as soon as possible.
 
 In most of the cases, it should be sufficient to run another `metalctl machine rm` on this machine in order to retry booting into PXE mode. If this still does not succeed, you can boot the machine into the BIOS and manually and change the boot order to PXE boot. This should force booting the metal-hammer again and add the machine back into your pool of allocatable machines.
 
-For further reference, use https://github.com/metal-stack/metal-api/issues/145.
+For further reference, see [metal-api#145](https://github.com/metal-stack/metal-api/issues/145).
 
 #### incomplete-cycles
 
@@ -171,7 +171,7 @@ Under bad circumstances, a machine diverges from its typical machine lifecycle. 
 
 Reasons for this can be:
 
-- The machine's hardware is not supported and the metal-hammer crashes during the machine discovery
+- The machine's [hardware is not supported](../overview/hardware.md) and the metal-hammer crashes during the machine discovery
 - The machine registration fails through the metal-hammer because an orphaned / dead machine is still present in the metal-api's data base. The machine is connected to the same switch ports that were used by the orphaned machine. In this case, you should clean up the orphaned machine through `metalctl machine rm --remove-from-database`.
 
 Please also consider console logs of the machine for investigating the issue.
@@ -188,12 +188,12 @@ To resolve the issue, you need to recreate the firewalls that use the same ASN.
 
 The [bmc-catcher](https://github.com/metal-stack/bmc-catcher) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
-If it's uncapable of discovering this information, your hardware might not be supported. Please investigate the logs of the bmc-catcher to find out what's going wrong with this machine.
+If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the bmc-catcher to find out what's going wrong with this machine.
 #### bmc-without-ip
 
 The [bmc-catcher](https://github.com/metal-stack/bmc-catcher) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
-If it's uncapable of discovering this information, your hardware might not be supported. Please investigate the logs of the bmc-catcher to find out what's going wrong with this machine.
+If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the bmc-catcher to find out what's going wrong with this machine.
 
 #### bmc-no-distinct-ip
 
