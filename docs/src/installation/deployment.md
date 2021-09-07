@@ -622,7 +622,7 @@ After the CI runner has been installed, you can trigger your Playbooks from the 
 - bmc-catcher
 - image-cache
 - simple webserver to provide images
-- [Onie Boot](http://onie.org/) and ZTP ([Demo](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)) for cumulus switches
+- [Onie Boot](https://opencomputeproject.github.io/onie/) and ZTP ([Demo](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)) for cumulus switches
 - DHCP addresses for ipmi interfaces of the workers
 - DHCP addresses for switches
 
@@ -649,7 +649,7 @@ In the example setup, these interfaces are connected to an end-of-row-switch whi
 
 If you want to deploy metal-stack as a cloud provider for [Gardener](https://gardener.cloud/), you should follow the regular Gardener installation instructions and setup a Gardener cluster first. It's perfectly fine to setup the Gardener cluster in the same cluster that you use for hosting metal-stack.
 
-You can find installation instructions for Gardener on the Gardener website beneath [docs](https://gardener.cloud/documentation/home/). metal-stack is an out-of-tree provider and therefore you will not find example files for metal-stack resources in the Gardener repositories. The following list describes the resources and components that you need to deploy into the Gardener cluster in order to make Gardener work with metal-stack:
+You can find installation instructions for Gardener on the Gardener website beneath [docs](https://gardener.cloud/docs/). metal-stack is an out-of-tree provider and therefore you will not find example files for metal-stack resources in the Gardener repositories. The following list describes the resources and components that you need to deploy into the Gardener cluster in order to make Gardener work with metal-stack:
 
 !!! warning
 

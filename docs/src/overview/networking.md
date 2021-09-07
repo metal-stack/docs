@@ -715,7 +715,7 @@ As Cumulus states, the NCLU tool is intended for people who do not understand Li
 Of course this decision comes with the challenge to render all required files correctly and reload the appropriate services accordingly.
 
 Reference:
-[Operationalizing Cumulus Linux](https://cumulusnetworks.com/learn/web-scale-networking-resources/white-papers/operationalizing-cumulus-linux/)
+[Operationalizing Cumulus Linux](https://www.nvidia.com/en-us/networking/education/)
 
 ### PXE Boot Mode
 

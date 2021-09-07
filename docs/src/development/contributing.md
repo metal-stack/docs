@@ -92,7 +92,7 @@ Development follows the official guide to:
 - Learn from mistakes that must not be repeated[^3]
 - Apply appropriate names to your artifacts:
   - [https://talks.golang.org/2014/names.slide#1](https://talks.golang.org/2014/names.slide#1)
-  - [https://blog.golang.org/package-names](https://blog.golang.org/package-names)
+  - [https://go.dev/blog/package-names](https://go.dev/blog/package-names)
   - [https://golang.org/doc/effective_go#names](https://golang.org/doc/effective_go#names)
 - Enable others to understand the reasoning of non-trivial code sequences by applying a meaningful documentation.
 
