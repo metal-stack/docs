@@ -3,7 +3,7 @@
 This controller is installed on a bare-metal firewall in front of several kubernetes worker nodes and responsible to reconcile a `ClusterwideNetworkPolicy` to nftables rules to control access to and from the kubernetes cluster.
 It allows also to control the traffic rate going through, to limit network resources for restricted usage scenarios. Nftable and node metrics are exposed with the `nftables-exporter` and `node-exporter`, the ips are visible as service and endpoint from the kubernetes cluster.
 
-Additional an IDS is managed on the firewall to detect known network anomalies. [suricata](https://suricata-ids.org) is used for this purpose. Right now, only basic statistics about the amount of scanned packets is reported. In a future release, access to all alarms will be provided.
+Additional an IDS is managed on the firewall to detect known network anomalies. [suricata](https://suricata.io/) is used for this purpose. Right now, only basic statistics about the amount of scanned packets is reported. In a future release, access to all alarms will be provided.
 
 ## Architecture
 
