@@ -34,7 +34,7 @@ The most used virtualization technology in the enterprise data centers.
 ## Comparison of Gardener on Metal Stack vs. Openshift on VMWare
 
 | Feature                        | Gardener on Metal Stack                                                                                       | Openshift on VMWare                                         |
-|:-------------------------------|:--------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------|
+| :----------------------------- | :------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------- |
 | Container Runtime              | docker, containerd, gvisor                                                                                    | cri-o                                                       |
 | Host Operating System          | Ubuntu, Debian , also see [OS](os.md)                                                                         | RHEL, Fedora-Core                                           |
 | Network Plugins                | Calico, Cilium(soon)                                                                                          | Openshift SDN                                               |
@@ -53,6 +53,6 @@ The most used virtualization technology in the enterprise data centers.
 | CI/CD                          | Tool of choice via Helm Install                                                                               | Jenkins                                                     |
 | Security                       | K8s control plane isolated from tenant, PSP enabled by default                                                | Strong cluster defaults                                     |
 | CNCF Kubernetes certified      | Yes (Gardener)                                                                                                | Yes                                                         |
-| Local development              | [minikube](https://minikube.sigs.k8s.io/docs/start/), [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) | [minishift](http://www.okd.io/minishift/)                   |
+| Local development              | [minikube](https://minikube.sigs.k8s.io/docs/start/), [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) | [minishift](https://github.com/minishift/minishift)         |
 | Proprietary extensions         | No                                                                                                            | DeploymentConfig and others                                 |
 | kubectl access                 | Yes                                                                                                           | Yes                                                         |
