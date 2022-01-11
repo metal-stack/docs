@@ -40,7 +40,7 @@ This section contains language-agnostic topics that all metal-stack projects are
 
 The code base is owned by the entire team and every member is allowed to contribute changes to any of the projects. This is considered as collective code ownership[^1].
 
-As a matter of fact, there are persons in a project, which already have experience with the sources. These are defined directly in the repository's [CODEOWNERS](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners) file. If you want to merge changes into the master branch, it is advisable to include code owners into the proecess of discussion and merging.
+As a matter of fact, there are persons in a project, which already have experience with the sources. These are defined directly in the repository's [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file. If you want to merge changes into the master branch, it is advisable to include code owners into the proecess of discussion and merging.
 
 ### Microservices
 
@@ -93,7 +93,7 @@ Development follows the official guide to:
 - Apply appropriate names to your artifacts:
   - [https://talks.golang.org/2014/names.slide#1](https://talks.golang.org/2014/names.slide#1)
   - [https://go.dev/blog/package-names](https://go.dev/blog/package-names)
-  - [https://golang.org/doc/effective_go#names](https://golang.org/doc/effective_go#names)
+  - [https://go.dev/doc/effective_go#names](https://go.dev/doc/effective_go#names)
 - Enable others to understand the reasoning of non-trivial code sequences by applying a meaningful documentation.
 
 #### Development Decisions
@@ -129,10 +129,10 @@ Development follows the official guide to:
 - Style Guide for Python Code (PEP 8)[^5]
   - The use of an IDE like [PyCharm](https://www.jetbrains.com/pycharm/) helps to write compliant code easily
 - Consider [setuptools](https://pythonhosted.org/an_example_pypi_project/setuptools.html) for packaging
-- If you want to add a Python microservice to the mix, consider [pyinstaller](https://www.pyinstaller.org/) on Alpine to achieve small image sizes
+- If you want to add a Python microservice to the mix, consider [pyinstaller](https://github.com/pyinstaller/pyinstaller) on Alpine to achieve small image sizes
 
 [^1]: [https://martinfowler.com/bliki/CodeOwnership.html](https://martinfowler.com/bliki/CodeOwnership.html)
-[^2]: [https://golang.org/doc/effective_go](https://golang.org/doc/effective_go)
+[^2]: [https://go.dev/doc/effective_go](https://go.dev/doc/effective_go)
 [^3]: [https://github.com/golang/go/wiki/CodeReviewComments](https://github.com/golang/go/wiki/CodeReviewComments)
 [^4]: [https://github.com/golang/go/wiki/CodeReviewComments#comment-sentences](https://github.com/golang/go/wiki/CodeReviewComments#comment-sentences)
 [^5]: [https://www.python.org/dev/peps/pep-0008/](https://www.python.org/dev/peps/pep-0008/)

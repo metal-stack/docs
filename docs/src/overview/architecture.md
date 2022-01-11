@@ -1,6 +1,6 @@
 # Architecture
 
-The metal-stack is a compound of microservices predominantly written in [Golang](https://golang.org/).
+The metal-stack is a compound of microservices predominantly written in [Golang](https://go.dev/).
 
 This page gives you an overview over which microservices exist, how they communicate with each other and where they are deployed.
 
