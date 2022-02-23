@@ -58,9 +58,9 @@ We are generally open to write code in any language that fits best to the functi
 
 Artifacts are always produced by a CI process (Github Actions).
 
-Docker images are published on Docker Hub using the [metalstack](https://hub.docker.com/u/metalstack) user.
+Docker images are published on the Github Container Registry of the metal-stack organization.
 
-Binary artifacts or images are uploaded to GKE buckets.
+Binary artifacts or OS images can be uploaded to `images.metal-stack.io` if necessary.
 
 When building Docker images, please consider our build tool [docker-make](https://github.com/fi-ts/docker-make) or the specific [docker-make action](https://github.com/fi-ts/action-docker-make) respectively.
 
