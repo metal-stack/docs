@@ -42,7 +42,7 @@ The control plane contains of a couple of essential microservices for the metal-
 
 The following figure shows the relationships between these microservices:
 
-![Metal Control Plane](control-plane.svg)
+![Metal Control Plane](metal-stack-control-plane.svg)
 
 > Figure 1: The metal control plane deployed in a Kubernetes environment with an ingress-controller exposing additional services via [service exposal](https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/).
 
@@ -87,7 +87,7 @@ The microservices running inside a partition are:
 - **[bmc-proxy](https://github.com/metal-stack/metal-console)** (runs on management servers) Belongs to the metal-console, allowing user access to the machine's serial console. It can be seen as an optional component.
 - **[bmc-catcher](https://github.com/metal-stack/bmc-catcher)** (runs on management servers) Reports the ip addresses that are leased to ipmi devices together with their machine uuids to the metal-api. This provides machine discovery in the partition machines and keeps all IPMI interface access data up-to-date.
 
-![Partition](partition.svg)
+![Partition](metal-stack-partition.svg)
 
 > Figure 2: Simplified illustration of services running inside a partition.
 
@@ -100,7 +100,7 @@ Some notes on this picture:
 
 The following figure shows several partitions connected to a single metal control plane. Of course, it is also possible to have multiple metal control planes, which can be useful for staging.
 
-![metal-stack](metal-stack.svg)
+![metal-stack](metal-stack-architecture.drawio.svg)
 
 > Figure 3: Reduced view on the communication between the metal control plane and multiple partitions.
 
