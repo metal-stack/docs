@@ -113,7 +113,7 @@ Some notes on this picture:
 
 The following sequence diagram illustrates some of the main principles of the machine provisioning lifecycle.
 
-![provisioning sequence](provisioning_sequence.svg)
+![provisioning sequence](provisioning_sequence.drawio.svg)
 
 > Figure 4: Sequence diagram of the machine provisioning sequence.
 
