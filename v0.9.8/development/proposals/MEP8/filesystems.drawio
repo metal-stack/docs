@@ -1,0 +1,43 @@
+<mxfile>
+    <diagram id="5LIaSWnmJn02k7tn6h47" name="Page-1">
+        <mxGraphModel dx="665" dy="330" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Filesystem /var/lib" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="250" y="270" width="540" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Logical Volume&lt;br&gt;/dev/vgroot/varlib" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="350" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Raid Device&lt;br&gt;/dev/md0" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="350" width="150" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Disk&lt;br&gt;/dev/sda" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="250" y="350" width="70" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Partition&lt;br&gt;/dev/sda1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="320" y="350" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="VolumeGroup&lt;br&gt;vgroot" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="410" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Raid Device(s)&lt;br&gt;/dev/md1&lt;br&gt;/dev/md2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="700" y="470" width="90" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Disk(s)&lt;br&gt;/dev/sdb&lt;br&gt;/dev/sdc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="470" width="70" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Partition(s)&lt;br&gt;/dev/sdb1&lt;br&gt;/dev/sdc1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="620" y="470" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Disk(s)&lt;br&gt;/dev/sdd&lt;br&gt;/dev/sde" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="410" width="70" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Partition(s)&lt;br&gt;/dev/sdd1&lt;br&gt;/dev/sde1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="410" width="80" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
