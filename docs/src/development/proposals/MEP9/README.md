@@ -11,6 +11,8 @@ As a next step, we can also cosider joining the management servers to the VPN me
 
 [](./architecture.drawio.svg)
 
+> Simplified drawing showing old vs. new architecture.
+
 ## Firewalls
 
 ### Implementation
