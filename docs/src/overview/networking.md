@@ -769,6 +769,6 @@ During provisioning bare metal servers get internet access via the management ne
 
 ### Management Network
 
-To manage network switches beside the out-of-band system console access a further management access is required. For this purpose the concept of **Management VRF** is applied. The Management VRF is a subset of VRF. It provides a separation between out-of-band management network and the in-band data plane network by introducing another routing table **mgmt**. Cumulus Linux supports lan0 to be used as the management interface.
+To manage network switches beside the out-of-band system console access a further management access is required. For this purpose the concept of **Management VRF** is applied. The Management VRF is a subset of VRF. It provides a separation between out-of-band management network and the in-band data plane network by introducing another routing table **mgmt**. Cumulus Linux supports eth0 to be used as the management interface.
 
-To enable and use the Management VRF all switches have to be connected via their lan0 interface to a management-switch. The management switch is connected to a management server. All access is established from within the managment server. Logins to the switch are set into the Management VRF context once the Managment VRF is enabled.
+To enable and use the Management VRF all switches have to be connected via their eth0 interface to a management-switch. The management switch is connected to a management server. All access is established from within the managment server. Logins to the switch are set into the Management VRF context once the Managment VRF is enabled.
