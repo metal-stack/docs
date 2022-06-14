@@ -22,8 +22,6 @@ As a next step, we can also consider joining the management servers to the VPN m
 
 > Simplified drawing showing old vs. new architecture.
 
-TODO:
-
 Store current Headscale and desired Tailscale(`metalctl`?) version in some K8s resource? And allow to update it via `metalctl`.
 
 ### Concerns
@@ -41,15 +39,62 @@ There's few concerns when using WireGuard for implementing VPN:
 
 ## Implementation Details
 
-- Add a headscale server to the metal control plane -- either manually or automate it with `metalctl`?
+- Add a headscale server to the metal control plane -- either manually or automate it with `metalctl`? 
 
-### Firewalls
-- The firewall allocation process in the metal-api will change the following way
-  1. Request a one-time joining token for the firewall VPN from the headscale gRPC endpoint (1 hour expiration time)
-  1. Inject the tailscaled service configuration into the userdata and launch it through ignition (along with user-given userdata)
-- Connection to headscale server is an optional configuration for the metal-api, without this configuration the whole firewall allocation process will remain the same as of today
-- Operators can join the VPN mesh
-  - Issue a command like `metalctl firewall vpn-join-token`
+### New `metalctl` commands
+
+- `metalctl vpn` -- section for VPN related commands:
+
+    - `metalctl vpn create --name [name] --tag [tag for headscale version] --config [path to config file] --metalctl [minimal metalctl version]` -- will create `headscale` deployment. Do we want to use separate StatefulSet for DB config? If yes, DB credentials have to provided somehow too.
+    - `metalctl vpn update --tag [tag for headscale version] --metalctl [minimal metalctl version]` -- will update `headscale` and/or required minimal `metalctl` version.
+    - `metalctl vpn namespace create [vpn name] --name [namespace name]` -- create new namespace.
+    - `metalctl vpn get key [vpn name] --namespace [namespace name]` -- returns auth key to be used with `tailscale` client for establishing connection.
+    - `metalctl vpn connect [vpn name] --namespace [namespace name]` -- connect to specific namespace. Uses `tailscale` pkg to set up connection.
+
+Extend `metalctl firewall`:
+
+- `metalctl firewall create ... --vpn [VPN name] --namespace [namespace name]` -- additional flag for `firewall create` command that specifies VPN name(optional). Argument for providing namespace and not generating it during creation is that it will provide better flexibility in the future, when VPN will expand beyond firewall.
+
+`tailscale` node pkg should be integrated into `metalctl`, for `metalctl vpn connect` command to work. But it's also should be possible to establish VPN connection with official `tailscale` client(with auth key).
+
+### Resources
+Update `Firewall` resource to include VPN info for establishing connection and `metalctl` version:
+
+```
+Firewall:
+  Spec:
+    ...
+    VPN:
+      Name:      VPN name
+      Namespace: Namespace name
+    metalctl:
+      Version:   Minimal version
+    ...
+  Status:
+    ...
+    VPN:
+      Status:    Boolean field
+    metalctl:
+      Version:   Actual version
+    ...
+```
+
+### metal-api
+Add new endpoints:
+- `/v1/vpn/allocate POST` -- should deploy `headscale` server.
+- `/v1/vpn/update PUT`
+- `/v1/vpn/namespace/allocate POST` 
+- `/v1/vpn GET` -- requests auth key from `headscale` server.
+
+Update schema `FirewallCreateRequest` with additional properties `vpn`, `namespace`.
+
+Also, need to update schema in `metal-db`(is it correct DB or should some other be used?).
+
+### metal-networker
+`metal-networker` also have to know if VPN was configured. In that case we need to disable public access to SSH and allow all(?) traffic from WireGuard interface.
+
+### firewall-controller
+`firewall-controller` have to monitor changes in `Firewall` resource and keep `metalctl` version up-to-date.
 
 ### bmc-reverse-proxy
 
