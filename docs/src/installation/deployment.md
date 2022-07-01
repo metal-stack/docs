@@ -616,10 +616,9 @@ The second bastion hosts are the management servers. They are the main bootstrap
 
 After the CI runner has been installed, you can trigger your Playbooks from the the CI. The Ansible-Playbooks have to make sure that these functionalities are present on the management servers:
 
-- BMC proxy / BMC reverse proxy
 - Prometheus and exporters
 - CI runner
-- bmc-catcher
+- metal-bmc
 - image-cache
 - simple webserver to provide images
 - [Onie Boot](https://opencomputeproject.github.io/onie/) and ZTP ([Demo](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)) for cumulus switches

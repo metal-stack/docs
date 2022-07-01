@@ -121,7 +121,7 @@ In the following sections, you can look up the machine issues that are returned 
 
 When a machine has no partition, the [metal-hammer](https://github.com/metal-stack/metal-hammer) has not yet registered the machine at the [metal-api](https://github.com/metal-stack/metal-api). Instead, the machine was created through metal-stack's event machinery, which does not have a lot of information about a machine (e.g. a PXE boot event was reported from the pixiecore).
 
-This can usually happen on the very first boot of a machine and the machine's [hardware is not supported](../overview/hardware.md) by metal-stack, leading to the [bmc-catcher](https://github.com/metal-stack/bmc-catcher) being unable to report BMC details to the metal-api (a bmc-catcher report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
+This can usually happen on the very first boot of a machine and the machine's [hardware is not supported](../overview/hardware.md) by metal-stack, leading to the [metal-bmc](https://github.com/metal-stack/metal-bmc) being unable to report BMC details to the metal-api (a metal-bmc report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
 
 To resolve this issue, you need to identify the machine in your metal-stack partition that emits PXE boot events and find the reason why it is not properly booting into the metal-hammer. The console logs of this machine should enable you to find out the root cause.
 
@@ -186,18 +186,19 @@ To resolve the issue, you need to recreate the firewalls that use the same ASN.
 
 #### bmc-without-mac
 
-The [bmc-catcher](https://github.com/metal-stack/bmc-catcher) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
+The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
-If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the bmc-catcher to find out what's going wrong with this machine.
+If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the metal-bmc to find out what's going wrong with this machine.
+
 #### bmc-without-ip
 
-The [bmc-catcher](https://github.com/metal-stack/bmc-catcher) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
+The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
-If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the bmc-catcher to find out what's going wrong with this machine.
+If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the metal-bmc to find out what's going wrong with this machine.
 
 #### bmc-no-distinct-ip
 
-The [bmc-catcher](https://github.com/metal-stack/bmc-catcher) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
+The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
 When there is no distinct IP address for the BMC, it can be that an orphaned machine used this IP in the past. In this case, you need to clean up the orphaned machine through `metalctl machine rm --remove-from-database`.
 
