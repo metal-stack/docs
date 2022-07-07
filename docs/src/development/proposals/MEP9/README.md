@@ -22,8 +22,6 @@ As a next step, we can also consider joining the management servers to the VPN m
 
 > Simplified drawing showing old vs. new architecture.
 
-Store current Headscale and desired Tailscale(`metalctl`?) version in some K8s resource? And allow to update it via `metalctl`.
-
 ### Concerns
 
 There's few concerns when using WireGuard for implementing VPN:
@@ -36,12 +34,17 @@ There's few concerns when using WireGuard for implementing VPN:
 
 1. Tailscale node software is using userspace implementation of WireGuard -- `wireguard-go`. One of the options is to inject Tailscale client into `metalctl`. And make it available as `metalctl vpn` or similar command. It should be possible to do as `tailscale` node is already available as open sourced Go pkg. That would allow us to control, what version of Tailscale users are using and in case of any critical changes to enforce them to update `metalctl` to use VPN functionality.
 2. Would it be a considerable risk? We could look into `wg-dynamic` project to cover this problem.
+3. At the moment, repository looks well maintained and the metal-stack team already contributes to it.
 
 ## Implementation Details
 
-`headscale` should be deployed/updated via `metal-roles`. Also, it should be possible to manage desired `tailscale` version through roles.
+### metal-roles
+
+`metal-roles` will be responsible for deployment of `headscale` server(via new `headscale` role). It also should provide sufficient config to `metal-api` so it establishes connection with `headscale` gRPC server.
 
 ### New `metalctl` commands
+
+`metalctl` will be responsible for client-side implementation of this MEP. Specifically, it's by using `metalctl` user expected to connect to firewalls.
 
 - `metalctl vpn` -- section for VPN related commands:
     - `metalctl vpn get key [vpn name] --namespace [namespace name]` -- returns auth key to be used with `tailscale` client for establishing connection.
@@ -52,7 +55,36 @@ Extend `metalctl firewall`:
 Extend `metalctl machine`:
 - `metalctl machine ssh [ID]` -- connect to machine via SSH.
 
-`metalctl` should be able to connect to firewall and machines by running `tailscale` in container.
+`metalctl` will be able to connect to firewall and machines by running `tailscale` in container.
+
+### metal-api
+
+Updates to `metal-api` should be made, so that it's able to add firewalls to VPNs. There should be one Tailscale namespace per project. So if multiple firewalls are created in single project, they will join the same namespace.
+
+Two new flags should be introduced to connect `metal-api` to `headscale` gRPC server:
+- `headscale-addr` -- specifies address of Headscale grpc API.
+- `headscale-api-key` -- specifies temporary API key to connect to Headscale. It should be replaced and then rotated by `metal-api`.
+
+If `metal-api` initialized with `headscale` connection it should automatically join all created firewalls to VPN.
+
+Add new endpoint, that will be used by `metalctl` to connect to VPN:
+- `/v1/vpn GET` -- requests auth key from `headscale` server.
+
+### metal-hammer
+
+`metal-hammer` acts as an intermediary for machine configuration between `metal-api` and machine's image. Specifically it writes to `/etc/metal/install.yaml` file, data from which later will be used by image's `install.sh` file.
+
+To implement VPN support we have to add authentication key and VPN server address to `install.yaml` file. This key will be used to join machine to a VPN.
+
+### metal-images
+
+Images `install.sh` script have to be updated to work with authentication key and VPN server address, provided in `install.yaml` file. If this key is present, machine should connect to VPN.
+
+### metal-networker
+`metal-networker` also have to know if VPN was configured. In that case we need to disable public access to SSH and allow all(?) traffic from WireGuard interface.
+
+### firewall-controller
+`firewall-controller` have to monitor changes in `Firewall` resource and keep `tailscaled` version up-to-date.
 
 ### Resources
 Update `Firewall` resource to include desired/actual `tailscale` version:
@@ -71,23 +103,6 @@ Firewall:
       Version:   Actual version
     ...
 ```
-
-### metal-api
-Add new endpoints:
-- `/v1/vpn/allocate POST` -- should deploy `headscale` server.
-- `/v1/vpn/update PUT`
-- `/v1/vpn/namespace/allocate POST` 
-- `/v1/vpn GET` -- requests auth key from `headscale` server.
-
-Update schema `FirewallCreateRequest` with additional properties `vpn`, `namespace`. Same with `MachineAllocateRequest` request.
-
-Also, need to update schema in `metal-db`(is it correct DB or should some other be used?).
-
-### metal-networker
-`metal-networker` also have to know if VPN was configured. In that case we need to disable public access to SSH and allow all(?) traffic from WireGuard interface.
-
-### firewall-controller
-`firewall-controller` have to monitor changes in `Firewall` resource and keep `tailscale` version up-to-date.
 
 ### bmc-reverse-proxy
 
