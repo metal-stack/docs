@@ -57,3 +57,127 @@ Using `config replace` would reduce the complexity in the `metal-core` codebase 
 actual changes between the running and the desired configuration. The approach's drawbacks are using a version of SONiC
 that contains the PR [Yang support for VXLAN](https://github.com/Azure/sonic-buildimage/pull/7294), and we must provide 
 the whole new startup configuration to prevent unwanted deconfiguration.
+
+#### Configure Loopback interface and activate VXLAN
+```json
+{
+ "LOOPBACK_INTERFACE": {
+  "Loopback0": {},
+  "Loopback0|<loopback address/32>": {}
+ },
+ "VXLAN_TUNNEL": {
+  "vtep": {
+   "src_ip": "<loopback address>"
+  }
+ }
+}
+```
+
+#### Configure mtu
+```json
+{
+ "PORT": {
+  "Ethernet0": {
+   "mtu": "9000"
+  }
+ }
+}
+```
+
+#### Configure PXE Vlan
+```json
+{
+ "VLAN": {
+  "Vlan4000": {
+   "vlanid": "4000"
+  }
+ },
+ "VLAN_INTERFACE": {
+  "Vlan4000": {},
+  "Vlan4000|<metal core cidr>": {}
+ },
+ "VLAN_MEMBER": {
+  "Vlan4000|<interface>": {
+   "tagging_mode": "untagged"
+  }
+ },
+ "VXLAN_TUNNEL_MAP": {
+  "vtep|map_104000_Vlan4000": {
+   "vlan": "Vlan4000",
+   "vni": "104000"
+  }
+ }
+}
+```
+
+#### Configure VRF
+```json
+{
+ "INTERFACE": {
+  "Ethernet0": {
+   "vrf_name": "vrf104001"
+  }
+ },
+ "VLAN": {
+  "Vlan4001": {
+   "vlanid": "4001"
+  }
+ },
+ "VLAN_INTERFACE": {
+  "Vlan4001": {
+   "vrf_name": "vrf104001"
+  }
+ },
+ "VRF": {
+  "vrf104001": {
+   "vni": "104001"
+  }
+ },
+ "VXLAN_TUNNEL_MAP": {
+  "vtep|map_104001_Vlan4001": {
+   "vlan": "Vlan4001",
+   "vni": "104001"
+  }
+ }
+}
+```
+
+## DHCP Relay
+
+The DHCP relay container only starts if `DEVICE_METADATA.localhost.type` is equal to `ToRRouter`.
+
+## LLDP
+
+SONiC always uses the local port subtype for LLDP and sets it to some freely configurable alias field of the interface.
+
+```python
+# Get the port alias. If None or empty string, use port name instead
+port_alias = port_table_dict.get("alias")
+if not port_alias:
+    self.log_info("Unable to retrieve port alias for port '{}'. Using port name instead.".format(port_name))
+    port_alias = port_name
+
+lldpcli_cmd = "lldpcli configure ports {0} lldp portidsubtype local {1}".format(port_name, port_alias)
+```
+Reference: https://github.com/Azure/sonic-buildimage/blob/202205/dockers/docker-lldp/lldpmgrd#L153
+
+## Mgmt Interface
+
+The mgmt interface is `eth0`. To configure a static IP address and activate the Mgmt VRF, use:
+
+```json
+{
+ "MGMT_INTERFACE": {
+  "eth0|<mgmt cidr>": {
+   "gwaddr": "<mgmt gateway>"
+  }
+ },
+ "MGMT_VRF_CONFIG": {
+  "vrf_global": {
+   "mgmtVrfEnabled": "true"
+  }
+ }
+}
+```
+
+[IP forwarding is deactivated on `eth0`](https://github.com/Azure/sonic-buildimage/blob/202205/files/image_config/sysctl/sysctl-net.conf#L7), and no IP Masquerade is configured.
