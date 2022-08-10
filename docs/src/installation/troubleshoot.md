@@ -165,9 +165,9 @@ In most of the cases, it should be sufficient to run another `metalctl machine r
 
 For further reference, see [metal-api#145](https://github.com/metal-stack/metal-api/issues/145).
 
-#### incomplete-cycles
+#### crashloop
 
-Under bad circumstances, a machine diverges from its typical machine lifecycle. When this happens, the internal state-machine of the metal-api counts this incident as an "incomplete cycle". It is likely that the machine has entered a crash loop where it PXE boots again and again without the machine ever becoming usable.
+Under bad circumstances, a machine diverges from its typical machine lifecycle. When this happens, the internal state-machine of the metal-api detects that the machine reboots unexpectedly during the provisioning phase. It is likely that the machine has entered a crash loop where it PXE boots again and again without the machine ever becoming usable.
 
 Reasons for this can be:
 
@@ -177,6 +177,12 @@ Reasons for this can be:
 Please also consider console logs of the machine for investigating the issue.
 
 The incomplete cycle count is reset as soon as the machine reaches `Phoned Home` state or there is a `Planned Reboot` of the machine (planned reboot is also done by the metal-hammer once a day in order to reboot with the latest version).
+
+#### last-event-error
+
+The machine had an error during the provisioning lifecycle recently or events are arriving out of order at the metal-api. This can be an interesting hint for the operator that something during machine provisioning went wrong. You can look at the error through `metalctl machine describe` or `metalctl machine logs`.
+
+This error will disappear after a certain time period from `machine issues`. You can still look up the error as described above.
 
 #### asn-not-unique
 
