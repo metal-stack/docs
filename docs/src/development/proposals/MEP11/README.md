@@ -68,7 +68,7 @@ The following resources and operations will explicitly not be logged even though
 ## Affected components
 
 - metal-api grpc server needs an auditing interceptor
-- metal-api web server needs an auditing filter / middleware
+- metal-api web server needs an auditing filter chain / middleware
 - metal-api needs new command line arguments to configure the auditing
 - mini-lab needs a Meilisearch instance
 - mini-lab may need a local S3 compatible storage
