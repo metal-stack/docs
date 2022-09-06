@@ -1,6 +1,6 @@
 # Auditing of metal-stack resources
 
-Currently no logs of the ownership of resources like machines, networks, ips and volumes are generated or kept.Though due to legal requirements data centers are required to keep track of this ownership over time to prevent liability issues when opening the platform for external users.
+Currently no logs of the ownership of resources like machines, networks, ips and volumes are generated or kept. Though due to legal requirements data centers are required to keep track of this ownership over time to prevent liability issues when opening the platform for external users.
 
 In this proposal we want to introduce a flexible and low-maintenance approach for auditing on top of [Meilisearch](https://www.meilisearch.com/).
 
@@ -68,7 +68,7 @@ The following resources and operations will explicitly not be logged even though
 ## Affected components
 
 - metal-api grpc server needs an auditing interceptor
-- metal-api web server needs an auditing filter / middleware
+- metal-api web server needs an auditing filter chain / middleware
 - metal-api needs new command line arguments to configure the auditing
 - mini-lab needs a Meilisearch instance
 - mini-lab may need a local S3 compatible storage
