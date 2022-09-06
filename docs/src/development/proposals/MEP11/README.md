@@ -20,50 +20,18 @@ To reduce the amount of unnecessary logs we want to introduce a whitelist of res
 Other requests will be passed directly to the next middleware or web service without any further processing.
 
 As we are only interested in mutating endpoints, we ignore all GET requests.
-The whitelist includes the following endpoints:
+The whitelist includes all `POST`, `PUT` and `DELETE` endpoints of the following services:
 
-- Machines `v1/machine`
-  - `POST v1/machine/` update machine
-  - `POST v1/machine/register` register machine, _if still present_
-  - `POST v1/machine/allocate` allocate machine
-  - `POST v1/machine/{id}/finalize-allocation` finalize allocation, _if still present_
-  - `POST v1/machine/{id}/state` set machine state
-  - `POST v1/machine/{id}/chassis-identify-led-state` set the state of a chassis identify LED, _if still present_
-  - `DELETE v1/machine/{id}/free` free machine
-  - `DELETE v1/machine/{id}` delete machine
-  - `POST v1/machine/{id}/reinstall` reinstall machine
-  - `POST v1/machine/{id}/abort-reinstall` aborts reinstall, _if still present_
-  - `POST v1/machine/{id}/event` adds a provisioning event, _if still present_
-  - `POST v1/machine/update-firmware/{id}` update firmware of machine
-- Networks `v1/network`
-  - `DELETE v1/network/{id}` delete network
-  - `PUT v1/network/` create network
-  - `POST v1/network/` update network
-  - `POST v1/network/allocate` allocate network
-  - `DELETE v1/network/free/{id}` free network
-  - `POST v1/network/free/{id}` _deprecated_ free network
-- IPs `v1/ip`
-  - `DELETE v1/ip/free/{id}` free ip
-  - `POST v1/ip/free/{id}` _deprecated_ free ip
-  - `POST v1/ip/` update ip
-  - `POST v1/ip/allocate` allocate ip
-  - `POST v1/ip/allocate/{id}` allocate specific ip
+- Machines `v1/machine`, except:
+  - `POST v1/machine/find`
+  - `POST v1/machine/ipmi/find`
+- Networks `v1/network`, except:
+  - `POST v1/network/find`
+- IPs `v1/ip`, except:
+  - `POST v1/ip/find`
 - GRPC Services and methods, that can create machines
   - `api.v1.BootService` method `Register`
   - `api.v1.EventService` method `Send`
-
-The following resources and operations will explicitly not be logged even though they are mutating the state of the system:
-
-- Machines `v1/machine`
-  - `POST v1/machine/{id}/power/on` power on machine
-  - `POST v1/machine/{id}/power/off` power off machine
-  - `POST v1/machine/{id}/power/reset` reset machine
-  - `POST v1/machine/{id}/power/cycle` send power cycle to machine
-  - `POST v1/machine/{id}/power/bios` boot machine into bios
-  - `POST v1/machine/{id}/power/disk` boot machine from disk
-  - `POST v1/machine/{id}/power/pxe` boot machine from pxe
-  - `POST v1/machine/{id}/power/chassis-identify-led-on` turn on chassis identify LED
-  - `POST v1/machine/{id}/power/chassis-identify-led-off` turn off chassis identify LED
 
 ## Affected components
 
