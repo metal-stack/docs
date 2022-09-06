@@ -9,7 +9,7 @@ In this proposal we want to introduce a flexible and low-maintenance approach fo
 In general our auditing logs will be collected by a request interceptor or middleware. Every request and response will be processed and eventually logged to Meilisearch.
 Meilisearch will be configured to regularly create chunks of the auditing logs. These finished chunks will be backed up to a S3 compatible storage with a read-only option enabled.
 
-Of course sensitve data like session keys or passwords will be redacted before logging.
+Of course sensitve data like session keys or passwords will be redacted before logging. We want to track relevant requests and responses. If auditing the request fails, the request itself will be aborted and will not be processed further. The requests and responses that will be audited will be annotated with a correlation id.
 
 Transferring the meilisearch auditing data chunks to the S3 compatible storage will be done by a cronjob that is executed periodically.
 To avoid data manipulation the S3 compatible storage will be configured to be read-only.
