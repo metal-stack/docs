@@ -11,7 +11,7 @@ Meilisearch will be configured to regularly create chunks of the auditing logs. 
 
 Of course sensitve data like session keys or passwords will be redacted before logging. We want to track relevant requests and responses. If auditing the request fails, the request itself will be aborted and will not be processed further. The requests and responses that will be audited will be annotated with a correlation id.
 
-Transferring the meilisearch auditing data chunks to the S3 compatible storage will be done by a cronjob that is executed periodically.
+Transferring the meilisearch auditing data chunks to the S3 compatible storage will be done by a sidecar cronjob that is executed periodically.
 To avoid data manipulation the S3 compatible storage will be configured to be read-only.
 
 ## Whitelisting
@@ -33,6 +33,31 @@ The whitelist includes all `POST`, `PUT` and `DELETE` endpoints of the following
   - `api.v1.BootService` method `Register`
   - `api.v1.EventService` method `Send`
 
+## Chunking in Meilisearch
+
+We want our data to be chunked in Meilisearch. To accomplish this, we rotate the index identifier on a scheduled basis. The index identifiers will be derived from the current date and time.
+
+To keep things simple, we only support hourly, daily and monthly rotation. The eventually prefixed index names will only include relevant parts of date and time like `2021-01`, `2021-01-01` or `2021-01-01_13`.
+
+The metal-api will only write to the current index and switches to the new index on rotation. The metal-api will never read or update data in any indices.
+
+## Moving chunks to S3 compatible storage
+
+As Meilisearch will be filled with data over time, we want to move completed chunks to a S3 compatible storage. This will be done by a sidecar cronjob that is executed periodically. Note that the periods of the index rotation and the cronjob execution don't have to match.
+
+When the backup process gets started, it initiates a [Meilisearch dump](https://docs.meilisearch.com/learn/advanced/dumps.html) of the whole database across all indices. Once the returned task is finished, the dump must be copied from a Meilisearch volume to the S3 compatible storage. After a successful copy, the dump can be deleted.
+
+Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://docs.meilisearch.com/reference/api/indexes.html#list-all-indexes), sort them and [delete each index](https://docs.meilisearch.com/reference/api/indexes.html#delete-an-index) except the most recent one to avoid data loss.
+
+For the actual implementation, we can build upon [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar). But due to the index rotation and the fact, that older indices need to be deleted, this probably does not fit into the mentioned sidecar.
+
+## S3 compatible storage
+
+The dumps of chunks should automatically deleted after a certain amount of time, once we are either no longer allowed or required to keep them.
+The default retention time will be 6 months. Ideally already uploaded chunks should be read-only to prevent data manipulation.
+
+A candidate for the S3 compatible storage is Google Cloud Storage, which allows to configure automatic expiration of objects through a [lifecycle rule](https://cloud.google.com/storage/docs/managing-lifecycles?hl=en#storage-set-lifecycle-config-go).
+
 ## Affected components
 
 - metal-api grpc server needs an auditing interceptor
@@ -40,8 +65,11 @@ The whitelist includes all `POST`, `PUT` and `DELETE` endpoints of the following
 - metal-api needs new command line arguments to configure the auditing
 - mini-lab needs a Meilisearch instance
 - mini-lab may need a local S3 compatible storage
+- we need a sidecar to implement the backup to S3 compatible storage
 - Consider auditing of volume allocations and freeings outside of metal-stack
 
 ## Alternatives considered
 
 Instead of using Meilisearch we investigated using an immutable database like [immudb](https://immudb.io/). But immudb does not support chunking of data and due to its immutable nature, we will never be able to free up space of expired data. Even if we are legally allowed or required to delete data, we will not be able to do so with immudb.
+
+In another variant of the Meilisearch approach the metal-api would also be responsible for copying chunks to the S3 compatible storage and deleting old indices. But separating the concerns allows completely different implementations for every deployment stage.
