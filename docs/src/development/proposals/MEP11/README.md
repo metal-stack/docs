@@ -19,19 +19,16 @@ To avoid data manipulation the S3 compatible storage will be configured to be re
 To reduce the amount of unnecessary logs we want to introduce a whitelist of resources and operations on those that should be logged.
 Other requests will be passed directly to the next middleware or web service without any further processing.
 
-As we are only interested in mutating endpoints, we ignore all GET requests.
-The whitelist includes all `POST`, `PUT` and `DELETE` endpoints of the following services:
+As we are only interested in mutating endpoints, we ignore all `GET` requests.
+The whitelist includes all `POST`, `PUT`, `PATCH` and `DELETE` endpoints the HTTP middleware except for the following (non-manipulating) route suffixes:
 
-- Machines `v1/machine`, except:
-  - `POST v1/machine/find`
-  - `POST v1/machine/ipmi/find`
-- Networks `v1/network`, except:
-  - `POST v1/network/find`
-- IPs `v1/ip`, except:
-  - `POST v1/ip/find`
-- GRPC Services and methods, that can create machines
-  - `api.v1.BootService` method `Register`
-  - `api.v1.EventService` method `Send`
+  - `/find`
+  - `/notify`
+  - `/try` and `/match`
+  - `/capacity`
+  - `/from-hardware`
+
+Regarding GRPC audit trails, they are not so interesting because only internal clients are using this API. However, we can log the trails of the `Boot` service, which can be interesting to revise the machine lifecycle.
 
 ## Chunking in Meilisearch
 
