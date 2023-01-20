@@ -20,7 +20,7 @@ To reduce the amount of unnecessary logs we want to introduce a whitelist of res
 Other requests will be passed directly to the next middleware or web service without any further processing.
 
 As we are only interested in mutating endpoints, we ignore all `GET` requests.
-The whitelist includes all `POST`, `PUT`, `PATCH` and `DELETE` endpoints the HTTP middleware except for the following (non-manipulating) route suffixes:
+The whitelist includes all `POST`, `PUT`, `PATCH` and `DELETE` endpoints of the HTTP middleware except for the following (non-manipulating) route suffixes:
 
   - `/find`
   - `/notify`
