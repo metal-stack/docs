@@ -35,7 +35,7 @@ _footer: ""
 ---
 <style>section { font-size: 30px; }</style>
 
-# Eigenschaften Multi-Partition-Layout
+# Multi-Partition-Layout Properties
 
 
 - Fully independent locations with own storage and own node networks
@@ -62,7 +62,7 @@ _footer: ""
 ---
 <style>section { font-size: 30px; }</style>
 
-# Eigenschaften Single-Partition-Layout
+# Single-Partition-Layout Properties
 
 - Multiple groups of racks at multiple locations but connected to same CLOS topology
 - All racks can connect to the same storage network
