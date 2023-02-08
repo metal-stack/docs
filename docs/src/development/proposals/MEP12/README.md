@@ -10,7 +10,7 @@ So, instead of just randomly deciding the placement of a machine candidate, we w
 
 The following placement strategies should be implemented:
 
-- `project`: Machines in the project are spread across all available racks evenly (best effort), the user can optionally pass tags which will be considered for spreading the machines as well
+- `project`: Machines in the project are spread across all available racks evenly (best effort), the user can optionally pass tags which will be considered for spreading the machines as well (this will for example allow spreading by a cluster id tag inside the same project)
 - `random`: Machines are randomly placed inside the racks (current implementation)
 
 As the new placement strategy is advantageous over the old implementation, the `project` strategy should become the default if no placement strategy is given.
@@ -28,8 +28,8 @@ const (
 )
 
 type MachinePlacementStrategy struct {
-    Strategy        PlacementStrategy
-    ProjectStrategy *ProjectStrategy
+    Strategy            PlacementStrategy
+    ProjectStrategy     *ProjectStrategy
 }
 
 type ProjectStrategy struct {
@@ -37,7 +37,7 @@ type ProjectStrategy struct {
 }
 
 type MachineAllocation struct {
-	// existing fields are omitted for readability
+    // existing fields are omitted for readability
     Placement *MachinePlacementStrategy `json:"placement_strategy" description:"defines how machines are placed inside a partition, defaults to project"`
 }
 ```
