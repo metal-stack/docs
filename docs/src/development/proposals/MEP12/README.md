@@ -4,7 +4,7 @@ Currently, when creating a machine through the metal-api, the machine is placed 
 
 Spreading a group of machines across racks can enhance availability for scenarios like a rack loosing power or a chassis meltdown.
 
-So, instead of just randomly electing a machine candidate, we want to propose the introduction of a placement strategy for the machine allocation.
+So, instead of just randomly deciding the placement of a machine candidate, we want to propose the introduction of a placement strategy for the machine allocation.
 
 ## Placement Strategies
 
