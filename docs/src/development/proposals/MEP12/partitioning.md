@@ -33,8 +33,10 @@ _footer: ""
 ![bg contain](partitioning-2.svg)
 
 ---
+<style>section { font-size: 30px; }</style>
 
 # Eigenschaften Multi-Partition-Layout
+
 
 - Fully independent locations with own storage and own node networks
 - Clusters can only be created independent in every location
@@ -58,6 +60,7 @@ _footer: ""
 ![bg contain](partitioning-3.svg)
 
 ---
+<style>section { font-size: 30px; }</style>
 
 # Eigenschaften Single-Partition-Layout
 
