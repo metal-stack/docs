@@ -28,12 +28,12 @@ const (
 )
 
 type MachinePlacementStrategy struct {
-    Strategy            PlacementStrategy
-    ProjectStrategy     *ProjectStrategy
+    Strategy            PlacementStrategy   `json:"strategy" description:"the name of the placement strategy to be used"`
+    ProjectStrategy     *ProjectStrategy    `json:"project_strategy" description:"project strategy configuration parameters"`
 }
 
 type ProjectStrategy struct {
-    Tags    []string
+    Tags    []string    `json:"tags" description:"if provided, will be used as an additional spreading critierion"`
 }
 
 type MachineAllocation struct {
