@@ -26,6 +26,6 @@ Once a proposal was accepted, an issue should be raised and the implementation s
 | [MEP-5](MEP5/README.md)   | Shared Networks                                |   `Completed`   |
 | [MEP-6](MEP6/README.md)   | DMZ Networks                                   |   `Completed`   |
 | [MEP-8](MEP8/README.md)   | Configurable Filesystemlayout                  |   `Completed`   |
-| [MEP-9](MEP9/README.md)   | No Open Ports To the Data Center               |  `In Progress`  |
-| [MEP-11](MEP11/README.md) | Auditing of metal-stack resources              |  `In Progress`  |
+| [MEP-9](MEP9/README.md)   | No Open Ports To the Data Center               |   `Completed`   |
+| [MEP-11](MEP11/README.md) | Auditing of metal-stack resources              |   `Completed`   |
 | [MEP-12](MEP12/README.md) | Rack Spreading                                 | `In Discussion` |
