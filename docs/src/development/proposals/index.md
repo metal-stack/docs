@@ -17,14 +17,15 @@ Possible states are:
 
 Once a proposal was accepted, an issue should be raised and the implementation should be done in a separate PR.
 
-| Name                     | Description                                    |      State      |
-| :----------------------- | :--------------------------------------------- | :-------------: |
-| [MEP-1](MEP1/README.md)  | Distributed Control Plane Deployment           | `In Discussion` |
-| [MEP-2](MEP2/README.md)  | Two Factor Authentication                      |    `Aborted`    |
-| [MEP-3](MEP3/README.md)  | Machine Re-Installation to preserve local data |   `Completed`   |
-| [MEP-4](MEP4/README.md)  | Multi-tenancy for the metal-api                |   `Accepted`    |
-| [MEP-5](MEP5/README.md)  | Shared Networks                                |   `Completed`   |
-| [MEP-6](MEP6/README.md)  | DMZ Networks                                   |   `Completed`   |
-| [MEP-8](MEP8/README.md)  | Configurable Filesystemlayout                  |   `Completed`   |
-| [MEP-9](MEP9/README.md)  | No Open Ports To the Data Center               |  `In Progress`  |
-| [MEP-11](MEP9/README.md) | Auditing of metal-stack resources              |  `In Progress`  |
+| Name                      | Description                                    |      State      |
+| :------------------------ | :--------------------------------------------- | :-------------: |
+| [MEP-1](MEP1/README.md)   | Distributed Control Plane Deployment           | `In Discussion` |
+| [MEP-2](MEP2/README.md)   | Two Factor Authentication                      |    `Aborted`    |
+| [MEP-3](MEP3/README.md)   | Machine Re-Installation to preserve local data |   `Completed`   |
+| [MEP-4](MEP4/README.md)   | Multi-tenancy for the metal-api                |   `Accepted`    |
+| [MEP-5](MEP5/README.md)   | Shared Networks                                |   `Completed`   |
+| [MEP-6](MEP6/README.md)   | DMZ Networks                                   |   `Completed`   |
+| [MEP-8](MEP8/README.md)   | Configurable Filesystemlayout                  |   `Completed`   |
+| [MEP-9](MEP9/README.md)   | No Open Ports To the Data Center               |   `Completed`   |
+| [MEP-11](MEP11/README.md) | Auditing of metal-stack resources              |   `Completed`   |
+| [MEP-12](MEP12/README.md) | Rack Spreading                                 | `In Discussion` |
