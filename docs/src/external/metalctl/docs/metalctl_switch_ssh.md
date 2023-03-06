@@ -1,23 +1,19 @@
-# metalctl image list
+# metalctl switch ssh
 
-list all images
+connect to the switch via ssh
+
+## Synopsis
+
+this requires a network connectivity to the management ip address of the switch.
 
 ```
-metalctl image list [flags]
+metalctl switch ssh <switchID> [flags]
 ```
 
 ## Options
 
 ```
-      --classification string   Classification of this image.
-      --features string         Features of this image.
-  -h, --help                    help for list
-      --id string               ID of the image.
-      --name string             Name of the image.
-      --os string               OS derivate of this image.
-      --show-usage              show from how many allocated machines every image is used
-      --sort-by strings         sort by (comma separated) column(s), sort direction can be changed by appending :asc or :desc behind the column identifier. possible values: classification|description|expiration|id|name
-      --version string          Version of this image.
+  -h, --help   help for ssh
 ```
 
 ## Options inherited from parent commands
@@ -50,5 +46,5 @@ metalctl image list [flags]
 
 ## SEE ALSO
 
-* [metalctl image](metalctl_image.md)	 - manage image entities
+* [metalctl switch](metalctl_switch.md)	 - manage switch entities
 
