@@ -38,7 +38,7 @@ Evaluation of those parameters led to more specific requirements:
   - Numbered BGP only for peerings at exit switches with third parties (Internet Service Provider).
   - Overall BGP unnumbered.
   - 4-byte private ASN instead of default 2-byte ASN for BGP.
-  - Network operation relies on Cumulus Linux.
+  - Network operation relies on SONiC Linux.
   - Bleeding edge Routing-to-the-Host/EVPN-to-the-Host with ordinary Linux distributions.
   - Layer-3 routing using BGP and VXLAN/EVPN.
   - Every VTEP acts as a layer-3 gateway and does routing. Routing is done on both the ingress and the egress VTEP (aka distributed symmetric routing).
@@ -149,7 +149,7 @@ Integrated routing and bridging (IRB) is the most complex part of EVPN. You coul
 
 ### MTU
 
-In a layer-3 network it is important to associate each interface with a proper Maximum Transmission Unit (MTU) to avoid fragmentation of IP packets. Typical modern networks do not fragment IP packets and the introduction of VXLAN adds another additional header to the packets that must not exceed the MTU. If the MTU is exceeded, VXLAN might just fail without error as Cumulus consultants stated. This already represents a difficult-to-diagnose connectivity issue that has to be avoided.
+In a layer-3 network it is important to associate each interface with a proper Maximum Transmission Unit (MTU) to avoid fragmentation of IP packets. Typical modern networks do not fragment IP packets and the introduction of VXLAN adds another additional header to the packets that must not exceed the MTU. If the MTU is exceeded, VXLAN might just fail without error. This already represents a difficult-to-diagnose connectivity issue that has to be avoided.
 
 It is common practice to set the MTU for VXLAN facing interfaces (e.g. inter-switch links) to a value of `9216` to compensate the additional VXLAN overhead and an MTU of `9000` as a default to other interfaces (e.g. server facing ports). The common MTU of `1500` is not sufficient for traffic inside a data center!
 
@@ -161,7 +161,7 @@ Routing is needed for communication between VXLAN tunnels or between a VXLAN tun
 
 > Picture 4: Illustration of two distinct routing tables of VRF1 (enslaved: servers A and B) and VRF2 (enslaved: server C)
 
-To leaverage the potential and power of BGP, VRF, EVPN/VXLAN without a vendor lock-in the implementation relies on hardware that is supported by open network operating system: Cumulus Linux.
+To leaverage the potential and power of BGP, VRF, EVPN/VXLAN without a vendor lock-in the implementation relies on hardware that is supported by open network operating system: SONiC.
 
 ## Implementation
 
@@ -187,7 +187,7 @@ To operate the CLOS topology, software defined configuration to enable BGP, VRF,
 
 ### Network Operating Systems
 
-Cumulus Linux as the network operating system will be installed on all network switches (leaves, spines, exit switches) within the CLOS topology. Cumulus Linux cannot be installed on bare metal servers that require BGP/EVPN but does not have a switching silicon.
+SONiC as the network operating system will be installed on all network switches (leaves, spines, exit switches) within the CLOS topology. SONiC cannot be installed on bare metal servers that require BGP/EVPN but does not have a switching silicon.
 
 Components without a switching silicon are:
 
@@ -384,7 +384,7 @@ A bridge is used to attach VXLAN interface `bridge-ports vni3981` and map its lo
 
 The Routed VLAN Interface or Switched Virtual Interface (SVI) `iface vlan1001` is configured corresponding to the per-tenant VXLAN interface. It is attached to the tenant VRF. Remote host routes are installed over this SVI. The `vlan-raw-device bridge` is used to associate the SVI with the VLAN aware bridge. For a packet received from a locally attached host the SVI interface corresponding to the VLAN determines the VRF `vrf vrf3981`.
 
-The VXLAN interface `iface vni3981` defines a tunnel address that is used for the VXLAN tunnel header `vlxan-local-tunnelip 10.0.0.11`. This VTEP IP address is typically the loopback device address of the switch. When EVPN is provisioned, data plane MAC learning for VXLAN interfaces must be disabled because the purpose of EVPN is to exchange MACs between VTEPs in the control plane: `bridge-learning off`. EVPN is responsible for installing remote MACs. `bridge-arp-nd-suppress` suppresses ARP flooding over VXLAN tunnels.  Instead, a local proxy handles ARP requests received from locally attached hosts for remote hosts. ARP suppression is the implementation for IPv4; ND suppression is the implementation for IPv6. It is recommended by Cumulus to enable ARP suppression on all VXLAN interfaces. Bridge Protocol Data Unit (BPDU) are not transmitted over VXLAN interfaces. So as a good practice bpduguard and pbdufilter are enabled with `mstpctl-bpduguard yes` and `mstpctl-portbpdufilter yes`. These settings filter BPDU and guard the spanning tree topology from unauthorized switches affecting the forwarding path. `vxlan-id 3981` specifies the VXLAN Network Identifier (VNI). The type of VNI can either be layer-2 (L2) or layer-3 (L3). This is an implicit thing. A VNI is a L3 VNI (L3VNI) when a mapping exists that maps the VNI to a VRF (configured in `/etc/frr/frr.conf`) otherwise it is a L2 VNI (L2VNI).
+The VXLAN interface `iface vni3981` defines a tunnel address that is used for the VXLAN tunnel header `vlxan-local-tunnelip 10.0.0.11`. This VTEP IP address is typically the loopback device address of the switch. When EVPN is provisioned, data plane MAC learning for VXLAN interfaces must be disabled because the purpose of EVPN is to exchange MACs between VTEPs in the control plane: `bridge-learning off`. EVPN is responsible for installing remote MACs. `bridge-arp-nd-suppress` suppresses ARP flooding over VXLAN tunnels.  Instead, a local proxy handles ARP requests received from locally attached hosts for remote hosts. ARP suppression is the implementation for IPv4; ND suppression is the implementation for IPv6. It is recommended to enable ARP suppression on all VXLAN interfaces. Bridge Protocol Data Unit (BPDU) are not transmitted over VXLAN interfaces. So as a good practice bpduguard and pbdufilter are enabled with `mstpctl-bpduguard yes` and `mstpctl-portbpdufilter yes`. These settings filter BPDU and guard the spanning tree topology from unauthorized switches affecting the forwarding path. `vxlan-id 3981` specifies the VXLAN Network Identifier (VNI). The type of VNI can either be layer-2 (L2) or layer-3 (L3). This is an implicit thing. A VNI is a L3 VNI (L3VNI) when a mapping exists that maps the VNI to a VRF (configured in `/etc/frr/frr.conf`) otherwise it is a L2 VNI (L2VNI).
 
 ```bash
 # /etc/frr/frr.conf
@@ -442,10 +442,8 @@ iface swp1
 The spines are important to forward EVPN routes and transport VXLAN packets between the VTEPs. They are not configured as VTEPs. The FRR configuration only contains the already known global BGP instance configuration `router bgp 4200000020` plus the activation of the l2vpn evpn address family `address-family l2vpn evpn` to enable EVPN type-5 route forwarding (Listing 7).
 
 ```bash
-frr version 4.0+cl3u9
-frr defaults datacenter
 hostname spine01
-username cumulus nopassword
+username admin nopassword
 !
 # [...]
 interface swp1
@@ -468,7 +466,7 @@ router bgp 4200000020
 
 #### Tenant Firewalls: EVPN-to-the-Host
 
-In case a tenant server needs to reach out to external networks as the Internet, a tenant firewall is provisioned. The firewall is a bare metal server without a switching silicon. Thus, there is no installation of Cumulus Linux. Instead a standard Linux OS with a special configuration is used (FRR from branch `dev/frr-7.1`, iproute2 and a more recent Linux Kernel >= 5.0) to provide the BGP/ EVPN functionality known as `EVPN-to-the-host`. The firewall is configured as a VTEP and applies `dynamic route-leaking` to install routes of an foreign VRF. The set of routes that are leaked are restricted with route-maps.
+In case a tenant server needs to reach out to external networks as the Internet, a tenant firewall is provisioned. The firewall is a bare metal server without a switching silicon. Thus, there is no installation of SONiC. [FRR](https://frrouting.org) provides the BGP / EVPN functionality known as `EVPN-to-the-host`. The firewall is configured as a VTEP and applies `dynamic route-leaking` to install routes of an foreign VRF. The set of routes that are leaked are restricted with route-maps.
 
 As Listing 8 shows, the firewall is configured with VXLAN interfaces as known from the leaf setup. Additionally, a VXLAN setup for VRF `vrfInternet` is added to provide Internet access. vrfInternet contains a route to the Internet that will be leaked into the tenant VRF.
 
@@ -692,31 +690,6 @@ In addition to the standard BGP setup the exit switches have configured `static 
 
 To reach out into external networks each of the exit nodes joins a BGP session with a distinct external router. There is a different latency to each of these routers. To favor routes of exit nodes connected with lower latency over exit nodes with higher latency two route maps `PREPEND-PATH-TO-DISFAVOR-IN` and `PREPEND-PATH-TO-DISFAVOR-OUT` are added to high latency exit nodes. These route maps apply actions to prolong the path of the incoming and outgoing routes. Because of this path extension BGP will calculate a lower weight for these paths and favors paths via other exit nodes. It is important to know that within an address family only one route map (the last) will be applied. To apply more than one actions within a route-map the required entries can be applied to a single route-map.
 
-#### Operationalizing Cumulus Linux
-
-With Cumulus Linux as the basic network operating system there are two possibilities on how to get configuration into the target devices:
-
-1. editing flat files and reloading required services
-2. utilizing Network Command Line Utility (NCLU)
-
-The NCLU has two wrappers:
-
-1. CLI (`net` command)
-1. Ansible Module `nclu`
-
-As Cumulus states, the NCLU tool is intended for people who do not understand Linux. Besides the fact, that we understand that editing flat files has advantages, we found the following reasons to stick with this approach:
-
-- full control on what is going on and when it is going on
-- no suffer from bugs that are present in NCLU `net` command
-- decoupling from additional layers (NCLU)
-- avoid hybrid solutions since NCLU is not capable of solving all use cases completely (e.g. DHCP configuration)
-- in the past we made good experiences with rendering plain configuration files
-
-Of course this decision comes with the challenge to render all required files correctly and reload the appropriate services accordingly.
-
-Reference:
-[Operationalizing Cumulus Linux](https://www.nvidia.com/en-us/networking/education/)
-
 ### PXE Boot Mode
 
 Before a bare metal server can act as tenant server or tenant firewall, it has to be provisioned. Within the Metal domain, this provisioning mode is called "PXE Mode" since it is based on Preboot eXecution Environment (PXE). PXE uses protocols like DHCP. This requires all bare metal servers that need provisioning to be located in a layer-2 domain where DHCP is available. This domain is a VLAN `vlan4000`. A DHCP server for PXE Mode is installed on the exit switches to work in this specific VLAN.
@@ -769,6 +742,6 @@ During provisioning bare metal servers get internet access via the management ne
 
 ### Management Network
 
-To manage network switches beside the out-of-band system console access a further management access is required. For this purpose the concept of **Management VRF** is applied. The Management VRF is a subset of VRF. It provides a separation between out-of-band management network and the in-band data plane network by introducing another routing table **mgmt**. Cumulus Linux supports eth0 to be used as the management interface.
+To manage network switches beside the out-of-band system console access a further management access is required. For this purpose the concept of **Management VRF** is applied. The Management VRF is a subset of VRF. It provides a separation between out-of-band management network and the in-band data plane network by introducing another routing table **mgmt**. SONiC supports eth0 to be used as the management interface.
 
 To enable and use the Management VRF all switches have to be connected via their eth0 interface to a management-switch. The management switch is connected to a management server. All access is established from within the managment server. Logins to the switch are set into the Management VRF context once the Managment VRF is enabled.

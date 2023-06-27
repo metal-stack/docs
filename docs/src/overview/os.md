@@ -2,18 +2,24 @@
 
 Our operating system images are built on regular basis from the [metal-images](https://github.com/metal-stack/metal-images) repository.
 
-All images are hosted on GKE at [images.metal-stack.io](https://images.metal-pod.io). Feel free to use this as a mirror for your metal-stack partitions if you want. The metal-stack developers continuously have an eye on the supported images. They are updated regularly and scanned for vulnerabilities.
+All images are hosted on GKE at [images.metal-stack.io](https://images.metal-stack.io). Feel free to use this as a mirror for your metal-stack partitions if you want. The metal-stack developers continuously have an eye on the supported images. They are updated regularly and scanned for vulnerabilities.
 
 ## Supported OS Images
 
 The operating system images that we build are trimmed down to their bare essentials for serving as Kubernetes worker nodes. Small image sizes make machine provisioning blazingly fast.
 
-The supported images currently are:
+The supported images for worker nodes currently are:
 
 | Platform | Distribution | Version |
 | :------- | :----------- | :------ |
-| Linux    | Debian       | 10      |
-| Linux    | Ubuntu       | 20.04   |
+| Linux    | Debian       | 11      |
+| Linux    | Ubuntu       | 22.04   |
+
+The supported images for firewalls are:
+
+| Platform | Distribution | Version | Based On |
+| :------- | :----------- | :------ | -------- |
+| Linux    | Ubuntu       | 3       | 22.04    |
 
 ## Building Your Own Images
 
