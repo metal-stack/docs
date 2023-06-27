@@ -48,36 +48,7 @@ If there are any failing pods, investigate those and look into container logs. T
 
     Sometimes, you see a helm errors like "no deployed releases" or something like this. When a helm chart fails after the first deployment it could be that you have a chart installation still pending. Also, the control plane helm chart uses pre- and post-hooks, which creates [jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/) that helm expects to be completed before attempting another deployment. Delete the helm chart (use Helm 3) with `helm delete -n metal-control-plane metal-control-plane` and delete the jobs in the `metal-control-plane` namespace before retrying the deployment.
 
-### In the mini-lab I can't SSH into the leaf switches anymore
-
-The `vagrant ssh leaf01` command returns an error like this:
-
-```
-The provider for this Vagrant-managed machine is reporting that it
-is not yet ready for SSH. Depending on your provider this can carry
-different meanings. Make sure your machine is created and running and
-try again. Additionally, check the output of `vagrant status` to verify
-that the machine is in the state that you expect. If you continue to
-get this error message, please view the documentation for the provider
-you're using.
-```
-
-This is actually expected behavior. As soon as the metal-core reconfigures the switch interfaces, the `eth0` interface will be reconfigured from DHCP to static. This causes Vagrant not to be able to figure out the IP address of the VM through dnsmasq anymore (which is how Vagrant gets to know the IP address of the VM for libvirt). The IP address of the switch is still the same though. You can still access the VM using SSH with the vagrant user.
-
-There are a couple of ways to get to know the IP address of the switch:
-
-- You can look it up in the switch interface configuration using the VM console
-- It is cached by the Ansible Vagrant dynamic inventory
-
-The following way describes how to access `leaf01` using the information from the dynamic inventory:
-
-```bash
-$ python3 -c 'import pickle; print(pickle.load(open(".ansible_vagrant_cache", "rb"))["meta_vars"]["leaf01"]["ansible_host"])'
-192.168.121.25
-$ ssh vagrant@192.168.121.25 # password is vagrant
-```
-
-### In the mini-lab the control-plane deployment fails because my system can't resolve api.0.0.0.0.nip.io
+### In the mini-lab the control-plane deployment fails because my system can't resolve api.172.17.0.1.nip.io
 
 The control-plane deployment returns an error like this:
 
@@ -89,7 +60,7 @@ deploy-control-plane |   elapsed: 0
 deploy-control-plane |   msg: 'Status code was -1 and not [200]: Request failed: <urlopen error [Errno -5] No address associated with hostname>'
 deploy-control-plane |   redirected: false
 deploy-control-plane |   status: -1
-deploy-control-plane |   url: http://api.0.0.0.0.nip.io:8080/metal/v1/health
+deploy-control-plane |   url: http://api.172.17.0.1.nip.io:8080/metal/v1/health
 deploy-control-plane |
 deploy-control-plane | PLAY RECAP *********************************************************************
 deploy-control-plane | localhost                  : ok=29   changed=4    unreachable=0    failed=1    skipped=7    rescued=0    ignored=0
@@ -99,7 +70,7 @@ deploy-control-plane exited with code 2
 
 Some home routers have a security feature that prevents DNS Servers to resolve anything in the router's local IP range (DNS-Rebind-Protection).
 
-You need to add an exception for `nip.io` in your router configuration.
+You need to add an exception for `nip.io` in your router configuration or add `127.0.0.1    api.172.17.0.1.nip.io` to your `/etc/hosts`.
 
 #### FritzBox
 
@@ -159,15 +130,17 @@ In most of the cases, there is not much that can be done from the operator's per
 
 #### failed-machine-reclaim
 
-If a machine remains in the `Phoned Home` state without having an allocation, this indicates that the [metal-core](https://github.com/metal-stack/metal-core) was not able to put the machine back into PXE boot mode after `metalctl machine rm`. The machine is still running the operating system and it does not return back into the allocatable machine pool. Effectively, you lost a machine in your environment and no-one pays for it. Therefore, you should resolve this issue as soon as possible.
+If a machine remains in the `Phoned Home` state without having an allocation, this indicates that the [metal-bmc](https://github.com/metal-stack/metal-bmc) was not able to put the machine back into PXE boot mode after `metalctl machine rm`. The machine is still running the operating system and it does not return back into the allocatable machine pool. Effectively, you lost a machine in your environment and no-one pays for it. Therefore, you should resolve this issue as soon as possible.
+
+In bad scenarios, when the machine was a firewall, the machine can still reach the internet through the PXE boot network and also attract traffic, which it cannot route anymore inside the tenant VRF. This can cause traffic loss inside a tenant network.
 
 In most of the cases, it should be sufficient to run another `metalctl machine rm` on this machine in order to retry booting into PXE mode. If this still does not succeed, you can boot the machine into the BIOS and manually and change the boot order to PXE boot. This should force booting the metal-hammer again and add the machine back into your pool of allocatable machines.
 
 For further reference, see [metal-api#145](https://github.com/metal-stack/metal-api/issues/145).
 
-#### incomplete-cycles
+#### crashloop
 
-Under bad circumstances, a machine diverges from its typical machine lifecycle. When this happens, the internal state-machine of the metal-api counts this incident as an "incomplete cycle". It is likely that the machine has entered a crash loop where it PXE boots again and again without the machine ever becoming usable.
+Under bad circumstances, a machine diverges from its typical machine lifecycle. When this happens, the internal state-machine of the metal-api detects that the machine reboots unexpectedly during the provisioning phase. It is likely that the machine has entered a crash loop where it PXE boots again and again without the machine ever becoming usable.
 
 Reasons for this can be:
 
@@ -177,6 +150,12 @@ Reasons for this can be:
 Please also consider console logs of the machine for investigating the issue.
 
 The incomplete cycle count is reset as soon as the machine reaches `Phoned Home` state or there is a `Planned Reboot` of the machine (planned reboot is also done by the metal-hammer once a day in order to reboot with the latest version).
+
+#### last-event-error
+
+The machine had an error during the provisioning lifecycle recently or events are arriving out of order at the metal-api. This can be an interesting hint for the operator that something during machine provisioning went wrong. You can look at the error through `metalctl machine describe` or `metalctl machine logs`.
+
+This error will disappear after a certain time period from `machine issues`. You can still look up the error as described above.
 
 #### asn-not-unique
 

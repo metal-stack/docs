@@ -22,15 +22,20 @@ The mini-lab is a small, virtual setup to locally run the metal-stack. It deploy
 - Linux machine with hardware virtualization support
 - kvm as hypervisor for the VMs (you can check through the `kvm-ok` command)
 - [docker](https://www.docker.com/) >= 18.09 (for using kind and our deployment base image)
-- [docker-compose](https://docs.docker.com/compose/) >= 1.25.4 (for ease of use and for parallelizing control plane and partition deployment)
-- [kind](https://github.com/kubernetes-sigs/kind/releases) == v0.12.0 (for hosting the metal control plane on a kubernetes cluster v1.23.4)
+- [docker-compose](https://docs.docker.com/compose/) >= 2.0 (for ease of use and for parallelizing control plane and partition deployment)
+- [kind](https://github.com/kubernetes-sigs/kind/releases) == v0.15.0 (for hosting the metal control plane on a kubernetes cluster v1.25)
 - [containerlab](https://containerlab.srlinux.dev/install/) == v0.25.1
 - the lab creates a docker network on your host machine (`172.17.0.1`), this hopefully does not overlap with other networks you have
 - (recommended) haveged to have enough random entropy (only needed if the PXE process does not work)
 
-Here is some code that should help you setting up most of the requirements:
+Here is some code that should help you to set up most of the requirements:
 
  ```bash
+# If UFW enabled.
+# Disable the firewall or allow traffic through Docker network IP range.
+sudo ufw status
+sudo ufw allow from 172.17.0.0/16
+
 # Install kvm
 sudo apt install -y git curl qemu qemu-kvm haveged
 
@@ -44,7 +49,7 @@ curl -fsSL https://get.docker.com | sh
 sudo usermod -G docker -a ${USER}
 
 # Install containerlab
-bash -c "$(curl -sL https://get-clab.srlinux.dev)"
+bash -c "$(curl -sL https://get.containerlab.dev)"
 
 # Install kind (kubernetes in docker), for more details see https://kind.sigs.k8s.io/docs/user/quick-start/#installation
 sudo curl -Lo /usr/local/bin/kind "https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64"
@@ -85,10 +90,10 @@ make
 # containerlab will ask you for root permissions (https://github.com/srl-labs/containerlab/issues/669)
 ```
 
-After the deployment and waiting for a short amoung of time, two machines in status `PXE booting` become visible through `metalctl machine ls`:
+After the deployment and waiting for a short amount of time, two machines in status `PXE booting` become visible through `metalctl machine ls`:
 
 ```bash
-docker-compose run metalctl machine ls
+docker-compose run --rm metalctl machine ls
 
 ID                                          LAST EVENT   WHEN     AGE  HOSTNAME  PROJECT  SIZE          IMAGE  PARTITION
 e0ab02d2-27cd-5a5e-8efc-080ba80cf258        PXE Booting  3s
@@ -98,7 +103,7 @@ e0ab02d2-27cd-5a5e-8efc-080ba80cf258        PXE Booting  3s
 Wait until the machines reach the waiting state:
 
 ```bash
-docker-compose run metalctl machine ls
+docker-compose run --rm metalctl machine ls
 
 ID                                          LAST EVENT   WHEN     AGE  HOSTNAME  PROJECT  SIZE          IMAGE  PARTITION
 e0ab02d2-27cd-5a5e-8efc-080ba80cf258        Waiting      8s                               v1-small-x86         mini-lab
@@ -115,13 +120,13 @@ make machine
 __Alternatively__, you may want to issue the `metalctl` commands on your own:
 
 ```bash
-docker-compose run metalctl network allocate \
+docker-compose run --rm metalctl network allocate \
         --partition mini-lab \
         --project 00000000-0000-0000-0000-000000000000 \
         --name user-private-network
 
 # lookup the network ID and create a machine
-docker-compose run metalctl machine create \
+docker-compose run --rm metalctl machine create \
         --description test \
         --name machine \
         --hostname machine \
@@ -132,7 +137,7 @@ docker-compose run metalctl machine create \
         --networks <network-ID>
 
 # create a firewall that is also connected to the virtual internet-mini-lab network
-docker-compose run metalctl machine create \
+docker-compose run --rm metalctl machine create \
         --description fw \
         --name fw \
         --hostname fw \
@@ -156,7 +161,7 @@ machine login:
 Two machines are now installed and have status "Phoned Home"
 
 ```bash
-docker-compose run metalctl machine ls
+docker-compose run --rm metalctl machine ls
 ID                                          LAST EVENT   WHEN   AGE     HOSTNAME  PROJECT                               SIZE          IMAGE                             PARTITION
 e0ab02d2-27cd-5a5e-8efc-080ba80cf258        Phoned Home  2s     21s     machine   00000000-0000-0000-0000-000000000000  v1-small-x86  Ubuntu 20.04 20200331             mini-lab
 2294c949-88f6-5390-8154-fa53d93a3313        Phoned Home  8s     18s     fw        00000000-0000-0000-0000-000000000000  v1-small-x86  Firewall 2 Ubuntu 20200730        mini-lab
@@ -165,7 +170,7 @@ e0ab02d2-27cd-5a5e-8efc-080ba80cf258        Phoned Home  2s     21s     machin
 Login with user name metal and the console password from
 
 ```bash
-docker-compose run metalctl machine consolepassword e0ab02d2-27cd-5a5e-8efc-080ba80cf258
+docker-compose run --rm metalctl machine consolepassword e0ab02d2-27cd-5a5e-8efc-080ba80cf258
 ```
 
 If you want to access the firewall with SSH or have internet connectivity from the firewall and machine, you'll need to have a static route configured that points to the leaf switches:
@@ -189,17 +194,17 @@ make cleanup
 Reinstall a machine with
 
 ```bash
-docker-compose run metalctl machine reinstall \
+docker-compose run --rm metalctl machine reinstall \
         --image ubuntu-20.04 \
         e0ab02d2-27cd-5a5e-8efc-080ba80cf258
 ```
 
 ### Free machine
 
-Free a machine with
+Free a machine with `make free-machine01` or
 
 ```bash
-docker-compose run metalctl machine rm e0ab02d2-27cd-5a5e-8efc-080ba80cf258
+docker-compose run --rm metalctl machine rm e0ab02d2-27cd-5a5e-8efc-080ba80cf258
 ```
 
 ## Flavors
@@ -207,7 +212,8 @@ docker-compose run metalctl machine rm e0ab02d2-27cd-5a5e-8efc-080ba80cf258
 There's few versions of mini-lab environment that you can run. We call them flavors. There's 2 flavors at the moment:
 
 - `default` -- runs 2 machines.
-- `cluster-api` -- runs 3 machines. Usefull for testing Control plane and worker node deployment with [Cluster API provider](https://github.com/metal-stack/cluster-api-provider-metalstack).
+- `cluster-api` -- runs 3 machines. Useful for testing Control plane and worker node deployment with [Cluster API provider](https://github.com/metal-stack/cluster-api-provider-metalstack).
+- `sonic` -- use SONiC as network operating system for the leaves
 
 In order to start specific flavor, you can define the flavor as follows:
 

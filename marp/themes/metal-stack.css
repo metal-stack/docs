@@ -1,0 +1,44 @@
+/* @theme metal-stack */
+
+@import 'gaia';
+@import url('https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@1&display=swap');
+
+section.cover {
+    color: white;
+    background-image: url('https://metal-stack.io/images/background/banner-back.png') !important;
+}
+
+section.cover footer {
+    color: white;
+}
+
+footer {
+    text-align: center;
+}
+
+blockquote {
+    font-family: "Sorts Mill Goudy";
+    font-style: italic;
+    hyphens: none;
+    text-align: center;
+}
+
+blockquote::after, blockquote::before {
+    content: "";
+    position: relative;
+}
+
+.blockquote-lead {
+    font-family: "Sorts Mill Goudy";
+    font-style: italic;
+    hyphens: none;
+    text-align: center;
+}
+
+.blockquote-footer {
+    font-family: "Sorts Mill Goudy";
+    font-style: italic;
+    font-size: 0.8em;
+    font-variant: small-caps;
+    color: gray;
+}
