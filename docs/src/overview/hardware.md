@@ -21,13 +21,17 @@ At the moment we support the following server types:
 At the moment we support the following switch types:
 
 | Vendor    | Series        | Model      | OS             | Status |
-| :-------- | :------------ | :--------- |:---------------|:-------|
+| :-------- | :------------ | :--------- | :------------- | :----- |
 | Edge-Core | AS7700 Series | AS7712-32X | Cumulus 3.7.13 | stable |
 | Edge-Core | AS7700 Series | AS7726-32X | Cumulus 4.1.1  | stable |
+| Edge-Core | AS7700 Series | AS7712-32X | Edgecore SONiC | stable |
+| Edge-Core | AS7700 Series | AS7726-32X | Edgecore SONiC | stable |
 
 !!! warning
 
-    On our switches we run [Cumulus Linux](hhttps://www.nvidia.com/en-us/networking/ethernet-switching/cumulus-linux/). The metal-core writes network configuration specifically implemented for this operating system. Please also consider running Cumulus Linux on your switches if you do not want to run into any issues with networking.
+    On our switches we run [SONiC](https://sonicfoundation.dev). The metal-core writes network configuration specifically implemented for this operating system. Please also consider running SONiC on your switches if you do not want to run into any issues with networking.
+
+    Our previous support for [Cumulus Linux](hhttps://www.nvidia.com/en-us/networking/ethernet-switching/cumulus-linux/) will come to an end.
 
     Of course, contributions for supporting other switch vendors and operating systems are highly appreciated.
 
