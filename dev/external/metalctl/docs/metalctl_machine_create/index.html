@@ -33,7 +33,8 @@ after you do not want to use this machine exclusive, remove the reservation:
 metalctl machine reserve 00000000-0000-0000-0000-0cc47ae54694 --remove
 
 Once created the machine installation can not be modified anymore.
-</code></pre><h2 id="Options"><a class="docs-heading-anchor" href="#Options">Options</a><a id="Options-1"></a><a class="docs-heading-anchor-permalink" href="#Options" title="Permalink"></a></h2><pre><code class="nohighlight hljs">  -d, --description string        Description of the machine to create. [optional]
+</code></pre><h2 id="Options"><a class="docs-heading-anchor" href="#Options">Options</a><a id="Options-1"></a><a class="docs-heading-anchor-permalink" href="#Options" title="Permalink"></a></h2><pre><code class="nohighlight hljs">      --bulk-output               when used with --file (bulk operation): prints results at the end as a list. default is printing results intermediately during the operation, which causes single entities to be printed in a row.
+  -d, --description string        Description of the machine to create. [optional]
   -f, --file string               filename of the create or update request in yaml format, or - for stdin.
                                   
                                   Example:
@@ -43,6 +44,8 @@ Once created the machine installation can not be modified anymore.
                                   $ cat machine.yaml | metalctl machine create -f -
                                   $ # or via file
                                   $ metalctl machine create -f machine.yaml
+                                  
+                                  the file can also contain multiple documents and perform a bulk operation.
                                   	
       --filesystemlayout string   Filesystemlayout to use during machine installation. [optional]
   -h, --help                      help for create
@@ -61,10 +64,12 @@ Once created the machine installation can not be modified anymore.
   -S, --partition string          partition/datacenter where the machine is created. [required, except for reserved machines]
   -P, --project string            Project where the machine should belong to. [required]
   -s, --size string               Size of the machine. [required, except for reserved machines]
+      --skip-security-prompts     skips security prompt for bulk operations
   -p, --sshpublickey string       SSH public key for access via ssh and console. [optional]
                                   Can be either the public key as string, or pointing to the public key file to use e.g.: &quot;@~/.ssh/id_rsa.pub&quot;.
                                   If ~/.ssh/[id_ed25519.pub | id_rsa.pub | id_dsa.pub] is present it will be picked as default, matching the first one in this order.
       --tags strings              tags to add to the machine, use it like: --tags &quot;tag1,tag2&quot; or --tags &quot;tag3&quot;.
+      --timestamps                when used with --file (bulk operation): prints timestamps in-between the operations
       --userdata string           cloud-init.io compatible userdata. [optional]
                                   Can be either the userdata as string, or pointing to the userdata file to use e.g.: &quot;@/tmp/userdata.cfg&quot;.</code></pre><h2 id="Options-inherited-from-parent-commands"><a class="docs-heading-anchor" href="#Options-inherited-from-parent-commands">Options inherited from parent commands</a><a id="Options-inherited-from-parent-commands-1"></a><a class="docs-heading-anchor-permalink" href="#Options-inherited-from-parent-commands" title="Permalink"></a></h2><pre><code class="nohighlight hljs">      --api-token string       api token to authenticate. Can be specified with METALCTL_API_TOKEN environment variable.
       --api-url string         api server address. Can be specified with METALCTL_API_URL environment variable.
@@ -88,4 +93,4 @@ Once created the machine installation can not be modified anymore.
                                metalctl machine list -o template --template &quot;{{ .id }}:{{ .size.id  }}&quot;
                                
                                
-      --yes-i-really-mean-it   skips security prompts (which can be dangerous to set blindly because actions can lead to data loss or additional costs)</code></pre><h2 id="SEE-ALSO"><a class="docs-heading-anchor" href="#SEE-ALSO">SEE ALSO</a><a id="SEE-ALSO-1"></a><a class="docs-heading-anchor-permalink" href="#SEE-ALSO" title="Permalink"></a></h2><ul><li><a href="../metalctl_machine/">metalctl machine</a>	 - manage machine entities</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Tuesday 27 June 2023 12:48">Tuesday 27 June 2023</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+      --yes-i-really-mean-it   skips security prompts (which can be dangerous to set blindly because actions can lead to data loss or additional costs)</code></pre><h2 id="SEE-ALSO"><a class="docs-heading-anchor" href="#SEE-ALSO">SEE ALSO</a><a id="SEE-ALSO-1"></a><a class="docs-heading-anchor-permalink" href="#SEE-ALSO" title="Permalink"></a></h2><ul><li><a href="../metalctl_machine/">metalctl machine</a>	 - manage machine entities</li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Tuesday 4 July 2023 13:15">Tuesday 4 July 2023</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
