@@ -8,7 +8,11 @@ So, instead of just randomly deciding the placement of a machine candidate, we w
 
 ## Placement Strategy
 
-Machines in the project are spread across all available racks evenly (best effort), the user can optionally pass placement tags which will be considered for spreading the machines as well (this will for example allow spreading by a cluster id tag inside the same project).
+Machines in the project are spread across all available racks evenly within a partition (best effort). For this, an additional request to the datastore has to be made in order to find allocated machines within the project in the partition.
+
+The algorithm will then figure out the least occupied racks and elect a machine candidate randomly from those racks.
+
+The user can optionally pass placement tags which will be considered for spreading the machines as well (this will for example allow spreading by a cluster id tag inside the same project).
 
 ## API
 
@@ -17,6 +21,6 @@ Machines in the project are spread across all available racks evenly (best effor
 
 type MachineAllocation struct {
     // existing fields are omitted for readability
-    PlacementTags []string `json:"tags" description:"by default machines are spread across the racks inside a partition for every project. if placement tags are provided, the machine candidate has an additional anti-affinity to other machines having the same tags"`
+    PlacementTags []string `json:"placement_tags" description:"by default machines are spread across the racks inside a partition for every project. if placement tags are provided, the machine candidate has an additional anti-affinity to other machines having the same tags"`
 }
 ```
