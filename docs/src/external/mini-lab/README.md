@@ -49,7 +49,7 @@ curl -fsSL https://get.docker.com | sh
 sudo usermod -G docker -a ${USER}
 
 # Install containerlab
-bash -c "$(curl -sL https://get.containerlab.dev)"
+bash -c "$(curl -sL https://get.containerlab.dev)" -- -v 0.25.1
 
 # Install kind (kubernetes in docker), for more details see https://kind.sigs.k8s.io/docs/user/quick-start/#installation
 sudo curl -Lo /usr/local/bin/kind "https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64"
@@ -67,7 +67,6 @@ The following ports are used statically on your host machine:
 | 6443 |   0.0.0.0    | kube-apiserver of the kind cluster |
 | 4443 |   0.0.0.0    | HTTPS ingress                      |
 | 4150 |   0.0.0.0    | nsqd                               |
-| 4161 |   0.0.0.0    | nsq-lookupd                        |
 | 8080 |   0.0.0.0    | HTTP ingress                       |
 
 ## Known Limitations
