@@ -52,7 +52,7 @@ If there are any failing pods, investigate those and look into container logs. T
 
 The control-plane deployment returns an error like this:
 
-```
+```bash
 deploy-control-plane | fatal: [localhost]: FAILED! => changed=false
 deploy-control-plane |   attempts: 60
 deploy-control-plane |   content: ''
@@ -159,7 +159,7 @@ This error will disappear after a certain time period from `machine issues`. You
 
 #### asn-not-unique
 
-This issue was introduced by a bug in earlier versions of metal-stack and was fixed in https://github.com/metal-stack/metal-api/pull/105.
+This issue was introduced by a bug in earlier versions of metal-stack and was fixed in [PR105](https://github.com/metal-stack/metal-api/pull/105.)
 
 To resolve the issue, you need to recreate the firewalls that use the same ASN.
 
@@ -181,6 +181,18 @@ The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to repo
 
 When there is no distinct IP address for the BMC, it can be that an orphaned machine used this IP in the past. In this case, you need to clean up the orphaned machine through `metalctl machine rm --remove-from-database`.
 
+#### bmc-info-outdated
+
+The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to report bmc details for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
+
+When the metal-bmc was not able to fetch the bmc info for longer than 20 minutes, something is wrong with the BMC configuration of the machine. This can be caused by one of the following reasons:
+
+- Wrong password for the root user is configured in the BMC
+- ip address of the BMC is either wrong or not present
+- the device on the given ip address is not a machine, maybe a switch or a management component which is not managed by the metal-api
+
+In either case, please check the logs for the given machine UUID on the metal-bmc for further details. Also check that the metal-bmc is configured to only consider BMC IPs in the range they are configured from the DHCP server in the partition. This prevents grabbing unrelated BMCs.
+
 ### A machine has registered with a different UUID after reboot
 
 metal-stack heavily relies on steady machine UUIDs as the UUID is the primary key of the machine entity in the metal-api.
@@ -192,8 +204,8 @@ For further reference also see [metal-stack/metal-hammer#52](https://github.com/
 There are some scenarios (can be vendor-specific), which can cause a machine UUID to change over time, e.g.:
 
 - When the UUID partly contains of a network card's mac address, it can happen when:
-    - Exchanging network cards
-    - Disabling network cards through BIOS
+  - Exchanging network cards
+  - Disabling network cards through BIOS
 - Changing the UUID through vendor-specific CLI tool
 
 #### Solution

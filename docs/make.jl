@@ -3,6 +3,7 @@ using Documenter
 is_ci_build = get(ENV, "CI", nothing) == "true"
 
 makedocs(
+    repo = "github.com/metal-stack/docs.git",
     sitename="metal-stack",
     format = Documenter.HTML(
         prettyurls = is_ci_build,
@@ -15,7 +16,7 @@ makedocs(
     linkcheck_ignore = [
         r"^(?!http)",
     ],
-    #strict = true, # TODO: Should be enabled soon, links from repos to CONTRIBUTING have to be updated though...
+    # strict = false, # TODO: Should be enabled soon, links from repos to CONTRIBUTING have to be updated though...
     clean = true,
     pages = [
         "Introduction" => "index.md",
