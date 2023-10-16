@@ -88,9 +88,17 @@ The `metalctl machine issues` command gives you an overview over machines in you
 
 In the following sections, you can look up the machine issues that are returned by `metalctl` and find out how to deal with them properly.
 
+#### no-event-container
+
+Every machine in the metal-stack database usually has a corresponding event container where provisioning events are stored. This database entity gets created lazily as soon as a machine is registered by the metal-hammer or a provisioning event for the machine arrives at the metal-api.
+
+When there is no event container, this means that the machine has never registered nor received a provisioning event. As an operator you should evaluate why this machine is not booting into the metal-hammer.
+
+This issue is special in a way that it prevents other issues from being evaluated for this machine because the issue calculation usually requires information from the machine event container.
+
 #### no-partition
 
-When a machine has no partition, the [metal-hammer](https://github.com/metal-stack/metal-hammer) has not yet registered the machine at the [metal-api](https://github.com/metal-stack/metal-api). Instead, the machine was created through metal-stack's event machinery, which does not have a lot of information about a machine (e.g. a PXE boot event was reported from the pixiecore).
+When a machine has no partition, the [metal-hammer](https://github.com/metal-stack/metal-hammer) has not yet registered the machine at the [metal-api](https://github.com/metal-stack/metal-api). Instead, the machine was created through metal-stack's event machinery, which does not have a lot of information about a machine (e.g. a PXE boot event was reported from the pixiecore), or just by the [metal-bmc](https://github.com/metal-stack/metal-bmc) which discovered the machine through DHCP.
 
 This can usually happen on the very first boot of a machine and the machine's [hardware is not supported](../overview/hardware.md) by metal-stack, leading to the [metal-bmc](https://github.com/metal-stack/metal-bmc) being unable to report BMC details to the metal-api (a metal-bmc report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
 
@@ -127,6 +135,10 @@ For machines that are allocated by a user, the ownership has gone over to this u
 When the LLDP daemon stopped sending packages, the reasons are identical to those of [dead machines](#liveliness-dead). However, it's not possible anymore to decide whether the user is responsible for reaching this state or not.
 
 In most of the cases, there is not much that can be done from the operator's perspective. You will need to wait for the user to report an issue with the machine. When you do support, you can use this issue type to quickly identify this machine.
+
+#### liveliness-not-available
+
+This is more of a theoretical issue. When the machine liveliness is not available check that the Kubernetes `CronJob` in the metal-stack control plane for evaluating the machine liveliness is running regularly and not containing error logs. Make the machine boot into the metal-hammer and this issue should not appear.
 
 #### failed-machine-reclaim
 
