@@ -22,11 +22,11 @@ Other requests will be passed directly to the next middleware or web service wit
 As we are only interested in mutating endpoints, we ignore all `GET` requests.
 The whitelist includes all `POST`, `PUT`, `PATCH` and `DELETE` endpoints of the HTTP middleware except for the following (non-manipulating) route suffixes:
 
-  - `/find`
-  - `/notify`
-  - `/try` and `/match`
-  - `/capacity`
-  - `/from-hardware`
+- `/find`
+- `/notify`
+- `/try` and `/match`
+- `/capacity`
+- `/from-hardware`
 
 Regarding GRPC audit trails, they are not so interesting because only internal clients are using this API. However, we can log the trails of the `Boot` service, which can be interesting to revise the machine lifecycle.
 
