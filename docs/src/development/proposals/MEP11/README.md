@@ -22,11 +22,11 @@ Other requests will be passed directly to the next middleware or web service wit
 As we are only interested in mutating endpoints, we ignore all `GET` requests.
 The whitelist includes all `POST`, `PUT`, `PATCH` and `DELETE` endpoints of the HTTP middleware except for the following (non-manipulating) route suffixes:
 
-  - `/find`
-  - `/notify`
-  - `/try` and `/match`
-  - `/capacity`
-  - `/from-hardware`
+- `/find`
+- `/notify`
+- `/try` and `/match`
+- `/capacity`
+- `/from-hardware`
 
 Regarding GRPC audit trails, they are not so interesting because only internal clients are using this API. However, we can log the trails of the `Boot` service, which can be interesting to revise the machine lifecycle.
 
@@ -42,9 +42,9 @@ The metal-api will only write to the current index and switches to the new index
 
 As Meilisearch will be filled with data over time, we want to move completed chunks to a S3 compatible storage. This will be done by a sidecar cronjob that is executed periodically. Note that the periods of the index rotation and the cronjob execution don't have to match.
 
-When the backup process gets started, it initiates a [Meilisearch dump](https://docs.meilisearch.com/learn/advanced/dumps.html) of the whole database across all indices. Once the returned task is finished, the dump must be copied from a Meilisearch volume to the S3 compatible storage. After a successful copy, the dump can be deleted.
+When the backup process gets started, it initiates a [Meilisearch dump](https://www.meilisearch.com/docs/learn/advanced/dumps) of the whole database across all indices. Once the returned task is finished, the dump must be copied from a Meilisearch volume to the S3 compatible storage. After a successful copy, the dump can be deleted.
 
-Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://docs.meilisearch.com/reference/api/indexes.html#list-all-indexes), sort them and [delete each index](https://docs.meilisearch.com/reference/api/indexes.html#delete-an-index) except the most recent one to avoid data loss.
+Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://www.meilisearch.com/docs/reference/api/indexes#list-all-indexes), sort them and [delete each index](https://www.meilisearch.com/docs/reference/api/indexes#delete-an-index) except the most recent one to avoid data loss.
 
 For the actual implementation, we can build upon [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar). But due to the index rotation and the fact, that older indices need to be deleted, this probably does not fit into the mentioned sidecar.
 

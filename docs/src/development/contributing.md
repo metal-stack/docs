@@ -52,7 +52,7 @@ One major ambition of metal-stack is to follow the idea of [microservices](https
 
 ### Programming Languages
 
-We are generally open to write code in any language that fits best to the function of the software. However, we encourage [golang](https://en.wikipedia.org/wiki/Go_(programming_language)) to be the main language of metal-stack as we think that it makes development faster when not establishing too many different languages in our architecture. Reason for this is that we are striving for consistent behavior of the microservices, similar to what has been described for the Twelve-Factor App (see https://12factor.net/). We help enforcing unified behavior by allowing a small layer of shared code for every programming language. We will refer to this shared code as "libraries" for the rest of this document.
+We are generally open to write code in any language that fits best to the function of the software. However, we encourage [golang](https://en.wikipedia.org/wiki/Go_(programming_language)) to be the main language of metal-stack as we think that it makes development faster when not establishing too many different languages in our architecture. Reason for this is that we are striving for consistent behavior of the microservices, similar to what has been described for the Twelve-Factor App (see [12 Factor](https://12factor.net/)). We help enforcing unified behavior by allowing a small layer of shared code for every programming language. We will refer to this shared code as "libraries" for the rest of this document.
 
 ### Artifacts
 
@@ -91,7 +91,7 @@ Development follows the official guide to:
 - Write clear, idiomatic Go code[^2]
 - Learn from mistakes that must not be repeated[^3]
 - Apply appropriate names to your artifacts:
-  - [https://talks.golang.org/2014/names.slide#1](https://talks.golang.org/2014/names.slide#1)
+  - [https://go.dev/talks/2014/names.slide](https://go.dev/talks/2014/names.slide)
   - [https://go.dev/blog/package-names](https://go.dev/blog/package-names)
   - [https://go.dev/doc/effective_go#names](https://go.dev/doc/effective_go#names)
 - Enable others to understand the reasoning of non-trivial code sequences by applying a meaningful documentation.
@@ -99,7 +99,7 @@ Development follows the official guide to:
 #### Development Decisions
 
 - **Dependency Management** by using Go modules
-- **Build and Test Automation** by using [GNU Make](https://linux.die.net/man/1/make).
+- **Build and Test Automation** by using [GNU Make](https://man7.org/linux/man-pages/man1/make.1p.html).
 - **End-user APIs** should consider using go-swagger and [Go-Restful](https://github.com/emicklei/go-restful)
   **Technical APIs** should consider using [grpc](https://grpc.io/)
 

@@ -453,7 +453,7 @@ metal_api_grpc_certs_ca_cert: "{{ lookup('file', 'certs/ca.pem') }}"
 
 !!! tip
 
-    For the actual communication between the metal-api and the user clients (REST API, runs over the ingress-controller you deployed before), you can simply deploy a tool like [cert-manager](https://github.com/jetstack/cert-manager) into your Kubernetes cluster, which will automatically provide your ingress domains with Let's Encrypt certificates.
+    For the actual communication between the metal-api and the user clients (REST API, runs over the ingress-controller you deployed before), you can simply deploy a tool like [cert-manager](https://github.com/cert-manager/cert-manager) into your Kubernetes cluster, which will automatically provide your ingress domains with Let's Encrypt certificates.
 
 ### Running the Deployment
 
@@ -555,7 +555,7 @@ Checkout the [role documentation](https://github.com/metal-stack/metal-roles/tre
 
 metal-stack currently supports two authentication methods:
 
-- [dex](https://github.com/dexidp/dex) for providing user authentication through [OpenID Connect](https://openid.net/connect/) (OIDC)
+- [dex](https://github.com/dexidp/dex) for providing user authentication through [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC)
 - [HMAC](https://en.wikipedia.org/wiki/HMAC) auth, typically used for access by technical users (because we do not have service account tokens at the time being)
 
 In the metal-api, we have three different user roles for authorization:
