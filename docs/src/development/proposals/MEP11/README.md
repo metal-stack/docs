@@ -44,7 +44,7 @@ As Meilisearch will be filled with data over time, we want to move completed chu
 
 When the backup process gets started, it initiates a [Meilisearch dump](https://www.meilisearch.com/docs/learn/advanced/dumps) of the whole database across all indices. Once the returned task is finished, the dump must be copied from a Meilisearch volume to the S3 compatible storage. After a successful copy, the dump can be deleted.
 
-Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://www.meilisearch.com/docs/reference/api/indexes#list-all-indexes), sort them and [delete each index](https://docs.meilisearch.com/reference/api/indexes#delete-an-index) except the most recent one to avoid data loss.
+Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://www.meilisearch.com/docs/reference/api/indexes#list-all-indexes), sort them and [delete each index](https://www.meilisearch.com/docs/reference/api/indexes#delete-an-index) except the most recent one to avoid data loss.
 
 For the actual implementation, we can build upon [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar). But due to the index rotation and the fact, that older indices need to be deleted, this probably does not fit into the mentioned sidecar.
 
