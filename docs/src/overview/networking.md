@@ -74,7 +74,7 @@ It is not only important to have a scalable and resilient infrastructure but als
 
 ### BGP
 
-For routing the **Border Gateway Protocol (BGP)**, more specific: External BGP was selected. Extensive testing and operational experiences have shown that External BGP is well suited as a stand-alone routing protocol (see: [RFC7938](https://tools.ietf.org/html/rfc7938)).
+For routing the **Border Gateway Protocol (BGP)**, more specific: External BGP was selected. Extensive testing and operational experiences have shown that External BGP is well suited as a stand-alone routing protocol (see: [RFC7938](https://datatracker.ietf.org/doc/html/rfc7938)).
 
 Not all tenant servers are connected to the same leaf. Instead they can be distributed among any of the leaves of the data center. To not let this detail restrict the intra-tenant communication it is required to interconnect those layer-2 domains. In the context of BGP there is a concept of overlay networking with VXLAN/ EVPN that was evaluated to satisfy the needs of the metal-stack.
 

@@ -42,9 +42,9 @@ The metal-api will only write to the current index and switches to the new index
 
 As Meilisearch will be filled with data over time, we want to move completed chunks to a S3 compatible storage. This will be done by a sidecar cronjob that is executed periodically. Note that the periods of the index rotation and the cronjob execution don't have to match.
 
-When the backup process gets started, it initiates a [Meilisearch dump](https://docs.meilisearch.com/learn/advanced/dumps.html) of the whole database across all indices. Once the returned task is finished, the dump must be copied from a Meilisearch volume to the S3 compatible storage. After a successful copy, the dump can be deleted.
+When the backup process gets started, it initiates a [Meilisearch dump](https://docs.meilisearch.com/learn/advanced/dumps) of the whole database across all indices. Once the returned task is finished, the dump must be copied from a Meilisearch volume to the S3 compatible storage. After a successful copy, the dump can be deleted.
 
-Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://docs.meilisearch.com/reference/api/indexes.html#list-all-indexes), sort them and [delete each index](https://docs.meilisearch.com/reference/api/indexes.html#delete-an-index) except the most recent one to avoid data loss.
+Now we want to remove all indices from Meilisearch, except the most recent one. For this, we [get all indices](https://docs.meilisearch.com/reference/api/indexes), sort them and [delete each index](https://docs.meilisearch.com/reference/api/indexes) except the most recent one to avoid data loss.
 
 For the actual implementation, we can build upon [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar). But due to the index rotation and the fact, that older indices need to be deleted, this probably does not fit into the mentioned sidecar.
 

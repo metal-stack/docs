@@ -91,7 +91,7 @@ Development follows the official guide to:
 - Write clear, idiomatic Go code[^2]
 - Learn from mistakes that must not be repeated[^3]
 - Apply appropriate names to your artifacts:
-  - [https://talks.golang.org/2014/names.slide#1](https://talks.golang.org/2014/names.slide#1)
+  - [https://talks.golang.org/2014/names.slide](https://talks.golang.org/2014/names.slide)
   - [https://go.dev/blog/package-names](https://go.dev/blog/package-names)
   - [https://go.dev/doc/effective_go#names](https://go.dev/doc/effective_go#names)
 - Enable others to understand the reasoning of non-trivial code sequences by applying a meaningful documentation.
@@ -99,7 +99,7 @@ Development follows the official guide to:
 #### Development Decisions
 
 - **Dependency Management** by using Go modules
-- **Build and Test Automation** by using [GNU Make](https://linux.die.net/man/1/make).
+- **Build and Test Automation** by using [GNU Make](https://man7.org/linux/man-pages/man1/make.1p.html).
 - **End-user APIs** should consider using go-swagger and [Go-Restful](https://github.com/emicklei/go-restful)
   **Technical APIs** should consider using [grpc](https://grpc.io/)
 
