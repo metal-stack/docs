@@ -90,7 +90,7 @@ A simple setup how this would look like is shown here.
 
 ![Simple CockroachDB setup](Distributed.png)
 
-go-ipam was modified in a example PR here: https://github.com/metal-pod/go-ipam/pull/17
+go-ipam was modified in a example PR here: [PR 17](https://github.com/metal-pod/go-ipam/pull/17)
 
 ### API Access
 

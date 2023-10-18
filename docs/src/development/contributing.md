@@ -52,7 +52,7 @@ One major ambition of metal-stack is to follow the idea of [microservices](https
 
 ### Programming Languages
 
-We are generally open to write code in any language that fits best to the function of the software. However, we encourage [golang](https://en.wikipedia.org/wiki/Go_(programming_language)) to be the main language of metal-stack as we think that it makes development faster when not establishing too many different languages in our architecture. Reason for this is that we are striving for consistent behavior of the microservices, similar to what has been described for the Twelve-Factor App (see https://12factor.net/). We help enforcing unified behavior by allowing a small layer of shared code for every programming language. We will refer to this shared code as "libraries" for the rest of this document.
+We are generally open to write code in any language that fits best to the function of the software. However, we encourage [golang](https://en.wikipedia.org/wiki/Go_(programming_language)) to be the main language of metal-stack as we think that it makes development faster when not establishing too many different languages in our architecture. Reason for this is that we are striving for consistent behavior of the microservices, similar to what has been described for the Twelve-Factor App (see [12 Factor](https://12factor.net/)). We help enforcing unified behavior by allowing a small layer of shared code for every programming language. We will refer to this shared code as "libraries" for the rest of this document.
 
 ### Artifacts
 
