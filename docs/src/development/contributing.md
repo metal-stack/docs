@@ -91,7 +91,7 @@ Development follows the official guide to:
 - Write clear, idiomatic Go code[^2]
 - Learn from mistakes that must not be repeated[^3]
 - Apply appropriate names to your artifacts:
-  - [https://talks.golang.org/2014/names.slide](https://talks.golang.org/2014/names.slide)
+  - [https://go.dev/talks/2014/names.slide](https://go.dev/talks/2014/names.slide)
   - [https://go.dev/blog/package-names](https://go.dev/blog/package-names)
   - [https://go.dev/doc/effective_go#names](https://go.dev/doc/effective_go#names)
 - Enable others to understand the reasoning of non-trivial code sequences by applying a meaningful documentation.
