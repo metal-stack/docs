@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Installation · metal-stack</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://docs.metal-stack.io/installation/deployment/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../assets/youtube.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="metal-stack logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">metal-stack</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Introduction</a></li><li><span class="tocitem">Overview</span><ul><li><a class="tocitem" href="../../overview/architecture/">Architecture</a></li><li><a class="tocitem" href="../../overview/networking/">Networking</a></li><li><a class="tocitem" href="../../overview/hardware/">Hardware Support</a></li><li><a class="tocitem" href="../../overview/os/">Operating Systems</a></li><li><a class="tocitem" href="../../overview/kubernetes/">Kubernetes Integration</a></li><li><a class="tocitem" href="../../overview/storage/">Storage</a></li><li><a class="tocitem" href="../../overview/comparison/">Comparison</a></li></ul></li><li><a class="tocitem" href="../../quickstart/">Quickstart</a></li><li><span class="tocitem">Installation &amp; Administration</span><ul><li class="is-active"><a class="tocitem" href>Installation</a><ul class="internal"><li><a class="tocitem" href="#Metal-Control-Plane-Deployment"><span>Metal Control Plane Deployment</span></a></li><li><a class="tocitem" href="#Bootstrapping-a-Partition"><span>Bootstrapping a Partition</span></a></li><li><a class="tocitem" href="#Partition-Deployment"><span>Partition Deployment</span></a></li><li><a class="tocitem" href="#Gardener-with-metal-stack"><span>Gardener with metal-stack</span></a></li></ul></li><li><a class="tocitem" href="../monitoring/">Monitoring</a></li><li><a class="tocitem" href="../troubleshoot/">Troubleshoot</a></li></ul></li><li><span class="tocitem">User Guides</span><ul><li><a class="tocitem" href="../../external/mini-lab/README/">mini-lab</a></li><li><a class="tocitem" href="../../external/metalctl/README/">metalctl</a></li><li><a class="tocitem" href="../../external/csi-driver-lvm/README/">csi-driver-lvm</a></li><li><a class="tocitem" href="../../external/firewall-controller/README/">firewall-controller</a></li></ul></li><li><a class="tocitem" href="../../apidocs/apidocs/">API Documentation</a></li><li><span class="tocitem">Development</span><ul><li><a class="tocitem" href="../../development/client_libraries/">Client Libraries</a></li><li><a class="tocitem" href="../../development/roadmap/">Roadmap</a></li><li><a class="tocitem" href="../../development/proposals/">Enhancement Proposals</a></li><li><a class="tocitem" href="../../development/contributing/">Contributing</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Installation &amp; Administration</a></li><li class="is-active"><a href>Installation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Installation</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="github.com/metal-stack/docs.git" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Deploying-metal-stack"><a class="docs-heading-anchor" href="#Deploying-metal-stack">Deploying metal-stack</a><a id="Deploying-metal-stack-1"></a><a class="docs-heading-anchor-permalink" href="#Deploying-metal-stack" title="Permalink"></a></h1><p>We are bootstrapping the <a href="../../overview/architecture/#Metal-Control-Plane-1">metal control plane</a> as well as our <a href="../../overview/architecture/#Partitions-1">partitions</a> with <a href="https://www.ansible.com/">Ansible</a> through CI.</p><p>In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called <a href="https://github.com/metal-stack/metal-roles">metal-roles</a>.</p><p>In order to wrap up deployment dependencies there is a special <a href="https://hub.docker.com/r/metalstack/metal-deployment-base">deployment base image</a> hosted on Docker Hub that you can use for running the deployment. Using this Docker image eliminates a lot of moving parts in the deployment and should keep the footprints on your system fairly small and maintainable.</p><p>This document will from now on assume that you want to use our Ansible deployment roles for setting up metal-stack. We will also use the deployment base image, so you should also have <a href="https://docs.docker.com/get-docker/">Docker</a> installed. It is in the nature of software deployments to differ from site to site, company to company, user to user. Therefore, we can only describe you the way of how the deployment works for us. It is up to you to tweak the deployment described in this document to your requirements.</p><ul><li><a href="#Deploying-metal-stack">Deploying metal-stack</a></li><li class="no-marker"><ul><li><a href="#Metal-Control-Plane-Deployment">Metal Control Plane Deployment</a></li><li class="no-marker"><ul><li><a href="#Releases-and-Ansible-Role-Dependencies">Releases and Ansible Role Dependencies</a></li><li><a href="#Inventory">Inventory</a></li><li><a href="#Control-Plane-Playbook">Control Plane Playbook</a></li><li><a href="#Setup-an-ingress-controller">Setup an ingress-controller</a></li><li><a href="#Deployment-Parametrization">Deployment Parametrization</a></li><li><a href="#Providing-Certificates">Providing Certificates</a></li><li><a href="#Running-the-Deployment">Running the Deployment</a></li><li><a href="#Providing-Images">Providing Images</a></li><li><a href="#Setting-up-metalctl">Setting up metalctl</a></li><li><a href="#Setting-Up-the-backup-restore-sidecar">Setting Up the backup-restore-sidecar</a></li><li><a href="#Auth">Auth</a></li></ul></li><li><a href="#Bootstrapping-a-Partition">Bootstrapping a Partition</a></li><li class="no-marker"><ul><li><a href="#Out-Of-Band-Network">Out-Of-Band-Network</a></li><li><a href="#Management-Firewalls">Management Firewalls</a></li><li><a href="#Management-Servers">Management Servers</a></li><li><a href="#Management-Spines">Management Spines</a></li><li><a href="#Management-Leaves">Management Leaves</a></li></ul></li><li><a href="#Partition-Deployment">Partition Deployment</a></li><li><a href="#Gardener-with-metal-stack">Gardener with metal-stack</a></li></ul></li></ul><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>Probably you need to learn writing Ansible playbooks if you want to be able to deploy the metal-stack as presented in this documentation. However, even when starting without any knowledge about Ansible it should be possible to follow these docs. In case you need further explanations regarding Ansible please refer to <a href="https://docs.ansible.com/">docs.ansible.com</a>.</p></div></div><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>If you do not want to use Ansible for deployment, you need to come up with a deployment mechanism by yourself. However, you will probably be able to re-use some of our contents from our <a href="https://github.com/metal-stack/metal-roles">metal-roles</a> repository, e.g. the Helm chart for deploying the metal control plane.</p></div></div><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>You can use the <a href="https://github.com/metal-stack/mini-lab">mini-lab</a> as a template project for your own deployment. It uses the same approach as described in this document.</p></div></div><h2 id="Metal-Control-Plane-Deployment"><a class="docs-heading-anchor" href="#Metal-Control-Plane-Deployment">Metal Control Plane Deployment</a><a id="Metal-Control-Plane-Deployment-1"></a><a class="docs-heading-anchor-permalink" href="#Metal-Control-Plane-Deployment" title="Permalink"></a></h2><p>The metal control plane is typically deployed in a Kubernetes cluster. Therefore, this document will assume that you have a Kubernetes cluster ready for getting deployed. Even though it is theoretically possible to deploy metal-stack without Kubernetes, we strongly advise you to use the described method because we believe that Kubernetes gives you a lot of benefits regarding the stability and maintainability of the application deployment.</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>For metal-stack it does not matter where your control plane Kubernetes cluster is located. You can of course use a cluster managed by a hyperscaler. This has the advantage of not having to setup Kubernetes by yourself and could even become beneficial in terms of fail-safe operation. The only requirement from metal-stack is that your partitions can establish network connections to the metal control plane. If you are interested, you can find a reasoning behind this deployment decision <a href="../../overview/architecture/#Target-Deployment-Platforms">here</a>.</p></div></div><p>Let&#39;s start off with a fresh folder for your deployment:</p><pre><code class="language-bash hljs">mkdir -p metal-stack-deployment
+cd metal-stack-deployment</code></pre><p>At the end of this section we are gonna end up with the following files and folder structures:</p><pre><code class="nohighlight hljs">.
+├── ansible.cfg
+├── deploy_metal_control_plane.yaml
+├── files
+│   └── certs
+│       ├── ca-config.json
+│       ├── ca-csr.json
+│       ├── metal-api-grpc
+│       │   ├── client.json
+│       │   ├── server.json
+│       ├── masterdata-api
+│       │   ├── client.json
+│       │   ├── server.json
+│       └── roll_certs.sh
+├── inventories
+│   ├── control-plane.yaml
+│   └── group_vars
+│       ├── all
+│       │   └── images.yaml
+│       └── control-plane
+│           ├── common.yaml
+│           └── metal.yml
+├── generate_role_requirements.yaml
+└── roles
+    └── ingress-controller
+        └── tasks
+            └── main.yaml</code></pre><p>You can already define the <code>inventories/group_vars/all/images.yaml</code> file. It contains the metal-stack version you are gonna deploy:</p><pre><code class="language-yaml hljs">---
+metal_stack_release_version: master</code></pre><h3 id="Releases-and-Ansible-Role-Dependencies"><a class="docs-heading-anchor" href="#Releases-and-Ansible-Role-Dependencies">Releases and Ansible Role Dependencies</a><a id="Releases-and-Ansible-Role-Dependencies-1"></a><a class="docs-heading-anchor-permalink" href="#Releases-and-Ansible-Role-Dependencies" title="Permalink"></a></h3><p>As metal-stack consists of many microservices all having individual versions, we have come up with a <a href="https://github.com/metal-stack/releases">releases</a> repository. It contains a YAML file (we often call it release vector) describing the fitting versions of all components for every release of metal-stack.</p><p>Ansible role dependencies are also part of a metal-stack release. Therefore, we will now write up a playbook, which dynamically renders a <code>requirements.yaml</code> file from the ansible-roles defined in the release repository. The <code>requirements.yaml</code> can then be used to resolve the actual role dependencies through <a href="https://galaxy.ansible.com/">Ansible Galaxy</a>. Define the following playbook in <code>generate_role_requirements.yaml</code>:</p><pre><code class="language-yaml hljs">---
+- name: generate requirements.yaml
+  hosts: control-plane
+  connection: local
+  gather_facts: false
+  vars:
+    release_vector_url: &quot;https://raw.githubusercontent.com/metal-stack/releases/{{ metal_stack_release_version }}/release.yaml&quot;
+  tasks:
+    - name: download release vector
+      uri:
+        url: &quot;{{ release_vector_url }}&quot;
+        return_content: yes
+      register: release_vector
+
+    - name: write requirements.yaml from release vector
+      copy:
+        dest: &quot;{{ playbook_dir }}/requirements.yaml&quot;
+        content: |
+          {% for role_name, role_params in (release_vector.content | from_yaml).get(&#39;ansible-roles&#39;).items() %}
+          - src: {{ role_params.get(&#39;repository&#39;) }}
+            name: {{ role_name }}
+            version: {{ hostvars[inventory_hostname][role_name | lower | replace(&#39;-&#39;, &#39;_&#39;) + &#39;_version&#39;] | default(role_params.get(&#39;version&#39;), true) }}
+          {% endfor %}</code></pre><p>This playbook will always be run before the actual metal-stack deployment and provide you with the proper versions of the Ansible role dependencies.</p><h3 id="Inventory"><a class="docs-heading-anchor" href="#Inventory">Inventory</a><a id="Inventory-1"></a><a class="docs-heading-anchor-permalink" href="#Inventory" title="Permalink"></a></h3><p>Then, there will be an inventory for the control plane deployment in <code>inventories/control-plane.yaml</code> that adds the localhost to the <code>control-plane</code> host group:</p><pre><code class="language-yaml hljs">---
+control-plane:
+  hosts:
+    localhost:
+      ansible_python_interpreter: &quot;{{ ansible_playbook_python }}&quot;</code></pre><p>We do this since we are deploying to Kubernetes and do not need to SSH-connect to any hosts for the deployment (which is what Ansible typically does). This inventory is also necessary to pick up the variables inside <code>inventories/group_vars/control-plane</code> during the deployment.</p><p>We recommend using the following <code>ansible.cfg</code>:</p><pre><code class="language-ini hljs">[defaults]
+retry_files_enabled = false
+force_color = true
+host_key_checking = false
+stdout_callback = yaml
+jinja2_native = true
+transport = ssh
+timeout = 30
+force_valid_group_names = ignore
+
+[ssh_connection]
+retries=3
+ssh_executable = /usr/bin/ssh</code></pre><p>Most of the properties in there are up to taste, but make sure you enable the <a href="https://jinja.palletsprojects.com/en/2.11.x/nativetypes/">Jinja2 native environment</a> as this is needed for some of our roles in certain cases.</p><h3 id="Control-Plane-Playbook"><a class="docs-heading-anchor" href="#Control-Plane-Playbook">Control Plane Playbook</a><a id="Control-Plane-Playbook-1"></a><a class="docs-heading-anchor-permalink" href="#Control-Plane-Playbook" title="Permalink"></a></h3><p>Next, we will define the actual deployment playbook in a file called <code>deploy_metal_control_plane.yaml</code>. You can start with the following lines:</p><pre><code class="language-yaml hljs">---
+- name: Deploy Control Plane
+  hosts: control-plane
+  connection: local
+  gather_facts: no
+  vars:
+    setup_yaml:
+      - url: https://raw.githubusercontent.com/metal-stack/releases/{{ metal_stack_release_version }}/release.yaml
+        meta_var: metal_stack_release
+  roles:
+    - name: ansible-common
+      tags: always
+    - name: ingress-controller
+      tags: ingress-controller
+    - name: metal-roles/control-plane/roles/prepare
+      tags: prepare
+    - name: metal-roles/control-plane/roles/nsq
+      tags: nsq
+    - name: metal-roles/control-plane/roles/metal-db
+      tags: metal-db
+    - name: metal-roles/control-plane/roles/ipam-db
+      tags: ipam-db
+    - name: metal-roles/control-plane/roles/masterdata-db
+      tags: masterdata-db
+    - name: metal-roles/control-plane/roles/metal
+      tags: metal</code></pre><p>Basically, this playbook does the following:</p><ul><li>Include all the modules, filter plugins, etc. of <a href="https://github.com/metal-stack/ansible-common">ansible-common</a> into the play</li><li>Deploys an ingress-controller into your cluster</li><li>Deploys the metal-stack by<ul><li>Running preparation tasks</li><li>Deploying NSQ</li><li>Deploying the rethinkdb database for the metal-api (wrapped in a backup-restore-sidecar),</li><li>Deploying the postgres database for go-ipam (wrapped in a backup-restore-sidecar)</li><li>Deploying the postgres database for the masterdata-api (wrapped in a backup-restore-sidecar)</li><li>Applying the metal control plane helm chart</li></ul></li></ul><h3 id="Setup-an-ingress-controller"><a class="docs-heading-anchor" href="#Setup-an-ingress-controller">Setup an ingress-controller</a><a id="Setup-an-ingress-controller-1"></a><a class="docs-heading-anchor-permalink" href="#Setup-an-ingress-controller" title="Permalink"></a></h3><p>As a next step you have to add a task for deploying an ingress-controller into your cluster. <a href="https://kubernetes.github.io/ingress-nginx/">nginx-ingress</a> is what we use. If you want to use another ingress-controller, you need to parametrize the metal roles carefully. When you just use ingress-nginx, make sure to also deploy it to the default namespace ingress-nginx.</p><p>This is how your <code>roles/ingress-controller/tasks/main.yaml</code> could look like:</p><pre><code class="language-yaml hljs">- name: Deploy ingress-controller
+  include_role:
+    name: ansible-common/roles/helm-chart
+  vars:
+    helm_repo: &quot;https://helm.nginx.com/stable&quot;
+    helm_chart: nginx-ingress
+    helm_release_name: nginx-ingress
+    helm_target_namespace: ingress-nginx</code></pre><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>The <a href="https://github.com/metal-stack/ansible-common">ansible-common</a> repository contains very general roles and modules that you can also use when extending your deployment further.</p></div></div><h3 id="Deployment-Parametrization"><a class="docs-heading-anchor" href="#Deployment-Parametrization">Deployment Parametrization</a><a id="Deployment-Parametrization-1"></a><a class="docs-heading-anchor-permalink" href="#Deployment-Parametrization" title="Permalink"></a></h3><p>Now you can parametrize the referenced roles to fit your environment. The role parametrization can be looked up in the role documentation on <a href="https://github.com/metal-stack/metal-roles/tree/master/control-plane">metal-roles/control-plane</a>. You should not need to define a lot of variables for the beginning as most values are reasonably defaulted. You can start with the following content for <code>group_vars/control-plane/common.yaml</code>:</p><pre><code class="language-yaml hljs">---
+metal_control_plane_ingress_dns: &lt;your-dns-domain&gt; # if you do not have a DNS entry, you could also start with &lt;ingress-ip&gt;.nip.io</code></pre><h3 id="Providing-Certificates"><a class="docs-heading-anchor" href="#Providing-Certificates">Providing Certificates</a><a id="Providing-Certificates-1"></a><a class="docs-heading-anchor-permalink" href="#Providing-Certificates" title="Permalink"></a></h3><p>We have several components in our stack that communicate over encrypted gRPC just like Kubernetes components do.</p><p>For the very basic setup you will need to create self-signed certificates for the communication between the following components (see <a href="../../overview/architecture/">architecture</a> document):</p><ul><li><a href="https://github.com/metal-stack/metal-api">metal-api</a> and <a href="https://github.com/metal-stack/masterdata-api">masterdata-api</a> (in-cluster traffic communication)</li><li><a href="https://github.com/metal-stack/metal-api">metal-api</a> and <a href="https://github.com/metal-stack/metal-hammer">metal-hammer</a> (partition to control plane communication)</li></ul><p>Here is a snippet for <code>files/roll_certs.sh</code> that you can use for generating your certificates (requires <a href="https://github.com/cloudflare/cfssl">cfssl</a>):</p><pre><code class="language-bash hljs">#!/usr/bin/env bash
+set -eo pipefail
+
+for i in &quot;$@&quot;
+do
+case $i in
+    -t=*|--target=*)
+    TARGET=&quot;${i#*=}&quot;
+    shift
+    ;;
+    *)
+    echo &quot;unknown parameter passed: $1&quot;
+    exit 1
+    ;;
+esac
+done
+
+if [ -z &quot;$TARGET&quot; ]; then
+    echo &quot;generating ca cert&quot;
+    cfssl genkey -initca ca-csr.json | cfssljson -bare ca
+    rm *.csr
+fi
+
+if [ -z &quot;$TARGET&quot; ] || [ $TARGET == &quot;grpc&quot; ]; then
+    pushd metal-api-grpc
+    echo &quot;generating grpc certs&quot;
+    cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=server server.json | cfssljson -bare server
+    cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=client client.json | cfssljson -bare client
+    rm *.csr
+    popd
+fi
+
+if [ -z &quot;$TARGET&quot; ] || [ $TARGET == &quot;masterdata-api&quot; ]; then
+    pushd masterdata-api
+    echo &quot;generating masterdata-api certs&quot;
+    rm -f *.pem
+    cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=client-server server.json | cfssljson -bare server
+    cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=client client.json | cfssljson -bare client
+    rm *.csr
+    popd
+fi</code></pre><p>Also define the following configurations for <code>cfssl</code>:</p><ul><li><code>files/certs/ca-config.json</code><pre><code class="language-json hljs">{
+    &quot;signing&quot;: {
+        &quot;default&quot;: {
+            &quot;expiry&quot;: &quot;43800h&quot;
+        },
+        &quot;profiles&quot;: {
+            &quot;server&quot;: {
+                &quot;expiry&quot;: &quot;43800h&quot;,
+                &quot;usages&quot;: [
+                    &quot;signing&quot;,
+                    &quot;key encipherment&quot;,
+                    &quot;server auth&quot;
+                ]
+            },
+            &quot;client&quot;: {
+                &quot;expiry&quot;: &quot;43800h&quot;,
+                &quot;usages&quot;: [
+                    &quot;signing&quot;,
+                    &quot;key encipherment&quot;,
+                    &quot;client auth&quot;
+                ]
+            },
+            &quot;client-server&quot;: {
+                &quot;expiry&quot;: &quot;43800h&quot;,
+                &quot;usages&quot;: [
+                    &quot;signing&quot;,
+                    &quot;key encipherment&quot;,
+                    &quot;client auth&quot;,
+                    &quot;server auth&quot;
+                ]
+            }
+        }
+    }
+}</code></pre></li><li><code>files/certs/ca-csr.json</code><pre><code class="language-json hljs">{
+  &quot;CN&quot;: &quot;metal-control-plane&quot;,
+  &quot;hosts&quot;: [],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 4096
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;:  &quot;DE&quot;,
+      &quot;L&quot;:  &quot;Munich&quot;,
+      &quot;O&quot;:  &quot;Metal-Stack&quot;,
+      &quot;OU&quot;: &quot;DevOps&quot;,
+      &quot;ST&quot;: &quot;Bavaria&quot;
+    }
+  ]
+}</code></pre></li><li><code>files/certs/masterdata-api/client.json</code><pre><code class="language-json hljs">{
+  &quot;CN&quot;: &quot;masterdata-client&quot;,
+  &quot;hosts&quot;: [&quot;&quot;],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;ecdsa&quot;,
+    &quot;size&quot;: 256
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;:  &quot;DE&quot;,
+      &quot;L&quot;:  &quot;Munich&quot;,
+      &quot;O&quot;:  &quot;Metal-Stack&quot;,
+      &quot;OU&quot;: &quot;DevOps&quot;,
+      &quot;ST&quot;: &quot;Bavaria&quot;
+    }
+  ]
+}</code></pre></li><li><code>files/certs/masterdata-api/server.json</code><pre><code class="language-json hljs">{
+  &quot;CN&quot;: &quot;masterdata-api&quot;,
+  &quot;hosts&quot;: [
+    &quot;localhost&quot;,
+    &quot;masterdata-api&quot;,
+    &quot;masterdata-api.metal-control-plane.svc&quot;,
+    &quot;masterdata-api.metal-control-plane.svc.cluster.local&quot;
+  ],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;ecdsa&quot;,
+    &quot;size&quot;: 256
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;:  &quot;DE&quot;,
+      &quot;L&quot;:  &quot;Munich&quot;,
+      &quot;O&quot;:  &quot;Metal-Stack&quot;,
+      &quot;OU&quot;: &quot;DevOps&quot;,
+      &quot;ST&quot;: &quot;Bavaria&quot;
+    }
+  ]
+}</code></pre></li><li><code>files/certs/metal-api-grpc/client.json</code><pre><code class="language-json hljs">{
+  &quot;CN&quot;: &quot;grpc-client&quot;,
+  &quot;hosts&quot;: [&quot;&quot;],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 4096
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;:  &quot;DE&quot;,
+      &quot;L&quot;:  &quot;Munich&quot;,
+      &quot;O&quot;:  &quot;Metal-Stack&quot;,
+      &quot;OU&quot;: &quot;DevOps&quot;,
+      &quot;ST&quot;: &quot;Bavaria&quot;
+    }
+  ]
+}</code></pre></li><li><code>files/certs/metal-api-grpc/server.json</code> (<strong>Fill in your control plane ingress DNS here</strong>)<pre><code class="language-json hljs">{
+  &quot;CN&quot;: &quot;metal-api&quot;,
+  &quot;hosts&quot;: [
+    &quot;&lt;your-metal-api-dns-ingress-domain&gt;&quot;
+  ],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 4096
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;:  &quot;DE&quot;,
+      &quot;L&quot;:  &quot;Munich&quot;,
+      &quot;O&quot;:  &quot;Metal-Stack&quot;,
+      &quot;OU&quot;: &quot;DevOps&quot;,
+      &quot;ST&quot;: &quot;Bavaria&quot;
+    }
+  ]
+}</code></pre></li></ul><p>Running the <code>roll_certs.sh</code> bash script without any arguments should generate you the required certificates.</p><p>Now Provide the paths to these certificates in <code>group_vars/control-plane/metal.yaml</code>:</p><pre><code class="language-yaml hljs">---
+metal_masterdata_api_tls_ca: &quot;{{ lookup(&#39;file&#39;, &#39;certs/ca.pem&#39;) }}&quot;
+metal_masterdata_api_tls_cert: &quot;{{ lookup(&#39;file&#39;, &#39;certs/masterdata-api/server.pem&#39;) }}&quot;
+metal_masterdata_api_tls_cert_key: &quot;{{ lookup(&#39;file&#39;, &#39;certs/masterdata-api/server-key.pem&#39;) }}&quot;
+metal_masterdata_api_tls_client_cert: &quot;{{ lookup(&#39;file&#39;, &#39;certs/masterdata-api/client.pem&#39;) }}&quot;
+metal_masterdata_api_tls_client_key: &quot;{{ lookup(&#39;file&#39;, &#39;certs/masterdata-api/client-key.pem&#39;) }}&quot;
+
+metal_api_grpc_certs_server_key: &quot;{{ lookup(&#39;file&#39;, &#39;certs/metal-api-grpc/server-key.pem&#39;) }}&quot;
+metal_api_grpc_certs_server_cert: &quot;{{  lookup(&#39;file&#39;, &#39;certs/metal-api-grpc/server.pem&#39;) }}&quot;
+metal_api_grpc_certs_client_key: &quot;{{ lookup(&#39;file&#39;, &#39;certs/metal-api-grpc/client-key.pem&#39;) }}&quot;
+metal_api_grpc_certs_client_cert: &quot;{{  lookup(&#39;file&#39;, &#39;certs/metal-api-grpc/client.pem&#39;) }}&quot;
+metal_api_grpc_certs_ca_cert: &quot;{{ lookup(&#39;file&#39;, &#39;certs/ca.pem&#39;) }}&quot;</code></pre><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>For the actual communication between the metal-api and the user clients (REST API, runs over the ingress-controller you deployed before), you can simply deploy a tool like <a href="https://github.com/cert-manager/cert-manager">cert-manager</a> into your Kubernetes cluster, which will automatically provide your ingress domains with Let&#39;s Encrypt certificates.</p></div></div><h3 id="Running-the-Deployment"><a class="docs-heading-anchor" href="#Running-the-Deployment">Running the Deployment</a><a id="Running-the-Deployment-1"></a><a class="docs-heading-anchor-permalink" href="#Running-the-Deployment" title="Permalink"></a></h3><p>Finally, it should be possible to run the deployment through a Docker container. Make sure to have the <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubeconfig file</a> of your cluster and set the path in the following command accordingly:</p><pre><code class="language-bash hljs">export KUBECONFIG=&lt;path-to-your-cluster-kubeconfig&gt;
+docker run --rm -it \
+  -v $(pwd):/workdir \
+  --workdir /workdir \
+  -e KUBECONFIG=&quot;${KUBECONFIG}&quot; \
+  -e K8S_AUTH_KUBECONFIG=&quot;${KUBECONFIG}&quot; \
+  -e ANSIBLE_INVENTORY=inventories/control-plane.yaml \
+  metalstack/metal-deployment-base:v0.7.1 \
+  /bin/bash -ce \
+    &quot;ansible-playbook obtain_role_requirements.yaml
+     ansible-galaxy install -r requirements.yaml
+     ansible-playbook deploy_metal_control_plane.yaml&quot;</code></pre><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>If you are having issues regarding the deployment take a look at the <a href="../troubleshoot/">troubleshoot document</a>. Please give feedback such that we can make the deployment of the metal-stack easier for you and for others!</p></div></div><h3 id="Providing-Images"><a class="docs-heading-anchor" href="#Providing-Images">Providing Images</a><a id="Providing-Images-1"></a><a class="docs-heading-anchor-permalink" href="#Providing-Images" title="Permalink"></a></h3><p>After the deployment has finished (hopefully without any issues!), you should consider deploying some masterdata entities into your metal-api. For example, you can add your first machine sizes and operating system images. You can do this by further parametrizing the <a href="https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal">metal role</a>. We will just add an operating system for demonstration purposes. Add the following variable to your <code>inventories/group_vars/control-plane/common.yaml</code>:</p><pre><code class="nohighlight hljs">metal_api_images:
+- id: firewall-ubuntu-2.0.20201004
+  name: Firewall 2 Ubuntu 20201004
+  description: Firewall 2 Ubuntu 20201004
+  url: http://images.metal-stack.io/metal-os/master/firewall/2.0-ubuntu/20201004/img.tar.lz4
+  features:
+    - firewall
+- id: ubuntu-20.04.20201004
+  name: Ubuntu 20.04 20201004
+  description: Ubuntu 20.04 20201004
+  url: http://images.metal-stack.io/metal-os/master/ubuntu/20.04/20201004/img.tar.lz4
+  features:
+    - machine</code></pre><p>Then, re-run the deployment to apply your changes. Our playbooks are idempotent.</p><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>Image versions should be regularly checked for updates.</p></div></div><h3 id="Setting-up-metalctl"><a class="docs-heading-anchor" href="#Setting-up-metalctl">Setting up metalctl</a><a id="Setting-up-metalctl-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-up-metalctl" title="Permalink"></a></h3><p>You can now verify the existence of the operating system images in the metal-api using our CLI client called <a href="https://github.com/metal-stack/metalctl">metalctl</a>. The configuration for <code>metalctl</code> should look like this:</p><pre><code class="language-yaml hljs"># ~/.metalctl/config.yaml
+---
+current: test
+contexts:
+  test:
+    # the metal-api endpoint depends on your dns name specified before
+    # you can look up the url to the metal-api via the kubernetes ingress
+    # resource with:
+    # $ kubectl get ingress -n metal-control-plane
+    url: &lt;metal-api-endpoint&gt;
+    # in the future you have to change the HMAC to a strong, random string
+    # in order to protect against unauthorized api access
+    # the default hmac is &quot;change-me&quot;
+    hmac: change-me</code></pre><p>Issue the following command:</p><pre><code class="language-bash hljs">$ metalctl image ls
+ID                              	NAME                          	DESCRIPTION                   	FEATURES	EXPIRATION	STATUS
+ubuntu-19.10.20200331           	Ubuntu 19.10 20200331         	Ubuntu 19.10 20200331         	machine 	89d 23h   	preview</code></pre><p>The basic principles of how the metal control plane can be deployed should now be clear. It is now up to you to move the deployment execution into your CI and add things like certificates for the ingress-controller and NSQ.</p><h3 id="Setting-Up-the-backup-restore-sidecar"><a class="docs-heading-anchor" href="#Setting-Up-the-backup-restore-sidecar">Setting Up the backup-restore-sidecar</a><a id="Setting-Up-the-backup-restore-sidecar-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-Up-the-backup-restore-sidecar" title="Permalink"></a></h3><p>The backup-restore-sidecar can come up very handy when you want to add another layer of security to the metal-stack databases in your Kubernetes cluster. The sidecar takes backups of the metal databases in small time intervals and stores them in a blobstore of a cloud provider. This way your metal-stack setup can even survive the deletion of your Kubernetes control plane cluster (including all volumes getting lost). After re-deploying metal-stack to another Kubernetes clusters, the databases come up with the latest backup data in a matter of seconds.</p><p>Checkout the <a href="https://github.com/metal-stack/metal-roles/tree/master/control-plane">role documentation</a> of the individual databases to find out how to configure the sidecar properly. You can also try out the mechanism from the <a href="https://github.com/metal-stack/backup-restore-sidecar">backup-restore-sidecar</a> repository.</p><h3 id="Auth"><a class="docs-heading-anchor" href="#Auth">Auth</a><a id="Auth-1"></a><a class="docs-heading-anchor-permalink" href="#Auth" title="Permalink"></a></h3><p>metal-stack currently supports two authentication methods:</p><ul><li><a href="https://github.com/dexidp/dex">dex</a> for providing user authentication through <a href="https://openid.net/developers/how-connect-works/">OpenID Connect</a> (OIDC)</li><li><a href="https://en.wikipedia.org/wiki/HMAC">HMAC</a> auth, typically used for access by technical users (because we do not have service account tokens at the time being)</li></ul><p>In the metal-api, we have three different user roles for authorization:</p><ul><li>Admin</li><li>Edit</li><li>View</li></ul><p>How the user permissions are used is documented in the <a href="../../apidocs/apidocs/">technical API docs</a>.</p><p>If you decided to set up a dex server, you can parametrize the <a href="https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal">metal role</a> for using the dex server by defining the variable <code>metal_api_dex_address</code>.</p><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>We also have dedicated controllers for using the dex server for Kubernetes clusters when deploying metal-stack along with the Gardener in your environment. The approach is described in further detail in the section <a href="#Gardener-with-metal-stack">Gardener with metal-stack</a>.</p></div></div><h2 id="Bootstrapping-a-Partition"><a class="docs-heading-anchor" href="#Bootstrapping-a-Partition">Bootstrapping a Partition</a><a id="Bootstrapping-a-Partition-1"></a><a class="docs-heading-anchor-permalink" href="#Bootstrapping-a-Partition" title="Permalink"></a></h2><h3 id="Out-Of-Band-Network"><a class="docs-heading-anchor" href="#Out-Of-Band-Network">Out-Of-Band-Network</a><a id="Out-Of-Band-Network-1"></a><a class="docs-heading-anchor-permalink" href="#Out-Of-Band-Network" title="Permalink"></a></h3><p>To be able to deploy and maintain a metal-stack partition, you need to bootstrap the Out-Of-Band-Network first. Some considerations must be made to fulfill the requirements of our infrastructure, a partition is designed to be:</p><ul><li>secure</li><li>fully routable (BGP)</li><li>scalable</li><li>resilient</li><li>deployable via CI/CD jobs</li><li>accessible from the internet from specific IPs</li></ul><p>In order to accomplish this task remotely and in a nearly automatic manner, you have to bootstrap the components in this order:</p><ol><li>management firewalls</li><li>management servers</li><li>management spines</li><li>management leaves</li><li>leaves, spines and exits</li></ol><p>This document assumes that all cabling is done. Here is a quick overview of the architecture:</p><p><img src="../mgmt_net_layer3.png" alt="Out-of-Band-Network"/></p><h3 id="Management-Firewalls"><a class="docs-heading-anchor" href="#Management-Firewalls">Management Firewalls</a><a id="Management-Firewalls-1"></a><a class="docs-heading-anchor-permalink" href="#Management-Firewalls" title="Permalink"></a></h3><p>As you can see, the management firewalls are the first bastion hosts in a partition to provide access to our infrastructure. There are two of them in each partition to guarantee high availability and load balancing. The very first configuration of these routers has to be done manually to solve the chicken and egg problem that you need the management firewalls in place to deploy the partition. Manually means that we generate a configuration template with ansible that we deploy with copy/paste, and the load, through the machine console. Once the management server has been deployed, we are able to deploy this configuration via CI runner and ansible. For this you need the user and the ssh-key, which is deployed with the configuration file mentioned above. The Edgerouters has to fulfill some requirements including:</p><ul><li>provide and restrict access to the Out-Of-Band-Network from the internet with a firewall ruleset</li><li>provide destination NAT to the management server and its IPMI interface</li><li>provide Onie Boot and ztp via DHCP options for the management spine</li><li>provide DHCP management addresses for management spine, management server and ipmi interface of the management server</li><li>Hairpin-NAT for the management server to access itself via its puplic IP, needed by the CI runner to delegate CI Jobs.</li><li>propagate a default gateway via BGP</li></ul><h3 id="Management-Servers"><a class="docs-heading-anchor" href="#Management-Servers">Management Servers</a><a id="Management-Servers-1"></a><a class="docs-heading-anchor-permalink" href="#Management-Servers" title="Permalink"></a></h3><p>The second bastion hosts are the management servers. They are the main bootstrapping components of the Out-Of-Band-Network. They also act as jump hosts for all components in a partition. Once they are installed and deployed, we are able to bootstrap all the other components. To bootstrap the management servers, we generate an ISO image which will automatically install an OS and an ansible user with ssh keys. It is preconfigured with a preseed file to allow an unattended OS installation for our needs. This is why we need remote access to the IPMI interface of the management servers: The generated ISO is attached via the virtual media function of the BMC. Ater that, all we have to do is boot from that virtual CD-ROM and wait for the installation to finish. Deployment jobs (Gitlab-CI) in a partition are delegated to the appropriate management servers, therefore we need a CI runner active on each management server.</p><p>After the CI runner has been installed, you can trigger your Playbooks from the the CI. The Ansible-Playbooks have to make sure that these functionalities are present on the management servers:</p><ul><li>Prometheus and exporters</li><li>CI runner</li><li>metal-bmc</li><li>image-cache</li><li>simple webserver to provide images</li><li><a href="https://opencomputeproject.github.io/onie/">Onie Boot</a> and ZTP</li><li>DHCP addresses for ipmi interfaces of the workers</li><li>DHCP addresses for switches</li></ul><h3 id="Management-Spines"><a class="docs-heading-anchor" href="#Management-Spines">Management Spines</a><a id="Management-Spines-1"></a><a class="docs-heading-anchor-permalink" href="#Management-Spines" title="Permalink"></a></h3><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>If you are using SONiC switches, you should make use of Zero Touch Provisioning and Onie Boot</p></div></div><p>The purpose of these switches is to connect the management interfaces of all switches to the management servers. The management spine&#39;s own management interface is connected to the management firewall for the bootstrapping of the management spine itself. The management firewall will provide a DHCP address and DHCP options to start SONiC&#39;s <a href="https://github.com/sonic-net/SONiC/blob/master/doc/ztp/ztp.md">Zero Touch Provisioning</a>; the images for all switches are downloaded from the management server (nginx container). Each management leaf is connected to both management spines to provide redundant connectivity to both management servers. BGP is used as a routing protocol such that, when a link goes down, an alternate path is used. In the picture above you can see that there are also switch management interfaces connected to the management spine. This has to be done so that we can bootstrap these switches; the management spine relays the DHCP requests from these switches to the management servers so that they are able to Onie Boot and get their ZTP scripts.</p><h3 id="Management-Leaves"><a class="docs-heading-anchor" href="#Management-Leaves">Management Leaves</a><a id="Management-Leaves-1"></a><a class="docs-heading-anchor-permalink" href="#Management-Leaves" title="Permalink"></a></h3><p>All workers have to be connected with their IPMI/BMC interface to the management leaves to get DHCP addresses from the management server. The management leaves are relaying those DHCP requests to the management server which will answer the requests and provide IPs from a given range. The management interfaces of the management leaves also have to be reachable from the management server, and need to get their IP address via DHCP for the bootstrapping process.</p><p>In the example setup, these interfaces are connected to an end-of-row-switch which aggregates them and connects them to the management spines with a fiber-optics connection. If you can reach the management spines from the management leaves with copper cables, you do not need the end of row switch. After the initial bootstrapping, the management interfaces of the management leaves continue to be used for access to the switches&#39; command line, and for subsequent OS updates. (update=reset+bootrap+deployment)</p><h2 id="Partition-Deployment"><a class="docs-heading-anchor" href="#Partition-Deployment">Partition Deployment</a><a id="Partition-Deployment-1"></a><a class="docs-heading-anchor-permalink" href="#Partition-Deployment" title="Permalink"></a></h2><h2 id="Gardener-with-metal-stack"><a class="docs-heading-anchor" href="#Gardener-with-metal-stack">Gardener with metal-stack</a><a id="Gardener-with-metal-stack-1"></a><a class="docs-heading-anchor-permalink" href="#Gardener-with-metal-stack" title="Permalink"></a></h2><p>If you want to deploy metal-stack as a cloud provider for <a href="https://gardener.cloud/">Gardener</a>, you should follow the regular Gardener installation instructions and setup a Gardener cluster first. It&#39;s perfectly fine to setup the Gardener cluster in the same cluster that you use for hosting metal-stack.</p><p>You can find installation instructions for Gardener on the Gardener website beneath <a href="https://gardener.cloud/docs/">docs</a>. metal-stack is an out-of-tree provider and therefore you will not find example files for metal-stack resources in the Gardener repositories. The following list describes the resources and components that you need to deploy into the Gardener cluster in order to make Gardener work with metal-stack:</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The following list assumes you have Gardener installed in a Kubernetes cluster and that you have a basic understanding of how Gardener works. If you need further help with the following steps, you can also come and ask in our Slack channel.</p></div></div><ol><li>Deploy the <a href="https://github.com/metal-stack/gardener-extension-provider-metal/tree/v0.9.1/charts/validator-metal">validator</a> from the <a href="https://github.com/metal-stack/gardener-extension-provider-metal">gardener-extension-provider-metal</a> repository to your cluster via Helm</li><li>Add a <a href="https://github.com/gardener/gardener/blob/v1.3.3/example/30-cloudprofile.yaml">cloud profile</a> called <code>metal</code> containing all your machine images, machine types and regions (region names can be chosen freely, the zone names need to match your partition names) together with our metal-stack-specific provider config as defined <a href="https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/pkg/apis/metal/v1alpha1/types_cloudprofile.go">here</a></li><li>Register the <a href="https://github.com/metal-stack/gardener-extension-provider-metal">gardener-extension-provider-metal</a> controller by deploying the <a href="https://github.com/metal-stack/gardener-extension-provider-metal/blob/v0.9.1/example/controller-registration.yaml">controller-registration</a> into your Gardener cluster, parametrize the embedded chart in the controller registration&#39;s values section if necessary (<a href="https://github.com/metal-stack/gardener-extension-provider-metal/tree/v0.9.1/charts/provider-metal">this</a> is the corresponding values file)</li><li>metal-stack does not provide an own backup storage infrastructure for now. If you want to enable ETCD backups (which you should do because metal-stack also does not have persistent storage out of the box, which makes these backups even more valuable), you should deploy an extension-provider of another cloud provider and configure it to only reconcile the backup buckets (you can reference this backup infrastructure used for the metal shoot in the shoot spec)</li><li>Register the <a href="https://github.com/metal-stack/os-metal-extension">os-extension-provider-metal</a> controller by deploying the <a href="https://github.com/metal-stack/os-metal-extension/blob/v0.4.1/example/controller-registration.yaml">controller-registration</a> into your Gardener cluster, this controller can transform the operating system configuration from Gardener into Ingition user data</li><li>You need to use the Gardener&#39;s <a href="https://github.com/gardener/gardener-extension-networking-calico">networking-calico</a> controller for setting up shoot CNI, you will have to put specific provider configuration into the shoot spec to make it work with metal-stack:<pre><code class="language-yaml hljs">     networking:
+       type: calico
+       # we can peer with the frr within 10.244.0.0/16, which we do with the metallb
+       # the networks for the shoot need to be disjunct with the networks of the seed, otherwise the VPN connection will not work properly
+       # the seeds are typically deployed with podCIDR 10.244.128.0/18 and serviceCIDR 10.244.192.0/18
+       # the shoots are typically deployed with podCIDR 10.244.0.0/18 and serviceCIDR 10.244.64.0/18
+       pods: 10.244.0.0/18
+       services: 10.244.64.0/18
+       providerConfig:
+         apiVersion: calico.networking.extensions.gardener.cloud/v1alpha1
+         kind: NetworkConfig
+         backend: vxlan
+         ipv4:
+           pool: vxlan
+           mode: Always
+           autoDetectionMethod: interface=lo
+         typha:
+           enabled: false</code></pre></li><li>For your seed cluster you will need to provide the provider secret for metal-stack containing the key <code>metalAPIHMac</code>, which is the API HMAC to grant editor access to the metal-api</li><li>Checkout our current provider configuration for <a href="https://github.com/metal-stack/gardener-extension-provider-metal/blob/master/pkg/apis/metal/v1alpha1/types_infrastructure.go">infrastructure</a> and <a href="https://github.com/metal-stack/gardener-extension-provider-metal/blob/master/pkg/apis/metal/v1alpha1/types_controlplane.go">control-plane</a> before deploying your shoot</li></ol><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>We are officially supported by <a href="https://github.com/gardener/dashboard">Gardener dashboard</a>. The dashboard can also help you setting up some of the resources mentioned above.</p></div></div></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../quickstart/">« Quickstart</a><a class="docs-footer-nextpage" href="../monitoring/">Monitoring »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Monday 20 November 2023 08:58">Monday 20 November 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
