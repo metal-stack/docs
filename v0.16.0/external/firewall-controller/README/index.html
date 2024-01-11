@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>firewall-controller · metal-stack</title><script data-outdated-warner src="../../../assets/warner.js"></script><link rel="canonical" href="https://docs.metal-stack.io/external/firewall-controller/README/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../../assets/youtube.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.svg" alt="metal-stack logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">metal-stack</a></span></div><form class="docs-search" action="../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../">Introduction</a></li><li><span class="tocitem">Overview</span><ul><li><a class="tocitem" href="../../../overview/architecture/">Architecture</a></li><li><a class="tocitem" href="../../../overview/networking/">Networking</a></li><li><a class="tocitem" href="../../../overview/hardware/">Hardware Support</a></li><li><a class="tocitem" href="../../../overview/os/">Operating Systems</a></li><li><a class="tocitem" href="../../../overview/kubernetes/">Kubernetes Integration</a></li><li><a class="tocitem" href="../../../overview/storage/">Storage</a></li><li><a class="tocitem" href="../../../overview/comparison/">Comparison</a></li></ul></li><li><a class="tocitem" href="../../../quickstart/">Quickstart</a></li><li><span class="tocitem">Installation &amp; Administration</span><ul><li><a class="tocitem" href="../../../installation/deployment/">Installation</a></li><li><a class="tocitem" href="../../../installation/monitoring/">Monitoring</a></li><li><a class="tocitem" href="../../../installation/troubleshoot/">Troubleshoot</a></li></ul></li><li><span class="tocitem">User Guides</span><ul><li><a class="tocitem" href="../../mini-lab/README/">mini-lab</a></li><li><a class="tocitem" href="../../metalctl/README/">metalctl</a></li><li><a class="tocitem" href="../../csi-driver-lvm/README/">csi-driver-lvm</a></li><li class="is-active"><a class="tocitem" href>firewall-controller</a><ul class="internal"><li><a class="tocitem" href="#Architecture"><span>Architecture</span></a></li><li><a class="tocitem" href="#Automatically-generated-ingress-rules"><span>Automatically generated ingress rules</span></a></li><li><a class="tocitem" href="#Configuration"><span>Configuration</span></a></li><li><a class="tocitem" href="#Status"><span>Status</span></a></li><li><a class="tocitem" href="#Prometheus-integration"><span>Prometheus integration</span></a></li><li><a class="tocitem" href="#Firewall-Logs"><span>Firewall Logs</span></a></li><li><a class="tocitem" href="#Page-Tree"><span>Page Tree</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../../apidocs/apidocs/">API Documentation</a></li><li><span class="tocitem">Development</span><ul><li><a class="tocitem" href="../../../development/client_libraries/">Client Libraries</a></li><li><a class="tocitem" href="../../../development/roadmap/">Roadmap</a></li><li><a class="tocitem" href="../../../development/proposals/">Enhancement Proposals</a></li><li><a class="tocitem" href="../../../development/contributing/">Contributing</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guides</a></li><li class="is-active"><a href>firewall-controller</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>firewall-controller</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="github.com/metal-stack/docs.git" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Firewall-Controller"><a class="docs-heading-anchor" href="#Firewall-Controller">Firewall Controller</a><a id="Firewall-Controller-1"></a><a class="docs-heading-anchor-permalink" href="#Firewall-Controller" title="Permalink"></a></h1><p>This controller is installed on a bare-metal firewall in front of several kubernetes worker nodes and responsible to reconcile a <code>ClusterwideNetworkPolicy</code> to nftables rules to control access to and from the kubernetes cluster. It allows also to control the traffic rate going through, to limit network resources for restricted usage scenarios. Nftable and node metrics are exposed with the <code>nftables-exporter</code> and <code>node-exporter</code>, the ips are visible as service and endpoint from the kubernetes cluster.</p><p>Additional an IDS is managed on the firewall to detect known network anomalies. <a href="https://suricata.io/">suricata</a> is used for this purpose. Right now, only basic statistics about the amount of scanned packets is reported. In a future release, access to all alarms will be provided.</p><h2 id="Architecture"><a class="docs-heading-anchor" href="#Architecture">Architecture</a><a id="Architecture-1"></a><a class="docs-heading-anchor-permalink" href="#Architecture" title="Permalink"></a></h2><p><img src="../architecture.svg" alt="Architecture"/></p><h2 id="Automatically-generated-ingress-rules"><a class="docs-heading-anchor" href="#Automatically-generated-ingress-rules">Automatically generated ingress rules</a><a id="Automatically-generated-ingress-rules-1"></a><a class="docs-heading-anchor-permalink" href="#Automatically-generated-ingress-rules" title="Permalink"></a></h2><p>For every <code>Service</code> of type <code>LoadBalancer</code> in the cluster, the corresponding ingress rules will be automatically generated.</p><p>If <code>loadBalancerSourceRanges</code> is not specified, incomig traffic to this service will be allowed for any source ip adresses.</p><h2 id="Configuration"><a class="docs-heading-anchor" href="#Configuration">Configuration</a><a id="Configuration-1"></a><a class="docs-heading-anchor-permalink" href="#Configuration" title="Permalink"></a></h2><p>Firewall Controller is configured with 2 CRDs: <code>firewalls.metal-stack.io</code> and <code>clusterwidenetworkpolicies.metal-stack.io</code>. Both are namespaced and must reside in the <code>firewall</code> namespace. The <code>firewalls</code> CRD is typically written from the <a href="https://github.com/metal-stack/gardener-extension-provider-metal">gardener-extension-provider-metal</a>, the <code>clusterwidenetworkpolicy</code> should be provided by the deployment of your application.</p><p>Example Firewall CRD:</p><pre><code class="language-yaml hljs">apiVersion: metal-stack.io/v1
+kind: Firewall
+metadata:
+  namespace: firewall
+  name: firewall
+spec:
+  # Interval of reconcilation if nftables rules and network traffic accounting
+  interval: 10s
+  # Ratelimits specify on which physical interface, which maximum rate of traffic is allowed
+  ratelimits:
+  # The name of the interface visible with ip link show
+  - interface: vrf104009
+    # The maximum rate in MBits/s
+    rate: 10
+  # Internalprefixes defines a list of prefixes where the traffic going to, or comming from is considered internal, e.g. not leaving into external networks
+  # given the archictecture picture above this would be:
+  internalprefixes:
+  - &quot;1.2.3.0/24
+  - &quot;172.17.0.0/16&quot;
+  - &quot;10.0.0.0/8&quot;</code></pre><p>Example ClusterwideNetworkPolicy:</p><pre><code class="language-yaml hljs">apiVersion: metal-stack.io/v1
+kind: ClusterwideNetworkPolicy
+metadata:
+  namespace: firewall
+  name: clusterwidenetworkpolicy-sample
+spec:
+  egress:
+  - to:
+    - cidr: 1.1.0.0/24
+      except:
+      - 1.1.1.0/16
+    - cidr: 8.8.8.8/32
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53</code></pre><h2 id="Status"><a class="docs-heading-anchor" href="#Status">Status</a><a id="Status-1"></a><a class="docs-heading-anchor-permalink" href="#Status" title="Permalink"></a></h2><p>Once the firewall-controller is running, it will report several statistics to the Firewall CRD Status: This can be inspected by running:</p><pre><code class="language-bash hljs">kubectl describe -n firewall firewall</code></pre><p>The output would look like:</p><pre><code class="language-yaml hljs">Status:
+  Last Run:  2020-06-17T13:18:58Z
+  Stats:
+    # Network traffic in bytes separated into external and internal in/out/total
+    Devices:
+      External:
+        In:     91696
+        Out:    34600
+        Total:  0
+      Internal:
+        In:     0
+        Out:    0
+        Total:  2678671
+    # IDS Statistics by interface
+    Idsstats:
+      vrf104009:
+        Drop:              1992
+        Invalidchecksums:  0
+        Packets:           4997276
+    # nftable rule statistics by rule name
+    Rules:
+      Accept:
+        BGP unnumbered:
+          Counter:
+            Bytes:    0
+            Packets:  0
+        SSH incoming connections:
+          Counter:
+            Bytes:    936
+            Packets:  16
+        accept established connections:
+          Counter:
+            Bytes:    21211168
+            Packets:  39785
+        accept icmp:
+          Counter:
+            Bytes:    0
+            Packets:  0
+        accept traffic for k8s service kube-system/vpn-shoot:
+          Counter:
+            Bytes:    360
+            Packets:  6
+      Drop:
+        drop invalid packets:
+          Counter:
+            Bytes:    52
+            Packets:  1
+        drop invalid packets from forwarding to prevent malicious activity:
+          Counter:
+            Bytes:    0
+            Packets:  0
+        drop invalid packets to prevent malicious activity:
+          Counter:
+            Bytes:    0
+            Packets:  0
+        drop packets with invalid ct state:
+          Counter:
+            Bytes:    0
+            Packets:  0
+        drop ping floods:
+          Counter:
+            Bytes:    0
+            Packets:  0
+      Other:
+        block bgp forward to machines:
+          Counter:
+            Bytes:    0
+            Packets:  0
+        count and log dropped packets:
+          Counter:
+            Bytes:    2528
+            Packets:  51
+        snat (networkid: internet):
+          Counter:
+            Bytes:    36960
+            Packets:  486</code></pre><h2 id="Prometheus-integration"><a class="docs-heading-anchor" href="#Prometheus-integration">Prometheus integration</a><a id="Prometheus-integration-1"></a><a class="docs-heading-anchor-permalink" href="#Prometheus-integration" title="Permalink"></a></h2><p>There are two exporters running on the firewall to report essential metrics from this machine:</p><ul><li>node-exporter for machine specific metrics like cpu, ram and disk usage, see <a href="https://github.com/prometheus/node_exporter">node-exporter</a> for details.</li><li>nftables-exporter for nftables metrics, see <a href="https://github.com/Sheridan/nftables_exporter">nftables-exporter</a></li></ul><p>Both exporters are exposed as services:</p><pre><code class="language-bash hljs">kubectl get svc -n firewall
+NAME                TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+nftables-exporter   ClusterIP   None         &lt;none&gt;        9630/TCP   13h
+node-exporter       ClusterIP   None         &lt;none&gt;        9100/TCP   13h</code></pre><p>These services are in front of virtual endpoints:</p><pre><code class="language-bash hljs">kubectl get ep -n firewall
+NAME                ENDPOINTS         AGE
+nftables-exporter   10.3.164.1:9630   13h
+node-exporter       10.3.164.1:9100   13h</code></pre><p>You can scrape these services in you prometheus installation to get the metrics.</p><p>To check you can run:</p><pre><code class="language-bash hljs">curl nftables-exporter.firewall.svc.cluster.local:9630/metrics
+curl node-exporter.firewall.svc.cluster.local:9100/metrics</code></pre><h2 id="Firewall-Logs"><a class="docs-heading-anchor" href="#Firewall-Logs">Firewall Logs</a><a id="Firewall-Logs-1"></a><a class="docs-heading-anchor-permalink" href="#Firewall-Logs" title="Permalink"></a></h2><p>It is also possible to tail for the dropped packets with the following command (install stern from <a href="https://github.com/stern/stern">stern</a> ):</p><pre><code class="language-bash hljs">stern -n firewall drop</code></pre><p>The output will look like:</p><pre><code class="language-json hljs">
+droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:27 +0000 UTC {&quot;DPT&quot;:&quot;4000&quot;,&quot;DST&quot;:&quot;1.2.3.4&quot;,&quot;ID&quot;:&quot;54321&quot;,&quot;IN&quot;:&quot;vrf104009&quot;,&quot;LEN&quot;:&quot;40&quot;,&quot;MAC&quot;:&quot;ca:41:f9:80:fa:89:aa:bb:0e:62:8c:a6:08:00&quot;,&quot;OUT&quot;:&quot;vlan179&quot;,&quot;PREC&quot;:&quot;0x00&quot;,&quot;PROTO&quot;:&quot;TCP&quot;,&quot;RES&quot;:&quot;0x00&quot;,&quot;SPT&quot;:&quot;38464&quot;,&quot;SRC&quot;:&quot;2.3.4.5&quot;,&quot;SYN&quot;:&quot;&quot;,&quot;TOS&quot;:&quot;0x00&quot;,&quot;TTL&quot;:&quot;236&quot;,&quot;URGP&quot;:&quot;0&quot;,&quot;WINDOW&quot;:&quot;65535&quot;,&quot;timestamp&quot;:&quot;2020-06-17 13:23:27 +0000 UTC&quot;}
+droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:34 +0000 UTC {&quot;DPT&quot;:&quot;2362&quot;,&quot;DST&quot;:&quot;1.2.3.4&quot;,&quot;ID&quot;:&quot;44545&quot;,&quot;IN&quot;:&quot;vrf104009&quot;,&quot;LEN&quot;:&quot;40&quot;,&quot;MAC&quot;:&quot;ca:41:f9:80:fa:89:aa:bb:0e:62:8c:a6:08:00&quot;,&quot;OUT&quot;:&quot;&quot;,&quot;PREC&quot;:&quot;0x00&quot;,&quot;PROTO&quot;:&quot;TCP&quot;,&quot;RES&quot;:&quot;0x00&quot;,&quot;SPT&quot;:&quot;40194&quot;,&quot;SRC&quot;:&quot;2.3.4.5&quot;,&quot;SYN&quot;:&quot;&quot;,&quot;TOS&quot;:&quot;0x00&quot;,&quot;TTL&quot;:&quot;242&quot;,&quot;URGP&quot;:&quot;0&quot;,&quot;WINDOW&quot;:&quot;1024&quot;,&quot;timestamp&quot;:&quot;2020-06-17 13:23:34 +0000 UTC&quot;}
+droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:30 +0000 UTC {&quot;DPT&quot;:&quot;650&quot;,&quot;DST&quot;:&quot;1.2.3.4&quot;,&quot;ID&quot;:&quot;12399&quot;,&quot;IN&quot;:&quot;vrf104009&quot;,&quot;LEN&quot;:&quot;40&quot;,&quot;MAC&quot;:&quot;ca:41:f9:80:fa:89:aa:bb:0e:62:8c:a6:08:00&quot;,&quot;OUT&quot;:&quot;vlan179&quot;,&quot;PREC&quot;:&quot;0x00&quot;,&quot;PROTO&quot;:&quot;TCP&quot;,&quot;RES&quot;:&quot;0x00&quot;,&quot;SPT&quot;:&quot;40194&quot;,&quot;SRC&quot;:&quot;2.3.4.5&quot;,&quot;SYN&quot;:&quot;&quot;,&quot;TOS&quot;:&quot;0x00&quot;,&quot;TTL&quot;:&quot;241&quot;,&quot;URGP&quot;:&quot;0&quot;,&quot;WINDOW&quot;:&quot;1024&quot;,&quot;timestamp&quot;:&quot;2020-06-17 13:23:30 +0000 UTC&quot;}
+droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:34 +0000 UTC {&quot;DPT&quot;:&quot;2362&quot;,&quot;DST&quot;:&quot;1.2.3.4&quot;,&quot;ID&quot;:&quot;44545&quot;,&quot;IN&quot;:&quot;vrf104009&quot;,&quot;LEN&quot;:&quot;40&quot;,&quot;MAC&quot;:&quot;ca:41:f9:80:fa:89:aa:bb:0e:62:8c:a6:08:00&quot;,&quot;OUT&quot;:&quot;&quot;,&quot;PREC&quot;:&quot;0x00&quot;,&quot;PROTO&quot;:&quot;TCP&quot;,&quot;RES&quot;:&quot;0x00&quot;,&quot;SPT&quot;:&quot;40194&quot;,&quot;SRC&quot;:&quot;2.3.4.5&quot;,&quot;SYN&quot;:&quot;&quot;,&quot;TOS&quot;:&quot;0x00&quot;,&quot;TTL&quot;:&quot;242&quot;,&quot;URGP&quot;:&quot;0&quot;,&quot;WINDOW&quot;:&quot;1024&quot;,&quot;timestamp&quot;:&quot;2020-06-17 13:23:34 +0000 UTC&quot;}
+droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:10 +0000 UTC {&quot;DPT&quot;:&quot;63351&quot;,&quot;DST&quot;:&quot;1.2.3.4&quot;,&quot;ID&quot;:&quot;11855&quot;,&quot;IN&quot;:&quot;vrf104009&quot;,&quot;LEN&quot;:&quot;40&quot;,&quot;MAC&quot;:&quot;ca:41:f9:80:fa:89:aa:bb:0e:62:8c:a6:08:00&quot;,&quot;OUT&quot;:&quot;vlan179&quot;,&quot;PREC&quot;:&quot;0x00&quot;,&quot;PROTO&quot;:&quot;TCP&quot;,&quot;RES&quot;:&quot;0x00&quot;,&quot;SPT&quot;:&quot;54589&quot;,&quot;SRC&quot;:&quot;2.3.4.5&quot;,&quot;SYN&quot;:&quot;&quot;,&quot;TOS&quot;:&quot;0x00&quot;,&quot;TTL&quot;:&quot;245&quot;,&quot;URGP&quot;:&quot;0&quot;,&quot;WINDOW&quot;:&quot;1024&quot;,&quot;timestamp&quot;:&quot;2020-06-17 13:23:10 +0000 UTC&quot;}
+droptailer-6d556bd988-4g8gp droptailer 2020-06-17 13:23:51 +0000 UTC {&quot;DPT&quot;:&quot;8002&quot;,&quot;DST&quot;:&quot;1.2.3.4&quot;,&quot;ID&quot;:&quot;17539&quot;,&quot;IN&quot;:&quot;vrf104009&quot;,&quot;LEN&quot;:&quot;40&quot;,&quot;MAC&quot;:&quot;ca:41:f9:80:fa:89:aa:bb:0e:62:8c:a6:08:00&quot;,&quot;OUT&quot;:&quot;&quot;,&quot;PREC&quot;:&quot;0x00&quot;,&quot;PROTO&quot;:&quot;TCP&quot;,&quot;RES&quot;:&quot;0x00&quot;,&quot;SPT&quot;:&quot;47615&quot;,&quot;SRC&quot;:&quot;2.3.4.5&quot;,&quot;SYN&quot;:&quot;&quot;,&quot;TOS&quot;:&quot;0x08&quot;,&quot;TTL&quot;:&quot;239&quot;,&quot;URGP&quot;:&quot;0&quot;,&quot;WINDOW&quot;:&quot;1024&quot;,&quot;timestamp&quot;:&quot;2020-06-17 13:23:51 +0000 UTC&quot;}</code></pre><p>You can forward the droptailer logs to any log aggregation infrastructure you have in place.</p><h2 id="Page-Tree"><a class="docs-heading-anchor" href="#Page-Tree">Page Tree</a><a id="Page-Tree-1"></a><a class="docs-heading-anchor-permalink" href="#Page-Tree" title="Permalink"></a></h2><ul><li><a href="../CONTRIBUTING/#Contributing">Contributing</a></li><li><a href="../DEVELOP/#Develop-Setup">Develop Setup</a></li><li class="no-marker"><ul><li><a href="../DEVELOP/#Testing-locally">Testing locally</a></li></ul></li><li><a href="#Firewall-Controller">Firewall Controller</a></li><li class="no-marker"><ul><li><a href="#Architecture">Architecture</a></li><li><a href="#Automatically-generated-ingress-rules">Automatically generated ingress rules</a></li><li><a href="#Configuration">Configuration</a></li><li><a href="#Status">Status</a></li><li><a href="#Prometheus-integration">Prometheus integration</a></li><li><a href="#Firewall-Logs">Firewall Logs</a></li><li><a href="#Page-Tree">Page Tree</a></li></ul></li></ul></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../csi-driver-lvm/README/">« csi-driver-lvm</a><a class="docs-footer-nextpage" href="../../../apidocs/apidocs/">API Documentation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Thursday 11 January 2024 09:20">Thursday 11 January 2024</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
