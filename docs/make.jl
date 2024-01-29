@@ -26,6 +26,7 @@ makedocs(
             "Hardware Support" => "overview/hardware.md",
             "Operating Systems" => "overview/os.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
+            "Isolated Kubernetes" => "overview/isolated-kubernetes.md",
             "Storage" => "overview/storage.md",
             "Comparison" => "overview/comparison.md",
         ],
