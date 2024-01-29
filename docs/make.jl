@@ -16,7 +16,7 @@ makedocs(
     linkcheck_ignore = [
         r"^(?!http)",
     ],
-    # strict = false, # TODO: Should be enabled soon, links from repos to CONTRIBUTING have to be updated though...
+    strict = false, # TODO: Should be enabled soon, links from repos to CONTRIBUTING have to be updated though...
     clean = true,
     pages = [
         "Introduction" => "index.md",

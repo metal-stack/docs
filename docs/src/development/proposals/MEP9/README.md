@@ -111,9 +111,9 @@ TODO
 ## References
 
 1. [WireGuard: Next Generation Secure Network Tunnel](https://www.youtube.com/watch?v=88GyLoZbDNw)
-2. [How Tailscale works](https://tailscale.com/blog/how-tailscale-works/)
-3. [Tailscale is officially SOC 2 compliant](https://tailscale.com/blog/soc2/)
-4. [Why not Wireguard](https://blog.ipfire.org/post/why-not-wireguard)
+2. [How Tailscale works](https://tailscale.com/blog/how-tailscale-works)
+3. [Tailscale is officially SOC 2 compliant](https://tailscale.com/blog/soc2)
+4. [Why not Wireguard](https://www.ipfire.org/blog/why-not-wireguard)
 5. [Wireguard: Known Limitations](https://www.wireguard.com/known-limitations/)
 6. [Wireguard: Things That Might Be Accomplished](https://www.wireguard.com/todo/)
 7. [Headscale: Tailscale control protocol v2](https://github.com/juanfont/headscale/issues/526)
