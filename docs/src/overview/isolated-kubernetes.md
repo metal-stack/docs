@@ -17,7 +17,7 @@ In order to be able to restrict ingress and egress internet traffic, but still m
 - DNS and NTP Servers are produced alongside the registry.
 - The containerd configuration on every worker node is configured to pull all of the strictly required container images from this private registry mirror,
 - DNS and NTP configuration is also adopted to use the DNS and NTP Servers on this private environment.
-- A list of networks which are allowed to reach is managed, this list reflects the network of the cloud provider and is not modifiable by the cluster user.
+- A list of networks which are allowed to reach is managed, this list reflects the network of the cloud provider and is not modifiable by the cluster user. This list usually contains the internet prefixes of the provider and one or more RFC address ranges.
 
 ![Network Design](isolated-kubernetes.drawio.svg)
 
@@ -41,7 +41,7 @@ For application workloads please see below how these images must be provided.
 
 ## Flavors
 
-The way kubernetes clusters can be created changed in this perspective. There are three different flavors of kubernetes cluster: Internet Access Baseline, Restricted and Forbidden. This results in the following restrictions:
+The way kubernetes clusters can be created changed in this perspective. There are three different flavors of kubernetes cluster: Internet Access **Baseline**, **Restricted** and **Forbidden**. This results in the following restrictions:
 
 ### Internet Access Baseline
 
@@ -72,10 +72,10 @@ The purposes of this CWNPs are:
 |--------------------|----------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
 | allow-to-http      | baseline             | 0.0.0.0/0                                            | egress via http                                                                              |
 | allow-to-https     | baseline             | 0.0.0.0/0                                            | egress via https                                                                             |
-| allow-to-apiserver | restricted/forbidden | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
+| allow-to-apiserver | restricted, forbidden | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
 | allow-to-dns       | all                  | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
 | allow-to-ntp       | all                  | IP of the private NTP Server                         | Time synchronization                                                                         |
-| allow-to-registry  | restricted/forbidden | IP of the private Registry Mirror                    | Pulling strictly required container images                                                   |
+| allow-to-registry  | restricted, forbidden | IP of the private Registry Mirror                    | Pulling strictly required container images                                                   |
 | allow-to-storage   | all                  | network of the container storage                     | persistent volumes with the cni driver                                                       |
 | allow-to-vpn       | all                  | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
 
@@ -83,11 +83,11 @@ All of these CWNPs are managed by the gardener-extension-provider-metal, every m
 
 ### Internet Access Forbidden
 
-This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access baseline or restricted) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
+This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `restricted`) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
 
 Every network access modifications triggered by a cluster user, either by adding/modifying CWNPs or adding a Service Type Loadbalancer, is validated against a list of allowed Networks. If the cluster was created with a additional internal network, this network is part of the allowed networks list.
 
-With internet access forbidden the following restrictions apply:
+With internet access `forbidden` the following restrictions apply:
 
 #### Egress traffic
 
@@ -129,16 +129,16 @@ By default, no IP Address will be automatically selected for such clusters and t
 
 ### Internet Access Restricted
 
-This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access baseline or forbidden) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
+This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `forbidden`) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
 
 The same default CWNPs are deployed and the container images are pulled from the private registry. Also DNS and NTP are configured to use the private DNS and NTP servers.
-The only difference to the forbidden mode is that CWNPs and Service Type Loadbalancers can be created without the restriction that only allowed networks are allowed.
+The only difference to the `forbidden` mode is that CWNPs and Service Type Loadbalancers can be created without the restriction that only allowed networks are allowed.
 
 Pulling container images is theoretically possible, if a cluster creates a CWNP which allows network access to the registry host of the container image. Most container registries serve the container images from large CDN Networks which have a lot of IP Addresses. Simply adding the IP Address of docker.io is therefore not sufficient.
 
 ## Application Container Images
 
-In order to deploy application containers into a cluster with Internet Access Forbidden a private registry must be provided located in the list of allowed networks.
+In order to deploy application containers into a cluster with Internet Access `forbidden` a private registry must be provided located in the list of allowed networks.
 The DNS name of the registry must resolve in the public DNS Servers. The registry must be secured with a TLS certificate which is also valid with the ca-certificates from the worker node, e.g. vanilla debian ca-certificates.
 
 ## Implementation
@@ -147,7 +147,7 @@ To achieve this functionality modifications has been implemented in various comp
 
 ### Gardener Extension Provider Metal
 
-The ControlPlane API is adopted to enable a user to configure a shoot with the internet access type forbidden or restricted. The CloudProfile can now be extended to carry the list of allowed networks, the dns and ntp servers, the registry with the mirrored registries.
+The ControlPlane API is adopted to enable a user to configure a shoot with the internet access type `forbidden` or `restricted`. The CloudProfile can now be extended to carry the list of allowed networks, the dns and ntp servers, the registry with the mirrored registries.
 
 ControlPlane:
 
@@ -225,7 +225,7 @@ type RegistryMirror struct {
 ### OS Metal Extension
 
 Based on the configuration of a cluster the configuration of the containerd must be changed to pull images from the private registry mirror.
-If a cluster is either configured with restricted or forbidden, the configuration of containerd will be created as such:
+If a cluster is either configured with `restricted` or `forbidden`, the configuration of containerd will be created as such:
 
 config.toml
 
