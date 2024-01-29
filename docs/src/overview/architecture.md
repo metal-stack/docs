@@ -108,7 +108,7 @@ Some notes on this picture:
 - By design, a partition only has very few ports open for incoming-connections from the internet. This contributes to a smaller attack surface and higher security of your infrastructure.
 - With the help of NSQ, it is not required to have connections from the metal control plane to the metal-core. The metal-core instances register at the message bus and can then consume partition-specfic topics, e.g. when a machine deletion gets issued by a user.
 
-# Machine Provisioning Sequence
+## Machine Provisioning Sequence
 
 The following sequence diagram illustrates some of the main principles of the machine provisioning lifecycle.
 
