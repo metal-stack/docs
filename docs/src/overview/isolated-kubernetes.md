@@ -38,7 +38,7 @@ In general the creation of a kubernetes cluster requires the ability to pull con
 - CSI (Container Storage Interface): controller and daemon set to setup and run the container storage
 - CoreDNS: DNS for containers
 - MetalLB: Service Type Loadbalancer Implementation
-- Node-Exporter and Metrics-Exporter: Monitoring for the worker node
+- node-exporter and metrics-server: Monitoring for the worker node
 - Metal-Stack Addons: for firewall and auditing events
 
 Because we configured `containerd` as such, that all images which are required, are pulled from the private registry. Because this private registry only contains the strictly required container images, it is not possible anymore to pull container images from public registries.
