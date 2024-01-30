@@ -335,8 +335,6 @@ type FirewallSpec struct {
     // Is only enforced with NetworkAccessForbidden.
     // The node network is always allowed.
     AllowedNetworks AllowedNetworks `json:"allowedNetworks,omitempty"`
-    // NetworkAccessType defines how the cluster can reach external networks.
-    NetworkAccessType NetworkAccessType `json:"networkAccessType,omitempty"`
 }
 
 // AllowedNetworks is a list of networks which are allowed to connect when NetworkAccessType is NetworkAccessForbidden.
@@ -346,28 +344,6 @@ type AllowedNetworks struct {
     // Egress defines a list of cidrs which are allowed for outgoing traffic
     Egress []string `json:"egress,omitempty"`
 }
-
-type (
-    // NetworkAccessType defines how a cluster is capable of accessing external networks
-    NetworkAccessType string
-)
-
-const (
-    // NetworkAccessBaseline allows the cluster to access external networks in a baseline manner
-    NetworkAccessBaseline = NetworkAccessType("baseline")
-    // NetworkAccessRestricted access to external networks is by default restricted to registries, dns and ntp to partition only destinations.
-    // Therefore registries, dns and ntp destinations must be specified in the cloud-profile accordingly-
-    // If this is not the case, restricting the access must not be possible.
-    // Image overrides for all images which are required to create such a shoot, must be specified. No other images are provided in the given registry.
-    // customers can define own rules to access external networks as in the baseline.
-    // Service type loadbalancers are also not restricted.
-    NetworkAccessRestricted = NetworkAccessType("restricted")
-    // NetworkAccessForbidden in this configuration a customer can no longer create rules to access external networks.
-    // which are outside of a given list of allowed networks. This is enforced by the firewall.
-    // Service type loadbalancers are also not possible to open a service ip which is not in the list of allowed networks.
-    // This is also enforced by the firewall.
-    NetworkAccessForbidden = NetworkAccessType("forbidden")
-)
 ```
 
 Also the ClusterwideNetworkPolicy in the Firewall Controller was changed to show the deployment status of a CWNP.
