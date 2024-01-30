@@ -47,7 +47,7 @@ For application workloads please see below how these images must be provided.
 
 ## Flavors
 
-With the introduction of Isolated Kubernetes Clusters, the cluster user must decide upon cluster creation which type of Isolation he needs for his workload.
+With the introduction of Isolated Kubernetes Clusters, the cluster user must decide upon cluster creation which type of isolation he needs for his workload.
 There are 3 different flavours available:
 
 - Internet Access Baseline: This is the default cluster creation mode, which does not change any aspects of network and registry access.
