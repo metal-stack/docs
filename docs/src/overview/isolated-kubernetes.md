@@ -322,7 +322,7 @@ version = 2
       endpoint = ["https://some.private.registry"]
 ```
 
-DNS and NTP must also be adopted according the configuration in the CloudProfile.
+DNS and NTP must also be adopted according to the configuration in the CloudProfile.
 
 ### Firewall Controller Manager and Firewall Controller
 
