@@ -11,7 +11,9 @@ For this purpose we implemented a possibility to start kubernetes clusters in su
 
 ## Design Choices
 
-TODO: describe which options we discussed and why we ended up with the current approach
+When talking about highly secure kubernetes environments people often raise the term "Air Gapped Cluster". This would mean that no physical connection exists between the kubernetes control plane and the kubernetes worker nodes with the outside world. These requirement exist in extreme environments such as ships, moon bases or nuclear plants. The effort to produce this in a completely automated manner is extreme.
+
+We decided to follow a different approach which is more usable, still very secure but much simpler to implement and operate. The solution we created is called "Isolated Cluster" which means that there are still physical connections between the kubernetes cluster, but guarded in a way that malicious traffic is prohibited. It is also not possible to enable malicious traffic by accident, e.g. if a cluster user configures network policies or load balancers to untrusted environments.
 
 ## Network Design
 
