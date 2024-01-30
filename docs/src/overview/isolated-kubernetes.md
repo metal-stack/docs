@@ -50,7 +50,7 @@ For application workloads please see below how these images must be provided.
 With the introduction of Isolated Kubernetes Clusters, the cluster user must decide upon cluster creation which type of isolation he needs for his workload.
 There are 3 different flavours available:
 
-- Internet Access Baseline: This is the default cluster creation mode, which does not change any aspects of network and registry access.
+- Internet access `baseline`: This is the default cluster creation mode, which does not change any aspects of network and registry access.
 - Internet Access Forbidden: No internet access is possible, neither ingress not egress.
 - Internet Access Restricted: No internet access is possible, neither ingress not egress, but can be enabled by the cluster user.
 
