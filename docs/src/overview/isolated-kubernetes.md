@@ -22,7 +22,7 @@ In order to be able to restrict ingress and egress internet traffic, but still m
 - All strictly required container images are mirrored to a registry which is only accessible from the kubernetes clusters.
 - DNS and NTP servers are produced alongside the registry.
 - The `containerd` configuration on every worker node is configured to pull all of the strictly required container images from this private registry mirror.
-- DNS and NTP configuration is also adopted to use the DNS and NTP Servers on this private environment.
+- DNS and NTP configuration is also adopted to use the DNS and NTP servers on this private environment.
 - A list of networks which are allowed to reach is managed, this list reflects the networks of the cloud provider and is not modifiable by the cluster user. This list usually contains the internet prefixes of the provider and one or more RFC address ranges.
 
 ![Network Design](isolated-kubernetes.drawio.svg)
