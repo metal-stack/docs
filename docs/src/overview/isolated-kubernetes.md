@@ -326,7 +326,7 @@ DNS and NTP must also be adopted according the configuration in the CloudProfile
 
 ### Firewall Controller Manager and Firewall Controller
 
-The  Firewall Controller Manager changed the FirewallSpec to configure the Firewall Controller which must enforce the restrictions regarding allowed networks.
+The Firewall Controller Manager has extended the FirewallSpec to configure the Firewall Controller which must enforce the restrictions regarding allowed networks.
 
 ```go
 // FirewallSpec defines parameters for the firewall creation along with configuration for the firewall-controller.
