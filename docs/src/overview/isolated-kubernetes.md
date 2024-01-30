@@ -5,7 +5,7 @@ Pages = ["isolated-kubernetes.md"]
 Depth = 5
 ```
 
-Some Customers have the need to run their workloads in a very restricted environment. These restrictions are driven by regulatory requirements in some industries such as finance, healthcare, energy and more. The Regulatory requirements often define that the workload must not be exposed to the public internet, nor is capable to reach the public internet in any case.
+Some customers have the need to run their workloads in a very restricted environment. These restrictions are driven by regulatory requirements in some industries such as finance, healthcare, energy and more. The regulatory requirements often define that the workload must not be exposed to the public internet, nor is capable to reach the public internet in any case.
 
 For this purpose we implemented a possibility to start kubernetes clusters in such a manner. This is called isolated cluster.
 
