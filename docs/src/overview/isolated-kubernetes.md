@@ -58,7 +58,7 @@ Please see the detailed description of these flavors below.
 
 ### Internet Access Baseline
 
-This is the default configuration of a kubernetes cluster, egress traffic is controlled by multiple CWNP's (Cluster Wide Network Policy), ingress traffic is possible by deploying a Service Type Loadbalancer. The cluster user can add additional CWNP's without any restrictions and is responsible for them.
+This is the default configuration of a kubernetes cluster, egress traffic is controlled by multiple CWNPs (`ClusterWideNetworkPolicy`), ingress traffic is possible by deploying a Service Type Loadbalancer. The cluster user can add additional CWNPs without any restrictions and is responsible for them.
 
 Container images can be pulled from any reachable container registry.
 
