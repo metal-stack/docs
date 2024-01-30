@@ -62,7 +62,7 @@ This is the default configuration of a kubernetes cluster, egress traffic is con
 
 Container images can be pulled from any reachable container registry.
 
-DNS and NTP are configured to internet DNS Resolvers and NTP Servers
+DNS and NTP are configured to internet DNS resolvers and NTP servers.
 
 The list of CWNP's which are deployed by default are:
 
