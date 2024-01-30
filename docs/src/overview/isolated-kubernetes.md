@@ -64,7 +64,7 @@ Container images can be pulled from any reachable container registry.
 
 DNS and NTP are configured to internet DNS resolvers and NTP servers.
 
-The list of CWNP's which are deployed by default are:
+The list of CWNPs which are deployed by default are:
 
 ```bash
 > kubectl get clusterwidenetworkpolicies.metal-stack.io
