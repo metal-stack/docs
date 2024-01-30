@@ -27,7 +27,7 @@ In order to be able to restrict ingress and egress internet traffic, but still m
 
 ![Network Design](isolated-kubernetes.drawio.svg)
 
-It is required to attach a additional network to the kubernetes cluster in order to be able to pull container images for the application workloads from private registries.
+Users are advised to attach an additional network to the kubernetes cluster in order to be able to pull container images for the application workloads from private registries.
 
 ### Strictly required Container Images
 
