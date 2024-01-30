@@ -52,7 +52,7 @@ There are 3 different flavours available:
 
 - Internet access `baseline`: This is the default cluster creation mode, which does not change any aspects of network and registry access.
 - Internet access `forbidden`: No internet access is possible, neither ingress nor egress.
-- Internet Access Restricted: No internet access is possible, neither ingress not egress, but can be enabled by the cluster user.
+- Internet access `restricted`: No internet access is possible, neither ingress nor egress, but can be enabled by the cluster user.
 
 Please see the detailed description of these flavours below.
 
