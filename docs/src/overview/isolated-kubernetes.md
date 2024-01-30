@@ -29,7 +29,7 @@ In order to be able to restrict ingress and egress internet traffic, but still m
 
 Users are advised to attach an additional network to the kubernetes cluster in order to be able to pull container images for the application workloads from private registries.
 
-### Strictly required Container Images
+### Strictly Required Container Images
 
 In general the creation of a kubernetes cluster requires the ability to pull container images for several applications which are necessary to make a machine a kubernetes worker node. To mention the most important:
 
