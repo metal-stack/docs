@@ -383,7 +383,7 @@ type PolicyStatus struct {
 
 ### Cloud Controller Manager
 
-This component was adopted to allow to be started without a default network specified. This was actually always the internet network and if no ip address was specified in the Service Type Loadbalancer, one ip was allocated from this default network. For restricted and isolated clusters this is not provided and a cluster user must always specify this ip to get a working loadbalancer.
+This component was adopted to allow to be started without a default network specified. This was actually always the internet network and if no ip address was specified in the Service Type Loadbalancer, one ip was allocated from this default network. For isolated clusters this is not provided and a cluster user must always specify this ip to get a working loadbalancer.
 
 ### OCI Mirror
 
