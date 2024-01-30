@@ -387,7 +387,7 @@ This component was adopted to allow to be started without a default network spec
 
 ### OCI Mirror
 
-The [OCI Mirror](https://github.com/metal-stack/oci-mirror) is a new application which acts as a scheduled job which pulls a given list of container images and pushes them to a private registry. The detailed description can be read on the project website.
+The [OCI Mirror](https://github.com/metal-stack/oci-mirror) is a new application which acts as a scheduled job which pulls a given list of container images and pushes them to a private registry (which will then serve as the private registry mirror). The detailed description can be read on the project website.
 
 ## Related Pull Requests
 
