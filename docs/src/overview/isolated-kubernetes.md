@@ -54,7 +54,7 @@ There are 3 different flavours available:
 - Internet access `forbidden`: No internet access is possible, neither ingress nor egress.
 - Internet access `restricted`: No internet access is possible, neither ingress nor egress, but can be enabled by the cluster user.
 
-Please see the detailed description of these flavours below.
+Please see the detailed description of these flavors below.
 
 ### Internet Access Baseline
 
