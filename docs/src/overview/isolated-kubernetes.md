@@ -41,10 +41,6 @@ In general the creation of a kubernetes cluster requires the ability to pull con
 - node-exporter and metrics-server: Monitoring for the worker node
 - Metal-Stack Addons: for firewall and auditing events
 
-Because we configured `containerd` as such, that all images which are required, are pulled from the private registry. Because this private registry only contains the strictly required container images, it is not possible anymore to pull container images from public registries.
-
-For application workloads please see below how these images must be provided.
-
 ## Flavors
 
 With the introduction of Isolated Kubernetes Clusters, the cluster user must decide upon cluster creation which type of isolation he needs for his workload.
@@ -74,38 +70,37 @@ allow-to-https       deployed
 allow-to-apiserver   deployed
 allow-to-dns         deployed
 allow-to-ntp         deployed
-allow-to-registry    deployed
 allow-to-storage     deployed
 allow-to-vpn         deployed
 ```
 
-The purposes of this CWNPs are:
+The purposes of these CWNPs are:
 
 | Rule Name          | Isolation            | Destination                                          | Purpose                                                                                      |
 |--------------------|----------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
 | allow-to-http      | baseline             | 0.0.0.0/0                                            | egress via http                                                                              |
 | allow-to-https     | baseline             | 0.0.0.0/0                                            | egress via https                                                                             |
-| allow-to-apiserver | restricted, forbidden | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
+| allow-to-apiserver | all | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
 | allow-to-dns       | all                  | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
 | allow-to-ntp       | all                  | IP of the private NTP Server                         | Time synchronization                                                                         |
 | allow-to-registry  | restricted, forbidden | IP of the private Registry Mirror                    | Pulling strictly required container images                                                   |
 | allow-to-storage   | all                  | network of the container storage                     | persistent volumes with the cni driver                                                       |
 | allow-to-vpn       | all                  | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
 
-All of these CWNPs are managed by the gardener-extension-provider-metal, every manual modification will be reverted immediately.
+All of these CWNPs are managed by the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal), every manual modification will be reverted immediately.
 
 ### Internet Access Forbidden
 
 This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `restricted`) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
 
-Every network access modifications triggered by a cluster user, either by adding or modifying CWNPs or adding a Service Type Loadbalancer, is validated against the list of allowed Networks. If the cluster was created with a additional internal network, this network is part of the allowed networks list.
+Every network access modifications triggered by a cluster user, either by adding or modifying CWNPs or adding a Service Type Loadbalancer, is validated against the list of allowed networks.
 
-With internet access `forbidden` the following restrictions apply:
+`containerd` is configured so that all required images are pulled from the private registry in the infrastructure cluster. This registry contains only the strictly required images, therefore no additional (workload) images can be pulled from public registries.
 
 #### Egress traffic
 
-Egress traffic is only allowed to the private registry and the DNS and NTP servers. Additional CWNPs can be added to reach destinations in the internal networks if specified.
-If a CWNP was created which points to a destination outside of the allowed networks, the CWNP will still be present but will stay in the Status `ignored`.
+Egress traffic is only allowed to the private registry mirror and the DNS and NTP servers. Additional CWNPs can be added to reach destinations in the internal networks if specified.
+If a CWNP was created which points to a destination outside of the allowed networks, the CWNP will still be present but stays in the status `ignored`.
 
 ```bash
 > kubectl get clusterwidenetworkpolicies.metal-stack.io
@@ -119,7 +114,7 @@ allow-to-vpn         deployed
 allow-to-google      ignored    ingress/egress does not match allowed networks
 ```
 
-Also a event is created which describes why the CWNP was ignored:
+Also an event is created which describes why the CWNP was ignored:
 
 ```bash
 > kubectl get events
@@ -128,7 +123,7 @@ Also a event is created which describes why the CWNP was ignored:
 
 #### Ingress traffic
 
-Ingress traffic is only allowed from the internal networks if specified. To specify the address where the Service Type Loadbalancer is listening to, the cluster user must first select a ip address from the internal network. Then this ip address must be configured in the service:
+Ingress traffic is only allowed from the internal networks if specified. To specify the address where the Service Type Loadbalancer is listening to, the cluster user must use one of his statically acquired ip addresses. Of course, this ip address is only considered if it is contained in the list of allowed networks. Then this ip address must be configured in the service:
 
 ```yaml
 apiVersion: v1
@@ -157,16 +152,16 @@ This configuration can only be achieved by creating a new kubernetes cluster, it
 The same default CWNPs are deployed and the container images are pulled from the private registry. Also DNS and NTP are configured to use the private DNS and NTP servers.
 The only difference to the `forbidden` mode is that CWNPs and Service Type Loadbalancers can be created without the restriction that only allowed networks are allowed.
 
-Pulling container images is theoretically possible, if a cluster creates a CWNP which allows network access to a external registry. But most container registries serve the container images from large CDN Networks which have a lot of ip addresses. Simply adding the ip address of docker.io is therefore not sufficient.
+Pulling container images is theoretically possible if a cluster user creates a CWNP which allows network access to an external registry. But most container registries serve the container images from large CDN networks which have a lot of ip addresses. Simply adding the ip address of docker.io is therefore not sufficient.
 
 ## Application Container Images
 
-In order to deploy application containers into a cluster with Internet Access `forbidden` a private registry must be provided. This private registry must be located in list of allowed networks.
-The DNS name of the registry must resolve in the public DNS Servers. The registry must be secured with a TLS certificate which is also valid with the ca-certificates from the worker node, e.g. vanilla debian ca-certificates.
+In order to deploy application containers into a cluster with Internet Access `forbidden` a private registry must be provided. This private registry must be located in the list of allowed networks.
+The DNS name of the registry must resolve in the public DNS servers. The registry must be secured with a TLS certificate which is also valid with the ca-certificates from the worker node, e.g. vanilla debian ca-certificates.
 
 ## Implementation
 
-To achieve this functionality modifications has been implemented in various components in metal-stack, this includes:
+To achieve this functionality modifications have been implemented in various components in metal-stack, this includes:
 
 ### Gardener Extension Provider Metal
 
@@ -220,6 +215,7 @@ spec:
     type: metal
       controlPlaneConfig:
         networkAccessType: forbidden
+...
 ```
 
 CloudProfile:
@@ -264,24 +260,24 @@ type RegistryMirror struct {
 A sample configuration in the CloudProfile would look like:
 
 ```yaml
-    network-isolation:
+  network-isolation:
     allowedNetworks:
-        egress:
-        - 1.2.3.0/24 # Internet CIDR of the Provider
-        - 100.64.0.0/10
-        - 10.0.0.0/8
-        ingress:
-        - 100.64.0.0/10
+      egress:
+      - 1.2.3.0/24 # Internet CIDR of the Provider
+      - 100.64.0.0/10
+      - 10.0.0.0/8
+      ingress:
+      - 100.64.0.0/10
     dnsServers:
-        - "1.2.3.1"
-        - "1.2.3.2"
-        - "1.2.3.3"
+      - "1.2.3.1"
+      - "1.2.3.2"
+      - "1.2.3.3"
     ntpServers:
-        - "1.2.3.1"
-        - "1.2.3.2"
-        - "1.2.3.3"
+      - "1.2.3.1"
+      - "1.2.3.2"
+      - "1.2.3.3"
     registryMirrors:
-        - name: test registry
+      - name: test registry
         endpoint: https://some.private.registry
         ip: "1.2.3.4"
         port: 443
