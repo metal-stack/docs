@@ -76,16 +76,16 @@ allow-to-vpn         deployed
 
 The purposes of these CWNPs are:
 
-| Rule Name          | Isolation            | Destination                                          | Purpose                                                                                      |
-|--------------------|----------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| allow-to-http      | baseline             | 0.0.0.0/0                                            | egress via http                                                                              |
-| allow-to-https     | baseline             | 0.0.0.0/0                                            | egress via https                                                                             |
-| allow-to-apiserver | all | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
-| allow-to-dns       | all                  | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
-| allow-to-ntp       | all                  | IP of the private NTP Server                         | Time synchronization                                                                         |
+| Rule Name          | Isolation             | Destination                                          | Purpose                                                                                      |
+|--------------------|-----------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| allow-to-http      | baseline              | 0.0.0.0/0                                            | egress via http                                                                              |
+| allow-to-https     | baseline              | 0.0.0.0/0                                            | egress via https                                                                             |
+| allow-to-apiserver | all                   | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
+| allow-to-dns       | all                   | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
+| allow-to-ntp       | all                   | IP of the private NTP Server                         | Time synchronization                                                                         |
 | allow-to-registry  | restricted, forbidden | IP of the private Registry Mirror                    | Pulling strictly required container images                                                   |
-| allow-to-storage   | all                  | network of the container storage                     | persistent volumes with the cni driver                                                       |
-| allow-to-vpn       | all                  | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
+| allow-to-storage   | all                   | network of the container storage                     | persistent volumes with the cni driver                                                       |
+| allow-to-vpn       | all                   | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
 
 All of these CWNPs are managed by the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal), every manual modification will be reverted immediately.
 
