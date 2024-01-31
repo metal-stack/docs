@@ -95,7 +95,7 @@ This configuration can only be achieved by creating a new kubernetes cluster, it
 
 Every network access modifications triggered by a cluster user, either by adding or modifying CWNPs or adding a Service Type Loadbalancer, is validated against the list of allowed networks.
 
-`containerd` is configured so that all required images are pulled from the private registry in the infrastructure cluster. This registry contains only the strictly required images, therefore no additional (workload) images can be pulled from public registries.
+`containerd` is configured so that all required images are pulled from the private registry mirror. This registry contains only the strictly required images, therefore no additional (workload) images can be pulled from public registries.
 
 #### Egress traffic
 
