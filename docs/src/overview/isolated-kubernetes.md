@@ -52,6 +52,36 @@ There are 3 different flavours available:
 
 Please see the detailed description of these flavors below.
 
+### Cluster Wide Network Policies CWNP
+
+To restrict which egress traffic is allowed, Custom Resources `ClusterWideNetworkPolicy` are deployed and can be deployed by the cluster user.
+The set of deployed CWNPs differs between `baseline` and `forbidden`/`restricted`.
+
+`baseline` CWNPs:
+
+| Rule Name          | Destination                                          | Purpose                                                                                      |
+|--------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| allow-to-http      | 0.0.0.0/0                                            | egress via http                                                                              |
+| allow-to-https     | 0.0.0.0/0                                            | egress via https                                                                             |
+| allow-to-apiserver | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
+| allow-to-dns       | IP of the Google DNS Servers                         | DNS resolution from the Kubernetes worker nodes and containers                               |
+| allow-to-ntp       | IP of the Cloudflare NTP Servers                     | Time synchronization                                                                         |
+| allow-to-storage   | network of the container storage                     | persistent volumes with the cni driver                                                       |
+| allow-to-vpn       | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
+
+`forbidden` and `restricted` CWNPs:
+
+| Rule Name          | Destination                                          | Purpose                                                                                      |
+|--------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| allow-to-apiserver | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
+| allow-to-dns       | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
+| allow-to-ntp       | IP of the private NTP Server                         | Time synchronization                                                                         |
+| allow-to-registry  | IP of the private Registry Mirror                    | Pulling strictly required container images                                                   |
+| allow-to-storage   | network of the container storage                     | persistent volumes with the cni driver                                                       |
+| allow-to-vpn       | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
+
+All of these CWNPs are managed by the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal), every manual modification will be reverted immediately.
+
 ### Internet Access Baseline
 
 This is the default configuration of a kubernetes cluster, egress traffic is controlled by multiple CWNPs (`ClusterWideNetworkPolicy`), ingress traffic is possible by deploying a Service Type Loadbalancer. The cluster user can add additional CWNPs without any restrictions and is responsible for them.
@@ -59,35 +89,6 @@ This is the default configuration of a kubernetes cluster, egress traffic is con
 Container images can be pulled from any reachable container registry. The `containerd` is not reconfigured to point to our private registry mirror.
 
 DNS and NTP are configured to internet DNS resolvers and NTP servers.
-
-The list of CWNPs which are deployed by default are:
-
-```bash
-> kubectl get clusterwidenetworkpolicies.metal-stack.io
-NAME                 STATUS     MESSAGE
-allow-to-http        deployed
-allow-to-https       deployed
-allow-to-apiserver   deployed
-allow-to-dns         deployed
-allow-to-ntp         deployed
-allow-to-storage     deployed
-allow-to-vpn         deployed
-```
-
-The purposes of these CWNPs are:
-
-| Rule Name          | Isolation             | Destination                                          | Purpose                                                                                      |
-|--------------------|-----------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| allow-to-http      | baseline              | 0.0.0.0/0                                            | egress via http                                                                              |
-| allow-to-https     | baseline              | 0.0.0.0/0                                            | egress via https                                                                             |
-| allow-to-apiserver | all                   | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
-| allow-to-dns       | all                   | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
-| allow-to-ntp       | all                   | IP of the private NTP Server                         | Time synchronization                                                                         |
-| allow-to-registry  | restricted, forbidden | IP of the private Registry Mirror                    | Pulling strictly required container images                                                   |
-| allow-to-storage   | all                   | network of the container storage                     | persistent volumes with the cni driver                                                       |
-| allow-to-vpn       | all                   | IP of the vpn endpoint on the control plane          | allow communication from the api server to the kubelet for container logs and container exec |
-
-All of these CWNPs are managed by the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal), every manual modification will be reverted immediately.
 
 ### Internet Access Forbidden
 
