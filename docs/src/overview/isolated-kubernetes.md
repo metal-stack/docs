@@ -60,7 +60,7 @@ The set of deployed CWNPs differs between `baseline` and `forbidden`/`restricted
 `baseline` CWNPs:
 
 | Rule Name          | Destination                                          | Purpose                                                                                      |
-|--------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
+|:-------------------|:-----------------------------------------------------|:---------------------------------------------------------------------------------------------|
 | allow-to-http      | 0.0.0.0/0                                            | egress via http                                                                              |
 | allow-to-https     | 0.0.0.0/0                                            | egress via https                                                                             |
 | allow-to-apiserver | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
@@ -72,7 +72,7 @@ The set of deployed CWNPs differs between `baseline` and `forbidden`/`restricted
 `forbidden` and `restricted` CWNPs:
 
 | Rule Name          | Destination                                          | Purpose                                                                                      |
-|--------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------|
+|:-------------------|:-----------------------------------------------------|:---------------------------------------------------------------------------------------------|
 | allow-to-apiserver | IP of the Kubernetes API Server on the control plane | API Server communication of kubelet and other controllers                                    |
 | allow-to-dns       | IP of the private DNS Server                         | DNS resolution from the Kubernetes worker nodes and containers                               |
 | allow-to-ntp       | IP of the private NTP Server                         | Time synchronization                                                                         |
