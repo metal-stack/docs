@@ -5,21 +5,21 @@ Pages = ["isolated-kubernetes.md"]
 Depth = 5
 ```
 
-Some customers have the need to run their workloads in a very restricted environment. These restrictions are driven by regulatory requirements in some industries such as finance, healthcare, energy and more. The regulatory requirements often define that the workload must not be exposed to the public internet, nor is capable to reach the public internet in any case.
+Some customers have the need to run their workloads in a very restricted environment. These restrictions are driven by regulatory requirements in some industries such as finance, healthcare, energy and more. Regulatory requirements often mandate that the workload must not be exposed to the public internet, nor is capable to reach the public internet in any case.
 
-For this purpose we implemented a possibility to start kubernetes clusters in such a manner. This we call cluster isolation.
+For this purpose we implemented a possibility to start Kubernetes clusters in such a manner. This is referred to as cluster isolation.
 
 ## Design Choices
 
-When talking about highly secure kubernetes environments people often raise the term "Air Gapped Cluster". This would mean that no physical connection exists between the kubernetes control plane and the kubernetes worker nodes with the outside world. This requirement exists in extreme environments such as ships, moon bases or nuclear plants. The effort to produce this in a completely automated manner is extreme.
+When talking about highly secure Kubernetes environments people often raise the term "Air Gapped Cluster". This would mean that no physical connection exists between the Kubernetes control plane and the Kubernetes worker nodes with the outside world. This requirement exists in extreme environments such as ships, moon bases or nuclear plants. The effort to produce this in a completely automated manner is extremely challenging.
 
-We decided to follow a different approach which is more practical, still very secure but much simpler to implement and operate. The solution we created is called "Isolated Cluster" which means that there are still physical connections between the kubernetes cluster, but guarded in a way that malicious traffic is prohibited. It is also not possible to enable malicious traffic by accident, e.g. if a cluster user configures network policies or load balancers to untrusted environments.
+We decided to follow a different approach which is more practical, still very secure but much simpler to implement and operate. The solution we created is called "Isolated Cluster" which means that there are still physical connections between the Kubernetes cluster, but guarded to prohibit malicious traffic. It is also not possible to enable malicious traffic by accident, e.g. if a cluster user configures network policies or load balancers to untrusted environments.
 
 ## Network Design
 
-In order to be able to restrict ingress and egress internet traffic, but still make it possible to create a working kubernetes cluster we implemented the following network design.
+In order to be able to restrict ingress and egress internet traffic, but still make it possible to create a working Kubernetes cluster we implemented the following network design.
 
-- All strictly required container images are mirrored to a registry which is only accessible from the kubernetes clusters.
+- All strictly required container images are mirrored to a registry which is only accessible from the Kubernetes clusters.
 - DNS and NTP servers are produced alongside the registry.
 - The `containerd` configuration on every worker node is configured to pull all of the strictly required container images from this private registry mirror.
 - DNS and NTP configuration is also adopted to use the DNS and NTP servers on this private environment.
@@ -27,24 +27,24 @@ In order to be able to restrict ingress and egress internet traffic, but still m
 
 ![Network Design](isolated-kubernetes.drawio.svg)
 
-Users are advised to attach an additional network to the kubernetes cluster in order to be able to pull container images for the application workloads from private registries.
+Users are advised to attach an additional network to the Kubernetes cluster in order to be able to pull container images for the application workloads from private registries.
 
 ### Strictly Required Container Images
 
-In general the creation of a kubernetes cluster requires the ability to pull container images for several applications which are necessary to make a machine a kubernetes worker node. To mention the most important:
+In general the creation of a Kubernetes cluster requires the ability to pull container images for several applications which are necessary to make a machine a Kubernetes worker node. To mention the most important:
 
 - Kubelet: the main controller on each worker node to manage the workload
 - CNI (Container Network Interface): controller and daemon set to setup and run the container networking
 - CSI (Container Storage Interface): controller and daemon set to setup and run the container storage
 - CoreDNS: DNS for containers
-- MetalLB: Service Type Loadbalancer Implementation
+- MetalLB: Service Type LoadBalancer Implementation
 - node-exporter and metrics-server: Monitoring for the worker node
 - Metal-Stack Addons: for firewall and auditing events
 
 ## Flavors
 
-With the introduction of Isolated Kubernetes Clusters, the cluster user must decide upon cluster creation which type of isolation he needs for his workload.
-There are 3 different flavours available:
+With the introduction of Isolated Kubernetes Clusters, cluster users must decide upon cluster creation which type of isolation he needs for his workload.
+There are three different flavours available:
 
 - Internet access `baseline`: This is the default cluster creation mode, which does not change any aspects of network and registry access.
 - Internet access `forbidden`: No internet access is possible, neither ingress nor egress.
@@ -84,7 +84,7 @@ All of these CWNPs are managed by the [gardener-extension-provider-metal](https:
 
 ### Internet Access Baseline
 
-This is the default configuration of a kubernetes cluster, egress traffic is controlled by multiple CWNPs (`ClusterWideNetworkPolicy`), ingress traffic is possible by deploying a Service Type Loadbalancer. The cluster user can add additional CWNPs without any restrictions and is responsible for them.
+This is the default configuration of a Kubernetes cluster, egress traffic is controlled by multiple CWNPs (`ClusterWideNetworkPolicy`), ingress traffic is possible by deploying a Service Type LoadBalancer. The cluster user can add additional CWNPs without any restrictions and is responsible for them.
 
 Container images can be pulled from any reachable container registry. The `containerd` is not reconfigured to point to our private registry mirror.
 
@@ -92,9 +92,9 @@ DNS and NTP are configured to internet DNS resolvers and NTP servers.
 
 ### Internet Access Forbidden
 
-This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `restricted`) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
+This configuration can only be achieved by creating a new Kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `restricted`) to this configuration. It is also required to specify the most recent version of Kubernetes, older versions of Kubernetes are not supported.
 
-Every network access modifications triggered by a cluster user, either by adding or modifying CWNPs or adding a Service Type Loadbalancer, is validated against the list of allowed networks.
+Every network access modification triggered by a cluster user, either by adding or modifying CWNPs or adding a Service Type LoadBalancer, is validated against the list of allowed networks.
 
 `containerd` is configured so that all required images are pulled from the private registry mirror. This registry contains only the strictly required images, therefore no additional (workload) images can be pulled from public registries.
 
@@ -124,7 +124,7 @@ Also an event is created which describes why the CWNP was ignored:
 
 #### Ingress traffic
 
-Ingress traffic is only allowed from the internal networks if specified. To specify the address where the Service Type Loadbalancer is listening to, the cluster user must use one of his statically acquired ip addresses. Of course, this ip address is only considered if it is contained in the list of allowed networks. Then this ip address must be configured in the service:
+Ingress traffic is only allowed from the internal networks if specified. To specify the address where the Service Type LoadBalancer is listening to, the cluster user must use one of his statically acquired ip addresses. Of course, this ip address is only considered if it is contained in the list of allowed networks. Then this ip address must be configured in the service:
 
 ```yaml
 apiVersion: v1
@@ -148,17 +148,17 @@ example-service   LoadBalancer   10.244.75.171   <pending>     443:32179/TCP   4
 
 ### Internet Access Restricted
 
-This configuration can only be achieved by creating a new kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `forbidden`) to this configuration. It is also required to specify the most recent version of kubernetes, older versions of kubernetes are not supported.
+This configuration can only be achieved by creating a new Kubernetes cluster, it is not possible to modify a existing cluster (with internet access `baseline` or `forbidden`) to this configuration. It is also required to specify the most recent version of Kubernetes, older versions of Kubernetes are not supported.
 
 The same default CWNPs are deployed and the container images are pulled from the private registry. Also DNS and NTP are configured to use the private DNS and NTP servers.
-The only difference to the `forbidden` mode is that CWNPs and Service Type Loadbalancers can be created without the restriction that only allowed networks are allowed.
+The only difference to the `forbidden` mode is that CWNPs and Service Type LoadBalancers can be created without the restriction that only allowed networks are allowed.
 
-Pulling container images is theoretically possible if a cluster user creates a CWNP which allows network access to an external registry. But most container registries serve the container images from large CDN networks which have a lot of ip addresses. Simply adding the ip address of docker.io is therefore not sufficient.
+Pulling container images is theoretically possible if a cluster user creates a CWNP which allows network access to an external registry. But most container registries serve the container images from large CDN networks, which have a lot of ip addresses. Simply adding the ip address of docker.io is therefore not sufficient.
 
 ## Application Container Images
 
 In order to deploy application containers into a cluster with Internet Access `forbidden` a private registry must be provided. This private registry must be located in the list of allowed networks.
-The DNS name of the registry must resolve in the public DNS servers. The registry must be secured with a TLS certificate which is also valid with the ca-certificates from the worker node, e.g. vanilla debian ca-certificates.
+The DNS name of the registry must resolve in the public DNS servers. The registry must be secured with a TLS certificate that is also valid with the CA certificates from the worker node, e.g. vanilla debian ca-certificates.
 
 ## Implementation
 
@@ -188,15 +188,15 @@ const (
     // NetworkAccessBaseline allows the cluster to access external networks in a baseline manner
     NetworkAccessBaseline = NetworkAccessType("baseline")
     // NetworkAccessRestricted access to external networks is by default restricted to registries, dns and ntp to partition only destinations.
-    // Therefore registries, dns and ntp destinations must be specified in the cloud-profile accordingly-
+    // Therefore registries, dns and ntp destinations must be specified in the cloud-profile accordingly.
     // If this is not the case, restricting the access must not be possible.
     // Image overrides for all images which are required to create such a shoot, must be specified. No other images are provided in the given registry.
     // customers can define own rules to access external networks as in the baseline.
-    // Service type loadbalancers are also not restricted.
+    // Service type LoadBalancers are also not restricted.
     NetworkAccessRestricted = NetworkAccessType("restricted")
     // NetworkAccessForbidden in this configuration a customer can no longer create rules to access external networks.
     // which are outside of a given list of allowed networks. This is enforced by the firewall.
-    // Service type loadbalancers are also not possible to open a service ip which is not in the list of allowed networks.
+    // Service type LoadBalancers are also not possible to open a service ip which is not in the list of allowed networks.
     // This is also enforced by the firewall.
     NetworkAccessForbidden = NetworkAccessType("forbidden")
 )
@@ -236,7 +236,7 @@ type NetworkIsolation struct {
 
 // AllowedNetworks is a list of networks which are allowed to connect in restricted or forbidden NetworkIsolated clusters.
 type AllowedNetworks struct {
-    // Ingress defines a list of networks which are allowed for incoming traffic like service type loadbalancer
+    // Ingress defines a list of networks which are allowed for incoming traffic like service type LoadBalancer
     // to allow all you must specify 0.0.0.0/0 or ::/0
     Ingress []string
     // Egress defines a list of networks which are allowed for outgoing traffic
@@ -329,14 +329,14 @@ The Firewall Controller Manager has extended the FirewallSpec to configure the F
 // FirewallSpec defines parameters for the firewall creation along with configuration for the firewall-controller.
 type FirewallSpec struct {
     // AllowedNetworks defines which networks are allowed to connect to, and allow incoming traffic from.
-    // Is only enforced with NetworkAccessForbidden.
+    // Is enforced with NetworkAccessForbidden.
     // The node network is always allowed.
     AllowedNetworks AllowedNetworks `json:"allowedNetworks,omitempty"`
 }
 
 // AllowedNetworks is a list of networks which are allowed to connect when NetworkAccessType is NetworkAccessForbidden.
 type AllowedNetworks struct {
-    // Ingress defines a list of cidrs which are allowed for incoming traffic like service type loadbalancer
+    // Ingress defines a list of cidrs which are allowed for incoming traffic like service type LoadBalancer
     Ingress []string `json:"ingress,omitempty"`
     // Egress defines a list of cidrs which are allowed for outgoing traffic
     Egress []string `json:"egress,omitempty"`
@@ -361,7 +361,7 @@ type PolicyDeploymentState string
 const (
     // PolicyDeploymentStateDeployed the CWNP was deployed to a native nftable rule
     PolicyDeploymentStateDeployed = PolicyDeploymentState("deployed")
-    // PolicyDeploymentStateIgnored the CWNP was not deployed to a native nftable rule because it is outside of allowed networks
+    // PolicyDeploymentStateIgnored the CWNP was not deployed to a native nftable rule because it is outside of the allowed networks
     PolicyDeploymentStateIgnored  = PolicyDeploymentState("ignored")
 )
 
@@ -380,11 +380,11 @@ type PolicyStatus struct {
 
 ### Cloud Controller Manager
 
-This component was adopted to allow to be started without a default network specified. This was actually always the internet network and if no ip address was specified in the Service Type Loadbalancer, one ip was allocated from this default network. For isolated clusters this is not provided and a cluster user must always specify this ip to get a working loadbalancer.
+This component was adopted to allow to be started without a default network specified. This was actually always the internet network and if no ip address was specified in the Service Type LoadBalancer, one ip was allocated from this default network. For isolated clusters this is not provided and a cluster user must always specify this ip to get a working load balancer.
 
 ### OCI Mirror
 
-The [OCI Mirror](https://github.com/metal-stack/oci-mirror) is a new application which acts as a scheduled job which pulls a given list of container images and pushes them to a private registry (which will then serve as the private registry mirror). The detailed description can be read on the project website.
+The [OCI Mirror](https://github.com/metal-stack/oci-mirror) is a new application which acts as a scheduled job that pulls a given list of container images and pushes them to a private registry (which will then serve as the private registry mirror). The detailed description can be read on the project website.
 
 ## Related Pull Requests
 
