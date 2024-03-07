@@ -6,6 +6,7 @@ makedocs(
     repo = "github.com/metal-stack/docs.git",
     sitename="metal-stack",
     format = Documenter.HTML(
+        repolink = "https://github.com/metal-stack/docs.git",
         prettyurls = is_ci_build,
         assets = ["assets/favicon.ico", "assets/youtube.css"],
         canonical = "https://docs.metal-stack.io/",
@@ -16,7 +17,7 @@ makedocs(
     linkcheck_ignore = [
         r"^(?!http)",
     ],
-    strict = false, # TODO: Should be enabled soon, links from repos to CONTRIBUTING have to be updated though...
+    warnonly = true, # TODO: Should be disabled soon, links from repos to CONTRIBUTING have to be updated though...
     clean = true,
     pages = [
         "Introduction" => "index.md",
@@ -33,6 +34,7 @@ makedocs(
         "Quickstart" => "quickstart.md",
         "Installation & Administration" => Any[
             "Installation" => "installation/deployment.md",
+            "Releases and Updates" => "installation/updates.md",
             "Monitoring" => "installation/monitoring.md",
             "Troubleshoot" => "installation/troubleshoot.md",
         ],

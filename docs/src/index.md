@@ -11,24 +11,6 @@ Pages = ["index.md"]
 Depth = 5
 ```
 
-## Releases
-
-````@eval
-using Docs
-
-version = releaseVersion()
-
-t = raw"""
-Your are currently reading the documentation for the metal-stack `%s` release.
-"""
-
-markdownTemplate(t, version)
-````
-
-Releases and integration tests are published through our [release repository](https://github.com/metal-stack/releases). You can also find the [release notes](https://github.com/metal-stack/releases/releases) for this metal-stack version in there. The release notes contain information about new features, upgrade paths and bug fixes.
-
-If you want, you can sign up at our Slack channel where we are announcing every new release. Often, we provide additional information for metal-stack administrators and adopters at this place, too.
-
 ## Why metal-stack?
 
 Before we started with our mission to implement the metal-stack, we decided on a couple of key characteristics and constraints that we think are unique in the domain (otherwise we would definitely have chosen an existing solution).
