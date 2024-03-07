@@ -11,7 +11,8 @@ endif
 build:
 	docker build -t docs-builder .
 	docker run -i$(DOCKER_TTY_ARG) --rm \
-	  -v $(PWD)/docs:/workdir/docs \
+	  -v $(PWD):/workdir \
+	  -v $(PWD)/.gitconfig:/root/.gitconfig \
 	  -e RELEASE_VERSION=$(RELEASE_VERSION) \
 	  -w /workdir \
 	  docs-builder julia \
