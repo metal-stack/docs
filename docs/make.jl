@@ -6,6 +6,7 @@ makedocs(
     repo = "github.com/metal-stack/docs.git",
     sitename="metal-stack",
     format = Documenter.HTML(
+        repolink = "https://github.com/metal-stack/docs.git",
         prettyurls = is_ci_build,
         assets = ["assets/favicon.ico", "assets/youtube.css"],
         canonical = "https://docs.metal-stack.io/",
