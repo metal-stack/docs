@@ -224,7 +224,6 @@ CloudProfile:
 ```go
 type NetworkIsolation struct {
     // AllowedNetworks is a list of networks which are allowed to connect in restricted or forbidden NetworkIsolated clusters.
-    // if empty all destinations are allowed.
     AllowedNetworks AllowedNetworks
     // DNSServers
     DNSServers []string
