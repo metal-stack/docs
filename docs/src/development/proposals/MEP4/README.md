@@ -1,6 +1,6 @@
 # Multi-tenancy for the metal-api
 
-In the past we decided to treat the metal-api as a "low-level API", i.e. the API does not know anything about projects and tenants. A user with editor access can for example assign machines to every project he desires, he can see all the machines available and control them. Even though we always wanted to keep open the possibility to just offer bare metal machines to the end-user, the ultimate objective has always been to create an API for Kubernetes clusters. Hence, we tried to keep the metal-api code base as small as possible and we added resource scoping to a "higher-level API", the cloud-api, a component that is not open-source. From there, a user would be able to only see his own clusters and IP addresses.
+In the past we decided to treat the metal-api as a "low-level API", i.e. the API does not know anything about projects and tenants. A user with editor access can for example assign machines to every project he desires, he can see all the machines available and control them. Even though we always wanted to keep open the possibility to just offer bare metal machines to the end-user, the ultimate objective has always been to create an API for Kubernetes clusters. Hence, we tried to keep the metal-api code base as small as possible and we added resource scoping to a "higher-level APIs". From there, a user would be able to only see his own clusters and IP addresses.
 
 The implication is that the metal-api has no multi-tenancy without another layer on top of it that implements resource scoping. One can say that we treat clusters as first-class citizens. In regard of clusters we fulfill the objective that we had from the very beginning: provide a multi-tenant API for Kubernetes clusters to the end-users.
 
@@ -8,27 +8,15 @@ However, as time passed by, things changed: The metal-stack is becoming an open-
 
 ## Why adopters need multi-tenancy in the metal-api
 
-### Not every adopter will be interested in the cloud-api
+### Gardener Users
 
-For example, users who want to combine the Metal Stack with Gardener, may not want to hide all of the Gardener's functionality behind the cloud-api in the way we do. They want to use the much more powerful Gardener Dashboard instead. The Gardener itself does not need the cloud-api either. It is a cluster-api by itself. It only needs to utilize our "low-level API" and actually expects this API to have multi-tenancy as otherwise every logged in user can create / destroy clusters in every existing project from the Gardener dashboard.
+For example, users who want to combine the Metal Stack with Gardener, may not want to hide all of the Gardener's functionality behind. They want to use the much more powerful Gardener Dashboard instead. It only needs to utilize our "low-level API" and actually expects this API to have multi-tenancy as otherwise every logged in user can create / destroy clusters in every existing project from the Gardener dashboard.
 
 This makes obvious that, with our decision, we placed an unnecessary obstacle in the way of our adopters: They now need to implement an own layer between the Gardener and the metal-api to provide multi-tenancy. From the Gardener-perspective we strongly differ from other cloud providers in this aspect and it is a matter of time when this will become an issue. When we encourage adopters to implement such interfaces on their own we also partly lose control of our product, we increase divergence.
-
-### We cannot claim that Metal Stack is a multi-tenant solution on our website
-
-As the cloud-api is not part of the Metal Stack, the promise of multi-tenancy is only true for our network layer. Without the cloud-api to enable multi-tenancy, the network isolation is currently useless for end-users. Users of the Metal Stack can not self-manage machines, networks and ips without compromising the environment and thus, there is no self-service. We lose a valuable selling point when adopters can not immediately make use of our leading edge network isolation where we put so much effort to.
 
 ### Open partitions for third-party usage
 
 If a third-party uses Gardener and our metal-api had multi-tenancy, we would be able to allow a third-party to create clusters with workers in our own partitions. At the moment, this is not possible because the Gardener needs to know the HMAC secrets to create worker nodes, which would compromise our environment. If a thirdy-party knows our HMAC we lose control over the machines of our own tenants.
-
-### We do not actually want to open-source the cloud-api
-
-One could think about solving the multi-tenancy issue by adding machine endpoints to the cloud-api. Gardener would then not consume the metal-api anymore but only the cloud-api.
-
-This approach would not be ideal. We only want to offer a minimum viable product to adopters. The Gardener does not need a cluster-api as provided by the cloud-api. We want to treat additions on top of the basic stack as enterprise products.
-
-The cloud-api contains billing endpoints, which are a perfect example for an optional addition of the Metal Stack. For basic usage of the Metal Stack a user does not need billing. Still, billing functionality can be interesting for some enterprises, who are like us, selling the infrastructure to third-parties.
 
 ### Increased security for provider admins
 
@@ -44,54 +32,70 @@ Also the surface for our Gardener components (metal-ccm, gardener-extension-prov
 
 For these reasons the decision we made is very likely to have a negative impact on the adoption-rate of the Metal Stack and we should think about treating machines, networks and ips as first-class citizens as well. This makes us closer to the offer of hyperscalers. As mentioned in the beginning, all the time we tried to keep the possibility open to just offer bare metal machines. Let's continue with decision by adding multi-tenancy to the metal-api.
 
-## Required actions
+## Implementation Proposal
 
-### Resource scoping
+We gathered a lot of knowledge while implementing the backend for metalstack.cloud. The goal is now to use the same technology and adopt that to the metal-api.
+To make this transition as smooth as possible we propose the following steps.
 
-Just as implemented by the cloud-api, resource scoping needs to be added to almost every endpoint of the metal-api:
+Create a the following repositories in the metal-stack org
 
-- Machines / Firewalls
-  - A user should only be able to view machines / firewalls of the projects he has at least view access to
-  - A user should only be able to create and destroy machines / firewalls for projects he has at least editor access to
-    Provider-tenants with at least view access can additionally view machines which have no project assignments
-    Provider-tenants with at least editor access can additionally allocate / reserve machines which have no project assignments
-- Networks
-  - A user should only be able to view networks of the projects he has at least view access to
-  - A user should only be able to allocate networks of projects he has at least editor access to
-  - A user should only be able to free networks assigned to projects he has at least editor access to
-    Provider-tenants with at least view access can additionally view networks which have no project assignments
-    Provider-tenants with at least editor access can additionally edit networks which have no project assignments
-    Provider-tenants with at least admin access can additionally create or remove networks which have no project assignments
-- IPs
-  - A user should only be able to view ips of the projects he has at least view access to
-  - A user should only be able to allocate ips in networks of projects he has at least editor access to
-  - A user should only be able to free ips assigned to projects he has at least editor access to
-- Projects
-  - A logged in user is able to create projects when he has the permission to create projects
-  - A user should only be able to view projects where he has at least view access to
-  - A user should only be able to delete projects where he has admin access to
-- Partitions / Images
-  - Only provider-admin users can add, delete, update
-  - All logged in users can view
-- IPMI
-  - Only provider-tenants can view machine IPMI data
-- Endpoints for internal use
-  - Should only be accessible with HMAC auth and the HMAC secrets are only known by components of the Metal Stack (mainly for communication between partition and control plane), never for third-party usage
+### API
 
-For all of this we need enhance the database queries with a filter for projects that a user has access to. As we already use a client to the masterdata-api in the metal-api, we can extract project memberships of a logged in user from there.
+This contains the `proto3` specification of the exposed metal-stack api. This includes the messages, simple validations, services and the access permission to these services. Client implementation for the most relevant languages (go, python) are generated automatically. Also the input parameters for the authorization in the backend is generated from the `proto3` annotations.
 
-### More permissions
+This api is divided into end user and admin access at the top level.
 
-We do not only need `kaas-...` permissions in the LDAP but also `maas-`. This way we can differentiate between permissions for the cloud-api and permissions for the metal-api.
+Proposed api is `metal-stack.io/v2`
 
-### Service account tokens / technical users
+Github Repo: `github.com/metal-stack/api`
 
-We need to provide the possibility for users to obtain access tokens to use for technical purposes (CI, third-party tooling like Gardener, ...).
+### API Server
 
-We do not have this functionality yet, but it would also become a necessity for the cloud-api at some point in the future.
+Implements the services defined in the api and validate access to a service is validated using OPA and JWT Tokens passed in the request. The server is implemented using the connectrpc.com framework.
 
-### Cloud API
+JWT Tokens are stored in a redis compatible backend to have the ability to create Access Tokens for CI/CD or other use cases.
+A JWT Token can be issued from a login at a OIDC provider, or from the built in http endpoint.
+JWT Tokens can be revoked by admins and the user itself.
 
-- Project creation and deletion again have to be moved back into the metal-api, this also frees adopters from the need to write an own API in order to manage projects- The cloud-api will (again) only proxy project endpoints through to the metal-api
-- Do not point the secret bindings to a the shared provider secret in a partition. Create an individual provider-secret for the logged in tenant. The Gardener needs to use this tenant-specific provider secret to talk to the metal-api, do not give the Gardener HMAC access anymore.
-- The provider secret partition mapping can be removed from the cloud-api config and from the deployment
+Exposed API Packages:
+
+- api: for end user facing services
+- admin: for operators and controllers which need access to unscoped entities
+
+Github Repo: `github.com/metal-stack/api-server`
+
+### Metal API
+
+The business logic in the metal-api must stay the same for maximum compatibility for the consumers which are not yet migrated to the new `v2` api. To achieve this with it is required to extract the backend implementation, currently the `cmd/internal` package should be factored out to a consumable repository at `github.com/metal-stack/api-server/pkg/`.
+
+### RethinkDB
+
+We will try to migrate the rethinkdb backend implementation to a generic approach during this effort.
+
+### Deployment
+
+In the control-plane both apis are deployed side by side behind the ingress. `api.metal-stack.dev` is forwarded to `metal-api` and `metal.metal-stack.dev/` is forwarded to the new `api-server`.
+
+### Migration of the consumers
+
+There are a lot of consumers of metal-api:
+
+- ansible
+- firewall-controller
+- firewall-controller-manager
+- gardener-extension-auth
+- gardener-extension-provider-metal
+- machine-controller-manager-provider-metal
+- metal-ccm
+- metal-console
+- metal-bmc
+- metal-core
+- metal-hammer
+- metal-image-cache-sync
+- metal-images
+- metal-metrics-exporter
+- metal-networker
+- metalctl
+- pixie
+
+With the approach that both apis, the new and the old, are deployed in parallel, the consumers can be migrated to the `v2` api gradually.
