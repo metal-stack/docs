@@ -42,7 +42,7 @@ The control plane contains of a couple of essential microservices for the metal-
 
 The following figure shows the relationships between these microservices:
 
-![Metal Control Plane](metal-stack-control-plane.svg)
+![Metal Control Plane](metal-stack-control-plane.drawio.svg)
 
 > Figure 1: The metal control plane deployed in a Kubernetes environment with an ingress-controller exposing additional services via [service exposal](https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/).
 
@@ -86,7 +86,7 @@ The microservices running inside a partition are:
 - **[pixiecore](https://github.com/danderson/netboot/tree/master/pixiecore)** (preferably runs on management servers, forked by metal-stack) Provides the capability of PXE booting servers in the PXE boot network.
 - **[metal-bmc](https://github.com/metal-stack/metal-bmc)** (runs on management servers) Reports the ip addresses that are leased to ipmi devices together with their machine uuids to the metal-api. This provides machine discovery in the partition machines and keeps all IPMI interface access data up-to-date. Also forwards metal-console requests to the actual machine, allowing user access to the machine's serial console. Furthermore it processes firmware updates and power on/off, led on/off, boot order changes.
 
-![Partition](metal-stack-partition.svg)
+![Partition](metal-stack-partition.drawio.svg)
 
 > Figure 2: Simplified illustration of services running inside a partition.
 
