@@ -124,7 +124,7 @@ Challenges such as large failure domains, spanning tree complexities, difficult 
 - **cost-effectiveness**: EVPN is an overlay virtual network. Not every switch on the routing path needs EVPN awareness. This enables the use of standard routers (in contrast to traditional VLAN); e.g.: spine switches act only as EVPN information replicator and do not need to have knowledge of specific virtual networks.
 - **efficiency**: EVPN information is exclusively exchanged via BGP (Multiprotocol BGP, see [RFC 4760](https://datatracker.ietf.org/doc/html/rfc4760)). Only a single eBGP session is needed to advertise layer-2 reachability. No other protocols beneath BGP are involved and flood traffic is reduced to a minimum (no "flood-and-learn", no BUM traffic).
 
-Virtual routing permits multiple network paths without the need of multiple switches. Hence the servers are logically isolated by assigning their networks to dedicated virtual routers using virtual routing and forwarding (short: **VRF**).
+Virtual routing permits multiple network paths without the need of multiple switches. Hence the servers are logically isolated by assigning their networks to dedicated virtual routers using virtual routing and forwarding (short, **VRF**, see [Linux Virtual Routing and Forwarding](https://docs.kernel.org/networking/vrf.html) and [SONiC VRF support](https://github.com/sonic-net/SONiC/blob/master/doc/vrf/sonic-vrf-hld.md)).
 
 #### The operation of EVPN
 
@@ -134,11 +134,13 @@ As EVPN is an overlay network, only the VXLAN Tunnel End Points (VTEPs) must be 
 
 In EVPN routing is assumed to occur in the context of a VRF. VRF enables true multitenancy. Therewith, VRF is the first step for EVPN configuration and there is a 1:1 relationship between tenant and VRF.
 
+Q: How should we imagine this separation? A further VRF is created for each new tenant. Will the IPv4 addresses continue to be obtained from the same pool? A more detailed description would be useful.
+
 To enable layer-2 connectivity, we need a special interface to route between layer-2 networks. This interface is called Switched VLAN Interface (SVI). The SVI is realized with a VLAN. It is part of a VRF (layer-3).
 
 The VTEP configuration requires the setup of a VXLAN interface. A VLAN aware bridge interconnects the VXLAN interface and the SVI.
 
-Required Interfaces to establish the EVPN control plane:
+Required ressources to establish the EVPN control plane:
 
 - VRF: because routing happens in the context of this interface.
 - SVI: because remote host routes for symmetric routing are installed over this interface.
@@ -173,7 +175,7 @@ Implementation of the network operation requires the data center infrastructure 
 
 ### Physical Wiring
 
-Reference: See the CLOS overview picture in ./README.md.
+Reference: See the [CLOS overview picture](#CLOS)
 
 | Name                        | Wiring                                                                                        |
 | :-------------------------- | :-------------------------------------------------------------------------------------------- |
@@ -184,6 +186,9 @@ Reference: See the CLOS overview picture in ./README.md.
 | Exit                        | Network switch that connects to spines and interconnects to external networks.                |
 | Management Server           | Jump-host to access all network switches within the CLOS topology for administrative purpose. |
 | Management Switch           | Connected to the management port of each of the network switches.                             |
+i
+
+Q: A overview image would be nice!
 
 Tenant servers are organized into a layer called projects. In case those tenant servers require access to or from external networks, a new tenant server to function as a firewall is created. Leaf and spine switches form the fundament of the CLOS network to facilitate redundancy, resilience and scalability. Exit switches establish connectivity to or from external networks. Management Switch and Management Server are mandatory parts that build a management network to access the network switches for administration.
 
@@ -312,7 +317,7 @@ Application of the route map `only-self-out` enables to announce only local ip(s
 
 To allow for peering between FRR and other routing daemons on a tenant server a `listen range` is specified to accept iBGP sessions on the network `10.244.0.0/16`. Therewith it gets possible that pods / containers like metal-lb with IPs of this range may peer with FRR.
 
-This is the only place where we use iBGP in our topology. For local peering this has the advantage, that we don't need an additional ASN that has to be handled / pruned in the AS-path of routes. Routes coming from other routing daemons look as if they are configured on the tenant server's lo interface from the viewpoint of the leaves. iBGP routes are differently handled than eBGP routes in BGPs best path algorithm. Generally BGP has the rule to prefer eBGP routes over iBGP routes (s. ['eBGP over iBGP'](https://medium.com/netdevops/how-bgp-best-path-selection-works-80e6e7b2da2b) ). BGP adds automatically an weight based on the route type. To overcome this issue, we set the weight of iBGP routes to the same weight that eBGP routes have, namely 32768 (`set weight 32768`). Without this configuration we will only get a single route to the IPs announced via iBGP. So this setting is essential for HA/failover!
+This is the only place where we use iBGP in our topology. For local peering this has the advantage, that we don't need an additional ASN that has to be handled / pruned in the AS-path of routes. Routes coming from other routing daemons look as if they are configured on the tenant server's lo interface from the viewpoint of the leaves. iBGP routes are differently handled than eBGP routes in BGPs best path algorithm. Generally BGP has the rule to prefer eBGP routes over iBGP routes (see ['eBGP over iBGP'](https://medium.com/netdevops/how-bgp-best-path-selection-works-80e6e7b2da2b) ). BGP adds automatically an weight based on the route type. To overcome this issue, we set the weight of iBGP routes to the same weight that eBGP routes have, namely 32768 (`set weight 32768`). Without this configuration we will only get a single route to the IPs announced via iBGP. So this setting is essential for HA/failover!
 
 Statistics of the established BGP session can be viewed locally from the tenant server via: `sudo vtysh -c 'show bgp ipv4 unicast'`
 
@@ -348,6 +353,7 @@ iface swp1
 There is a VRF defintion `iface vrf3981` to create a distinct routing table and a section `vrf vrf3981` that enslaves swp1 (connects the tenant server) into the VRF. Those host facing ports are also called `edge ports`.
 
 Unfortunately, due to a kernel bug, IPv6 is not reliably enabled, so it is enforced explicitly via `post-up sysctl -w net.ipv6.conf.swp1.disable_ipv6=0`. If this `post-up` trigger is missing the LLA of the interface might be absent.
+Q: Is that still the case?
 
 Additional to the VRF definition the leaf must be configured to provide and connect a VXLAN interface to establish a VXLAN tunnel. This network virtualization begins at the leaves. Therefore, the leaves are also called Network Virtualization Edges (NVEs). The leaves encapsulate and decapsulate VXLAN packets.
 
