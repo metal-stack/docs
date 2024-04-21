@@ -98,9 +98,9 @@ ASN numbering in a CLOS topology should follow a model to avoid routing problems
 
 - Leaves have unique ASN
 - Spines share an ASN
-  Q: Why is that a good idea? What is the advantage for sharing?
+  `Q: Why is that a good idea? What is the advantage for sharing?`
 - Exit switches share an ASN
-  Q: Why is that a good idea? What is the advantage for sharing?
+  `Q: Why is that a good idea? What is the advantage for sharing?`
 
 #### Address-Families
 
@@ -132,7 +132,7 @@ As EVPN is an overlay network, only the VXLAN Tunnel End Points (VTEPs) must be 
 
 In EVPN routing is assumed to occur in the context of a VRF. VRF enables true multitenancy. Therewith, VRF is the first step for EVPN configuration and there is a 1:1 relationship between tenant and VRF.
 
-Q: How should we imagine this separation? A further VRF is created for each new tenant. Will the IPv4 addresses continue to be obtained from the same pool? A more detailed description would be useful.
+Q: How should we imagine this separation? A further VRF is created for each new tenant. Will the IPv4 addresses continue to be obtained from the same pool? A more detailed description would be useful.`
 
 To enable layer-2 connectivity, we need a special interface to route between layer-2 networks. This interface is called Switched VLAN Interface (SVI). The SVI is realized with a VLAN. It is part of a VRF (layer-3).
 
@@ -186,7 +186,7 @@ Reference: See the [CLOS overview picture](#CLOS)
 | Management Switch           | Connected to the management port of each of the network switches.                             |
 
 
-Q: A illustration image would be nice!
+`Q: A illustration image would be nice!`
 
 ![](Implementation-Overview.drawio.svg)
 
@@ -353,7 +353,7 @@ iface swp1
 There is a VRF defintion `iface vrf3981` to create a distinct routing table and a section `vrf vrf3981` that enslaves swp1 (connects the tenant server) into the VRF. Those host facing ports are also called `edge ports`.
 
 Unfortunately, due to a kernel bug, IPv6 is not reliably enabled, so it is enforced explicitly via `post-up sysctl -w net.ipv6.conf.swp1.disable_ipv6=0`. If this `post-up` trigger is missing the LLA of the interface might be absent.
-Q: Is that still the case?
+`Q: Is that still the case?`
 
 Additional to the VRF definition the leaf must be configured to provide and connect a VXLAN interface to establish a VXLAN tunnel. This network virtualization begins at the leaves. Therefore, the leaves are also called Network Virtualization Edges (NVEs). The leaves encapsulate and decapsulate VXLAN packets.
 
