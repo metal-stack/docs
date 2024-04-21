@@ -98,18 +98,16 @@ ASN numbering in a CLOS topology should follow a model to avoid routing problems
 
 - Leaves have unique ASN
 - Spines share an ASN
-  Q: Why?
+  Q: Why is that a good idea? What is the advantage for sharing?
 - Exit switches share an ASN
-  Q: Why?
+  Q: Why is that a good idea? What is the advantage for sharing?
 
 #### Address-Families
 
 As stated, BGP is a multi-protocol routing protocol. Since it is planned to use IPv4 and overlay networks using EVPN/VXLAN several address-families have to be activated for the BGP sessions to use:
 
 - IPv4 unicast address-family
-  Q: Why?
 - L2 EVPN address-family
-  Q: Why?
 
 ### EVPN
 
@@ -186,9 +184,11 @@ Reference: See the [CLOS overview picture](#CLOS)
 | Exit                        | Network switch that connects to spines and interconnects to external networks.                |
 | Management Server           | Jump-host to access all network switches within the CLOS topology for administrative purpose. |
 | Management Switch           | Connected to the management port of each of the network switches.                             |
-i
 
-Q: A overview image would be nice!
+
+Q: A illustration image would be nice!
+
+![](Implementation-Overview.drawio.svg)
 
 Tenant servers are organized into a layer called projects. In case those tenant servers require access to or from external networks, a new tenant server to function as a firewall is created. Leaf and spine switches form the fundament of the CLOS network to facilitate redundancy, resilience and scalability. Exit switches establish connectivity to or from external networks. Management Switch and Management Server are mandatory parts that build a management network to access the network switches for administration.
 
