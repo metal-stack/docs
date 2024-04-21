@@ -132,7 +132,7 @@ As EVPN is an overlay network, only the VXLAN Tunnel End Points (VTEPs) must be 
 
 In EVPN routing is assumed to occur in the context of a VRF. VRF enables true multitenancy. Therewith, VRF is the first step for EVPN configuration and there is a 1:1 relationship between tenant and VRF.
 
-`Q: How should we imagine this separation? A further VRF is created for each new tenant. Will the IPv4 addresses continue to be obtained from the same pool? A more detailed description would be useful.`
+`Q: How should we imagine this separation? A VRF is created for each new tenant. Will the IPv4 addresses continue to be obtained from the same pool? A more detailed description would be useful.`
 
 To enable layer-2 connectivity, we need a special interface to route between layer-2 networks. This interface is called Switched VLAN Interface (SVI). The SVI is realized with a VLAN. It is part of a VRF (layer-3).
 
@@ -186,7 +186,7 @@ Reference: See the [CLOS overview picture](#CLOS)
 | Management Switch           | Connected to the management port of each of the network switches.                             |
 
 
-`Q: A illustration image would be nice!`
+`Q: A illustration image would be nice! I made one, is that useful?`
 
 ![](Implementation-Overview.drawio.svg)
 
