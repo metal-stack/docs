@@ -140,7 +140,7 @@ To enable layer-2 connectivity, we need a special interface to route between lay
 
 The VTEP configuration requires the setup of a VXLAN interface. A VLAN aware bridge interconnects the VXLAN interface and the SVI.
 
-Required ressources to establish the EVPN control plane:
+Required resources to establish the EVPN control plane:
 
 - VRF: because routing happens in the context of this interface.
 - SVI: because remote host routes for symmetric routing are installed over this interface.
