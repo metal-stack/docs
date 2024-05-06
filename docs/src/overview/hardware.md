@@ -6,7 +6,7 @@ We came up with a repository called [go-hal](https://github.com/metal-stack/go-h
 
 ## Servers
 
-At the moment we support the following server types:
+The following server types are officially supported and verified by the metal-stack project:
 
 | Vendor     | Series      | Model            | Board Type     | Status |
 |------------|-------------|------------------|:---------------|:-------|
@@ -16,9 +16,21 @@ At the moment we support the following server types:
 | Supermicro | Microcloud  | 5039MD8-H8TNR    | X11SDD-8C-F    | stable |
 | Lenovo     | ThinkSystem | SD530            |                | alpha  |
 
+Other server series and models might work but were not reported to us.
+
+## GPUs
+
+The following GPU types are officially supported and verified by the metal-stack project:
+
+| Vendor | Model    | Status |
+| ------ | -------- | :----- |
+| NVIDIA | RTX 6000 | stable |
+
+Other GPU models might work but were not reported to us.
+
 ## Switches
 
-At the moment we support the following switch types:
+The following switch types are officially supported and verified by the metal-stack project:
 
 | Vendor    | Series        | Model      | OS             | Status |
 | :-------- | :------------ | :--------- | :------------- | :----- |
@@ -26,6 +38,8 @@ At the moment we support the following switch types:
 | Edge-Core | AS7700 Series | AS7726-32X | Cumulus 4.1.1  | stable |
 | Edge-Core | AS7700 Series | AS7712-32X | Edgecore SONiC | stable |
 | Edge-Core | AS7700 Series | AS7726-32X | Edgecore SONiC | stable |
+
+Other switch series and models might work but were not reported to us.
 
 !!! warning
 
