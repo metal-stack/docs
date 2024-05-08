@@ -11,8 +11,10 @@ The following server types are officially supported and verified by the metal-st
 | Vendor     | Series      | Model            | Board Type     | Status |
 |------------|-------------|------------------|:---------------|:-------|
 | Supermicro | Big-Twin    | SYS-2029BT-HNR   | X11DPT-B       | stable |
+| Supermicro | Big-Twin    | SYS-220BT-HNTR   | X12DPT-B6      | stable |
 | Supermicro | SuperServer | SSG-5019D8-TR12P | X11SDV-8C-TP8F | stable |
 | Supermicro | SuperServer | 2029UZ-TN20R25M  | X11DPU         | stable |
+| Supermicro | SuperServer | SYS-621C-TN12R   | X13DDW-A       | stable |
 | Supermicro | Microcloud  | 5039MD8-H8TNR    | X11SDD-8C-F    | stable |
 | Lenovo     | ThinkSystem | SD530            |                | alpha  |
 
