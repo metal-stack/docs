@@ -28,7 +28,7 @@ The following GPU types are officially supported and verified by the metal-stack
 | ------ | -------- | :----- |
 | NVIDIA | RTX 6000 | stable |
 
-Other GPU models might work but were not reported to us.
+Other GPU models might work but were not reported to us. For a detailed description howto use GPU support in a kubernetes cluster please check this [documentation](gpu-support.md)
 
 ## Switches
 
