@@ -11,10 +11,10 @@ For workloads which require the assistance of GPUs, support for GPUs in bare met
 
 With the nvidia image a worker has basic GPU support. This means that the required kernel driver, the containerd shim and the required containerd configuration are already installed and configured.
 
-The make it possible to schedule `Pods` which require GPU support to a worker node with a GPU, a so called `gpu-operator` must be installed.
-This task is required to be made by the cluster owner after the cluster is up and running.
+To enable `Pods` that require GPU support to be scheduled on a worker node with a GPU, a `gpu-operator' must be installed.
+This has to be done by the cluster owner after the cluster is up and running.
 
-The most simple way to install this operator is like this:
+The simplest way to install this operator is as follows:
 
 ```bash
 helm repo add nvidia https://helm.ngc.nvidia.com/nvidia
@@ -49,10 +49,11 @@ Capacity:
 
 With this basic installation, the worker node is ready to process GPU workloads.
 
-But there is a caveat, only one `Pod` is able to get access to the GPU. If this meets your requirements no additional configuration is required.
-If you on the other hand, plan to deploy multiple applications which require GPU support and there are not so much GPUs available, you must configure the `gpu-operator` to allow to share the GPU across multiple `Pods`.
+!!! warning
+    However, there is a caveat - only one 'Pod' can access the GPU. If this is all you need, no additional configuration is required.
+    On the other hand, if you are planning to deploy multiple applications that require GPU support, and there are not that many GPUs available, you will need to configure the `gpu-operator` to allow the GPU to be shared between multiple `Pods`.
 
-There are several approaches available for sharing GPUs, please consult the official Nvidia documentation for further reference.
+There are several approaches to sharing GPUs, please consult the official Nvidia documentation for further reference.
 
 [https://developer.nvidia.com/blog/improving-gpu-utilization-in-kubernetes](https://developer.nvidia.com/blog/improving-gpu-utilization-in-kubernetes)
 [https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html)
