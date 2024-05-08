@@ -304,7 +304,7 @@ Application of the route map `only-self-out` enables to announce only local ip(s
   Displayed  4 routes and 7 total paths
   ```
 
-  That is why only the self ip (looback ip) is announced.
+  That is why only the self ip (loopback ip) is announced.
 
 To allow for peering between FRR and other routing daemons on a tenant server a `listen range` is specified to accept iBGP sessions on the network `10.244.0.0/16`. Therewith it gets possible that pods / containers like metal-lb with IPs of this range may peer with FRR.
 
@@ -341,7 +341,7 @@ iface swp1
 
 > Listing 3: Fragment that shows swp1 being member of vrf vrf3981.
 
-There is a VRF defintion `iface vrf3981` to create a distinct routing table and a section `vrf vrf3981` that enslaves swp1 (connects the tenant server) into the VRF. Those host facing ports are also called `edge ports`.
+There is a VRF definition `iface vrf3981` to create a distinct routing table and a section `vrf vrf3981` that enslaves swp1 (connects the tenant server) into the VRF. Those host facing ports are also called `edge ports`.
 
 Unfortunately, due to a kernel bug, IPv6 is not reliably enabled, so it is enforced explicitly via `post-up sysctl -w net.ipv6.conf.swp1.disable_ipv6=0`. If this `post-up` trigger is missing the LLA of the interface might be absent.
 
@@ -424,7 +424,7 @@ route-map LOOPBACKS permit 10
 
 Listing 5 shows the required FRR configuration of the BGP control plane. Only content not discussed so far is explained. The section `vrf vrf3981` contains the mapping from layer-3 VNI to VRF. This is required to be able to install EVPN IP prefix routes (type-5 routes) into the routing table. Further the file contains a global BGP instance `router bgp 4200000011` definition. A new setting `redistribute connected route-map LOOPBACKS` is in place to filter the redistribution of routes that are not matching the local loopback interface. The route-map is defined with `route-map LOOPBACKS permit 10`. With the configuration line  `address-family l2vpn evpn`, the EVPN address family is enabled between BGP neighbours. `advertise-all-vni` makes the switch a VTEP configures it in such a way, that all locally configured VNIs should be advertised by the BGP control plane.
 
-The second BGP instance configuration is specific to the tenant VRF `router bgp 4200000011 vrf vrf3981`. This VRF BGP instance configures the l2vpn evpn address family with `advertise ipv4 unicast` to announce IP prefixes in BGP's routing information base (RIB). This is required to apply learned routes to the routing tables of connected hosts. The Maximum-Prefix feature is useful to avoid that a router recieves more routes than the router memory can take. The maximum number of prefixes a tenant server is allowed to announce is limited to `100` with: `neighbor MACHINE maximum-prefix 100`.
+The second BGP instance configuration is specific to the tenant VRF `router bgp 4200000011 vrf vrf3981`. This VRF BGP instance configures the l2vpn evpn address family with `advertise ipv4 unicast` to announce IP prefixes in BGP's routing information base (RIB). This is required to apply learned routes to the routing tables of connected hosts. The Maximum-Prefix feature is useful to avoid that a router receives more routes than the router memory can take. The maximum number of prefixes a tenant server is allowed to announce is limited to `100` with: `neighbor MACHINE maximum-prefix 100`.
 
 #### Spine setup
 
@@ -470,7 +470,7 @@ In case a tenant server needs to reach out to external networks as the Internet,
 
 As Listing 8 shows, the firewall is configured with VXLAN interfaces as known from the leaf setup. Additionally, a VXLAN setup for VRF `vrfInternet` is added to provide Internet access. vrfInternet contains a route to the Internet that will be leaked into the tenant VRF.
 
-Traffic that originates from the tenant network `10.0.0.0/22` will be masqueraded before leaving the inferface `vlanInternet` towards the internet.
+Traffic that originates from the tenant network `10.0.0.0/22` will be masqueraded before leaving the interface `vlanInternet` towards the internet.
 
 ```bash
 # /etc/network/interfaces
@@ -549,7 +549,7 @@ router bgp 4200000040 vrf vrf3981
   import vrf vrfInternet
   import vrf route-map vrf3981-import-map
  # [...]
- addrress-family l2vpn evpn
+ address-family l2vpn evpn
   advertise ipv4 unicast
  # [...]
 router bgp 4200000040 vrf vrfInternet
@@ -559,7 +559,7 @@ router bgp 4200000040 vrf vrfInternet
   import vrf vrf3981
   import vrf route-map vrfInternet-import-map
  # [...]
- addrress-family l2vpn evpn
+ address-family l2vpn evpn
   advertise ipv4 unicast
  # [...]
  bgp as-path access-list SELF permit ^$
@@ -699,9 +699,9 @@ Before a bare metal server can act as tenant server or tenant firewall, it has t
 INTERFACES="vlan4000"
 ```
 
-> Listing 13: DHCP server configration of exit switches.
+> Listing 13: DHCP server configuration of exit switches.
 
-As shown in listing 13, the PXE DHCP server is located on the exit switches and enforced to bind to interface `vlan4000`. This represents a layer-2 separation that allows only DHCP clients in the same VLAN to request IP addresses. Only unprovisionned bare metal servers are configured to be member of this VLAN. Thus unwanted or accidential provisionning is impossible.
+As shown in listing 13, the PXE DHCP server is located on the exit switches and enforced to bind to interface `vlan4000`. This represents a layer-2 separation that allows only DHCP clients in the same VLAN to request IP addresses. Only unprovisionned bare metal servers are configured to be member of this VLAN. Thus unwanted or accidental provisionning is impossible.
 
 To provide `vlan4000` on the leaves (that face the bare metal servers) the exit and leaf switches are configured as VTEPs and share an interface configuration that contains the required interfaces (Listing 13). Since no EVPN routing is in place `vni104000` is configured as an L2 VNI (there is no mapping for this VNI in `/etc/frr/frr.conf`).
 
@@ -736,7 +736,7 @@ iface swp1
 
 > Listing 14: VLAN access setup for bare metal server facing ports on leaves.
 
-Once a bare metal server is provisioned it is deconfigured from PXE VLAN `vlan4000` to avoid accidential or unwanted provisioning.
+Once a bare metal server is provisioned it is deconfigured from PXE VLAN `vlan4000` to avoid accidental or unwanted provisioning.
 
 During provisioning bare metal servers get internet access via the management network of the exit switches. This is because the exit switches are announced as DHCP gateway to the DHCP clients.
 
@@ -744,4 +744,4 @@ During provisioning bare metal servers get internet access via the management ne
 
 To manage network switches beside the out-of-band system console access a further management access is required. For this purpose the concept of **Management VRF** is applied. The Management VRF is a subset of VRF. It provides a separation between out-of-band management network and the in-band data plane network by introducing another routing table **mgmt**. SONiC supports eth0 to be used as the management interface.
 
-To enable and use the Management VRF all switches have to be connected via their eth0 interface to a management-switch. The management switch is connected to a management server. All access is established from within the managment server. Logins to the switch are set into the Management VRF context once the Managment VRF is enabled.
+To enable and use the Management VRF all switches have to be connected via their eth0 interface to a management-switch. The management switch is connected to a management server. All access is established from within the management server. Logins to the switch are set into the Management VRF context once the Management VRF is enabled.

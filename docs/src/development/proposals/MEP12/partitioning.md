@@ -40,7 +40,7 @@ _footer: ""
 
 - Fully independent locations with own storage and own node networks
 - Clusters can only be created independent in every location
-  - Failover mechanism for deployed applications requires duplicated deployments, which can serve indepedently
+  - Failover mechanism for deployed applications requires duplicated deployments, which can serve independently
   - Failover through BGP
 - If cluster nodes are spread across partitions (not implemented yet), nodes will not be able to reach each other
   - Would require an overlay network for inter-node-communication
