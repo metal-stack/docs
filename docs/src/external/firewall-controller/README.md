@@ -13,7 +13,7 @@ Additional an IDS is managed on the firewall to detect known network anomalies. 
 
 For every `Service` of type `LoadBalancer` in the cluster, the corresponding ingress rules will be automatically generated.
 
-If `loadBalancerSourceRanges` is not specified, incomig traffic to this service will be allowed for any source ip adresses.
+If `loadBalancerSourceRanges` is not specified, incomig traffic to this service will be allowed for any source ip addresses.
 
 ## Configuration
 
@@ -29,7 +29,7 @@ metadata:
   namespace: firewall
   name: firewall
 spec:
-  # Interval of reconcilation if nftables rules and network traffic accounting
+  # Interval of reconciliation if nftables rules and network traffic accounting
   interval: 10s
   # Ratelimits specify on which physical interface, which maximum rate of traffic is allowed
   ratelimits:
@@ -37,8 +37,8 @@ spec:
   - interface: vrf104009
     # The maximum rate in MBits/s
     rate: 10
-  # Internalprefixes defines a list of prefixes where the traffic going to, or comming from is considered internal, e.g. not leaving into external networks
-  # given the archictecture picture above this would be:
+  # Internalprefixes defines a list of prefixes where the traffic going to, or coming from is considered internal, e.g. not leaving into external networks
+  # given the architecture picture above this would be:
   internalprefixes:
   - "1.2.3.0/24
   - "172.17.0.0/16"
