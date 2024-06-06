@@ -40,7 +40,7 @@ Firewalls that access shared networks need to:
 
 ![Advanced Setup](./shared_advanced.png)
 
-## Getting internet acccess
+## Getting internet access
 
 Machines contained in a shared network can access the internet with different scenarios:
 
