@@ -64,6 +64,8 @@ Exposed API Packages:
 
 Github Repo: `github.com/metal-stack/api-server`
 
+![Architecture](architecture.jpg)
+
 ### Metal API
 
 The business logic in the metal-api must stay the same for maximum compatibility for the consumers which are not yet migrated to the new `v2` api. To achieve this with it is required to extract the backend implementation, currently the `cmd/internal` package should be factored out to a consumable repository at `github.com/metal-stack/api-server/pkg/`.
