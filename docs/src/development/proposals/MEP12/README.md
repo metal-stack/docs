@@ -6,6 +6,8 @@ Spreading a group of machines across racks can enhance availability for scenario
 
 So, instead of just randomly deciding the placement of a machine candidate, we want to propose a placement strategy that attempts to spread machine candidates across the racks inside a partition.
 
+Furthermore a followup improvement to guarantee that machines are really spread across multiple racks, even if multiple machines are ordered in parallel, was implemented with [PR490](https://github.com/metal-stack/metal-api/pull/490).
+
 ## Placement Strategy
 
 Machines in the project are spread across all available racks evenly within a partition (best effort). For this, an additional request to the datastore has to be made in order to find allocated machines within the project in the partition.
