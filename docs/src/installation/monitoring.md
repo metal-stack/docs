@@ -1,5 +1,9 @@
 # Monitoring the metal-stack
 
+## Overview
+
+![Monitoring Stack](monitoring-stack.svg)
+
 ## Logging
 
 Logs are being collected by
