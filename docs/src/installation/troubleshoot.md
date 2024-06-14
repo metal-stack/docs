@@ -225,3 +225,12 @@ There are some scenarios (can be vendor-specific), which can cause a machine UUI
 1. After five minutes, the orphaned machine UUID will be marked dead (💀) because machine events will be sent only to the most recent UUID
 1. Identify the dead machine through `metalctl machine ls`
 1. Remove the dead machine forcefully with `metalctl machine rm --remove-from-database --yes-i-really-mean-it <uuid>`
+
+### Fixing Switch Issues
+
+#### switch-sync-failing
+
+For your network infrastructure it is key to adapt to new configuration. In case this sync process fails for more than 10 minutes, it is likely to require manual investigation.
+
+Depending on your switch operating system, the error sources might differ a lot.
+Try to connect to your switch using the console or ssh and investigate the logs. Check if the hard drive is full.

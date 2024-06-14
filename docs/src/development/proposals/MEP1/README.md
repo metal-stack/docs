@@ -72,7 +72,7 @@ One exception is the `metal-console` service which must have the partition in it
 
 ### State
 
-In order to replicate certain data which must be available across all partitions we can use on of the existing open source databases which enable such kind of setup. There are a few avaible out there, the following uncomplete list will highlight the pro´s and cons of each.
+In order to replicate certain data which must be available across all partitions we can use on of the existing open source databases which enable such kind of setup. There are a few available out there, the following incomplete list will highlight the pro´s and cons of each.
 
 - RethinkDB
 
