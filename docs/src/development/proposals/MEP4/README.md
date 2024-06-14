@@ -35,10 +35,6 @@ These are some general requirements / higher objectives that MEP-4 has to fulfil
 - Project scoping (disallow resource access to resources of other projects)
 - Access tokens in self-service for technical user access
 
-Non-goals:
-
-- Provide "tenant acts on-behalf" functionality (because we want only admins and these can act on-behalf)
-
 ## Implementation
 
 We gathered a lot of knowledge while implementing a multi-tenancy-capable backend for metalstack.cloud. The goal is now to use the same technology and adopt that to the metal-api, this includes:
@@ -75,7 +71,7 @@ And has methods with different visibility scopes:
 - `public`: Methods that do not require any specific authorization
 - `private`: Methods that are not exposed
 
-### API Server
+### API
 
 The API server implements the services defined in the API and validates access to a method using OPA with the JWT tokens passed in the requests. The server is implemented using the connectrpc.com framework.
 
@@ -85,13 +81,26 @@ With these tokens, users can create Access Tokens for CI/CD or other use cases.
 
 JWT Tokens can be revoked by admins and the user itself.
 
-❓ Discuss: Should we create a new repository (https://github.com/metal-stack/api-server) or can we locate the new API in the existing metal-api project beneath `v2`?
+### API Server
+
+Is put into a new github repo which implements the services defined in the `api` repository. It opens a `https` endpoints where the grpc (via connectrpc.com) and oidc servives are exposed.
 
 ### Migration of the Consumers
 
 To allow consumers to migrate to the `v2` API gradually, both apis, the new and the old, are deployed in parallel. In the control-plane both apis are deployed side-by-side behind the ingress. `api.example.com` is forwarded to `metal-api` and `metal.example.com` is forwarded to the new `api-server`.
 
-The the business logic of the metal-api must be maintained during the switch to the new `v2` api. To achieve this with it is required to extract the backend implementation, currently the `cmd/internal` package should be factored out to a consumable repository at `github.com/metal-stack/api-server/pkg/`. We will try to migrate the rethinkdb backend implementation to a generic approach during this effort.
+The api-server will talk to the existing metal-api during the process of migration services away to the new grpc api.
+
+The migration process can be done in the following manner:
+
+for each resource in the metal-api:
+
+- create a new proto3 based definition in the `api` repo.
+- implement at least a small wrapper service in the `api-server` which asks the metal-api for this resource an maps the response back the caller in the grpc format.
+- identify all consumers of this resource and replace them to use the grpc instead of the rest api
+- move the business logic incl. the backend calls to ipam, metal-db, masterdata-ap, nsq for this resource from the metal-api to the api-server
+
+We will try to migrate the rethinkdb backend implementation to a generic approach during this effort.
 
 There are a lot of consumers of metal-api, which need to be migrated:
 
@@ -117,59 +126,6 @@ There are a lot of consumers of metal-api, which need to be migrated:
 ## User Scenarios
 
 This section gathers a collection of workflows from the perspective of a user that we want to provide with the implementation of this proposal.
-
-### Project Creation
-
-A regular user wants to create a project to later maintain multiple resources inside this project's workspace.
-
-Requirements: Tenant was created
-
-- The user has to login before he can interact with the API. The login command will open a browser window as implemented already.
-
-    ```bash
-    metalctl login
-    ```
-
-- A user is always associated with a tenant.
-
-    ```bash
-    $ metalctl whoami
-    UserId: gerrit
-    Email: gerrit@gerrit.gerrit
-    Tenant: metal-stack
-    Issuer: https://metal.example.com
-    ProjectRoles:
-    TenantRoles:
-        metal-stack-tenant-a: OWNER
-    Expires at Thu Jul 22 00:07:09 CEST 2024
-    ```
-
-- The user can create a project.
-
-    ```bash
-    metalctl project create --name my-project
-    ```
-
-- The user has the option to direct all requests to a certain project (just like context switch)
-
-    ```bash
-    metalctl ctx update my-ctx --default-project 793bb6cd-8b46-479d-9209-0fedca428fe1
-    ```
-
-- The user automatically acquired the owner role for the project he created.
-
-  ```bash
-    $ metalctl whoami
-    UserId: gerrit
-    Email: gerrit@gerrit.gerrit
-    Tenant: metal-stack
-    Issuer: https://metal.example.com
-    ProjectRoles:
-        793bb6cd-8b46-479d-9209-0fedca428fe1: OWNER
-    TenantRoles:
-        metal-stack-tenant-a: OWNER
-    Expires at Thu Jul 22 00:07:09 CEST 2024
-  ```
 
 ### Machine Creation
 
@@ -224,126 +180,6 @@ Requirements: Project was created, permissions are present
 
     A user **cannot** list all allocated machines for all projects. The user **must** always switch project context first and can only view the machines inside this project. Only admins can see all machines at once.
 
-### Admin Machine Maintenance
-
-Admins should be able to see "everything", even resources of tenant's regular users. The reasons why this user needs these privileged rights is:
-
-1. Recover machines a tenant can't recover themselves (due to software bug)
-1. When a tenant leaves, resources may need to be cleaned up
-1. The admin should generally be able to observe the health of the entire installation
-1. Admins have set up the environment and are likely to have access to all the databases, such they were able to compromise the environment anyway
-
-- The user has permissions to create a project.
-
-  ```bash
-    $ metalctl whoami
-    UserId: gerrit
-    Email: gerrit@gerrit.gerrit
-    Tenant: metal-stack
-    Issuer: https://metal.example.com
-    ProjectRoles:
-        793bb6cd-8b46-479d-9209-0fedca428fe1: OWNER
-    TenantRoles:
-        metal-stack-tenant-a: OWNER
-    Expires at Thu Jul 22 00:07:09 CEST 2024
-  AdminRoles:
-    *: OWNER
-  ```
-
-- The admin user can see all machines there are.
-
-  ```bash
-  $ metalctl admin machine ls
-  ...
-  ```
-
-### Limited API Access Through Technical Users
-
-A user creates a custom role `ci-builder` and a project token for it. A user cannot elevate his permissions, which needs to be prevented by the API.
-
-- The user has permissions to create a role.
-  ```
-  $ metalctl show-permissions
-  Project: 793bb6cd-8b46-479d-9209-0fedca428fe1
-  Roles:
-    metal-project-creator
-    metal-project-owner
-  Permissions:
-    metal.v2.role.list
-    metal.v2.role.get
-    metal.v2.role.create
-    metal.v2.role.update
-    metal.v2.role.delete
-    metal.v2.project.token-list
-    metal.v2.project.token-get
-    metal.v2.project.token-create
-    metal.v2.project.token-revoke
-    ...more typical user permissions...
-  Resources:
-    *
-  ```
-- A user can create a custom role and a role binding for the project. He can't elevate his permissions and can only create roles with permissions the user owns on this project.
-  ```
-  $ metalctl role create --name ci-builder --permissions metal.v2.machine.get,metal.v2.machine.create,metal.v2.machine.delete
-  ```
-- The user can create the project token.
-  ```
-  $ metalctl project token create --role ci-builder
-  <token>
-  ```
-- This command created a role binding:
-  ```
-  $ metalctl rolebinding describe 131e10f0-509f-450f-99d4-3b793cc4db59
-  {
-    "id": "131e10f0-509f-450f-99d4-3b793cc4db59",
-    "name": "project-token",
-    "tenantid": "metal-stack",
-    "projectid": "793bb6cd-8b46-479d-9209-0fedca428fe1",
-    "roles": [
-      {
-        "id": "c3e24647-709e-44da-b551-cbfb1909e328",
-        "name": "ci-builder",
-        "projectid": "793bb6cd-8b46-479d-9209-0fedca428fe1",
-        "permissions": [
-          "metal.v2.machine.get",
-          "metal.v2.machine.create",
-          "metal.v2.machine.delete"
-        ]
-      }
-    ],
-    "userids": [],
-    "projecttokens": ["19c92a80-f5ae-47be-973a-76e47894be8a"],
-    "resources": ["*"],
-    "oidcgroups: []
-  }
-  ```
-- This token can now be used for login, too.
-  ```
-  $ metalctl login --project-token <token>
-  ```
-- The project token has restricted permissions.
-  ```
-  $ metalctl whoami
-  UserId: gerrit
-  Email: gerrit@gerrit.gerrit
-  Tenant: metal-stack
-  Issuer: https://dex.test.io/dex
-  No expiration (project token 19c92a80-f5ae-47be-973a-76e47894be8a)
-
-  $ metalctl show-permissions
-  Project: 793bb6cd-8b46-479d-9209-0fedca428fe1
-  Roles:
-    ci-builder
-  Permissions:
-    metal.v2.machine.get
-    metal.v2.machine.create
-    metal.v2.machine.delete
-  Resources:
-    *
-  ```
-
-❓ Discuss: Should there be a `masterdatactl` (something like an extension of `metalctl`) to maintain tenants, projects, quotas, users, roles and annotations for accounting?
-
 ### Scopes for Resources
 
 The admins / operators of the metal-stack should be able to provide _global_ resources that users are able to use along with their own resources. In particular, users can view and use _global_ resources, but they are not allowed to create, modify or delete them.
@@ -359,7 +195,7 @@ Where possible, users should be capable of creating their own resource entities.
 | File System Layout | yes  | yes    |
 | Firewall           | yes  |        |
 | Firmware           |      | yes    |
-| OS Image           | yes  | yes    |
+| OS Image           |      | yes    |
 | Machine            | yes  |        |
 | Network (Base)     |      | yes    |
 | Network (Children) | yes  |        |
@@ -367,8 +203,6 @@ Where possible, users should be capable of creating their own resource entities.
 | Partition          |      | yes    |
 | Project            | yes  |        |
 | Project Token      | yes  |        |
-| Role               | yes  | yes    |
-| Role Binding       | yes  | yes    |
 | Size               |      | yes    |
 | Switch             |      |        |
 | Tenant             |      | yes    |
