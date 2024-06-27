@@ -5,8 +5,7 @@ update the program
 ## Options
 
 ```
-  -h, --help             help for update
-  -v, --version string   the version to update to, by default updates to the supported version, use "latest" to update to latest version
+  -h, --help   help for update
 ```
 
 ## Options inherited from parent commands

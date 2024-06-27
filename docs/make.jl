@@ -28,6 +28,7 @@ makedocs(
             "Operating Systems" => "overview/os.md",
             "Kubernetes Integration" => "overview/kubernetes.md",
             "Isolated Kubernetes" => "overview/isolated-kubernetes.md",
+            "GPU Support" => "overview/gpu-support.md",
             "Storage" => "overview/storage.md",
             "Comparison" => "overview/comparison.md",
         ],
