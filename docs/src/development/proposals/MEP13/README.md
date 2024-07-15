@@ -7,7 +7,7 @@ Full IPv6 dual-stack Support was added to Kubernetes with v1.23 as stable.
 
 Gardener on the other hand does not yet have full IPv6 dual-stack support. See: https://github.com/gardener/gardener/issues/7051
 
-Metal Stack manages Cidrs and IP Addresses with the [go-ipam](https://github.com/metal-stack/go-ipam) library, which gained full IPv6 Support already in 2021 https://metal-stack.io/blog/2021/02/ipv6-part1.
+metal-stack manages CIDRs and IP addresses with the [go-ipam](https://github.com/metal-stack/go-ipam) library, which gained full IPv6 Support already in 2021 (see https://metal-stack.io/blog/2021/02/ipv6-part1).
 But this was only the foundation, to get full IPv6 support for all aspects which are managed by metal-stack.io, further work needs to be done.
 
 ## General Decisions
