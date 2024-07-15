@@ -14,9 +14,7 @@ But this was only the foundation, to get full IPv6 support for all aspects which
 
 ### Networks
 
-Currently metal-stack organizes Cidrs/Prefixes in a `network`. A network can consist of multiple cidrs from the same address family,
-for example if you need internet connectivity, you start with a small cidrs but with time you will need more ipaddresses and by more internet cidrs.
-Then you simply add these additional cidrs you bought, to the already existing internet `network` and more servers can be created with internet addresses.
+Currently, metal-stack organizes CIDRs/prefixes into a `network' resource in the metal-api. A network can consist of multiple CIDRs from the same address family. For example, if an operator wants to provide Internet connectivity to provisioned machines, they can start with small network CIDRs. The number of managed network prefixes can then be expanded as needed over time.
 
 With IPv6 we have to choose between two options:
 
