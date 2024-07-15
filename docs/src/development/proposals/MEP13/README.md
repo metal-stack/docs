@@ -31,3 +31,4 @@ Also there will be 2 distinct VRF IDs for every network with a different address
 Make a network dual address family capable, that means that you can add multiple cidrs from both address families to one network
 Then the machine creation will stay the same for the single stack and dual-stack case, but the ip address allocation from one network must return a pair of ip addresses if the network is dual-stack.
 It would also be possible to return by default only the IPv4 ip address when allocate one, but add the possibility to specify the addressfamily. With this the ip address allocation can be called for both addressfamilies if the machine needs to be dual-stack attached. This would not break the existing api, but enables existing extensions to add dual-stack support in a easy way.
+To prevent additional checking what addressfamilies are available in this network during a ip allocation call, we could store the addressfamilies in the network.
