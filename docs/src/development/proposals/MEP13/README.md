@@ -20,7 +20,7 @@ With IPv6 we have to choose between two options:
 
 #### Network per Address Family
 
-This means that we allow networks with cidrs from one address family only, one for IPv4 and one for IPv6
+This means that we allow networks with CIDRs from one address family only, one for IPv4 and one for IPv6.
 
 The machine creation process will not change if the machine only needs to be either IPv4 or IPv6 addressable.
 But if on the other side, the machine need to be able to connect to both address families, the machine creation needs to specify two networks, one for IPv4 and one for IPv6.
