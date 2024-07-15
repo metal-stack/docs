@@ -5,9 +5,9 @@ With immanent shortage of IPv4 addresses the need to be able to use IPv6 increas
 
 Full IPv6 dual-stack Support was added to Kubernetes with v1.23 as stable.
 
-Gardener on the other hand does not yet have full IPv6 dual-stack support. See: https://github.com/gardener/gardener/issues/7051
+Gardener on the other hand does not yet have full IPv6 dual-stack support. See: [https://github.com/gardener/gardener/issues/7051](https://github.com/gardener/gardener/issues/7051)
 
-metal-stack manages CIDRs and IP addresses with the [go-ipam](https://github.com/metal-stack/go-ipam) library, which gained full IPv6 Support already in 2021 (see https://metal-stack.io/blog/2021/02/ipv6-part1).
+metal-stack manages CIDRs and IP addresses with the [go-ipam](https://github.com/metal-stack/go-ipam) library, which gained full IPv6 Support already in 2021 (see [https://metal-stack.io/blog/2021/02/ipv6-part1](https://metal-stack.io/blog/2021/02/ipv6-part1) ).
 But this was only the foundation, to get full IPv6 support for all aspects which are managed by metal-stack.io, further work needs to be done.
 
 ## General Decisions
@@ -30,3 +30,4 @@ Also there will be 2 distinct VRF IDs for every network with a different address
 
 Make a network dual address family capable, that means that you can add multiple cidrs from both address families to one network
 Then the machine creation will stay the same for the single stack and dual-stack case, but the ip address allocation from one network must return a pair of ip addresses if the network is dual-stack.
+It would also be possible to return by default only the IPv4 ip address when allocate one, but add the possibility to specify the addressfamily. With this the ip address allocation can be called for both addressfamilies if the machine needs to be dual-stack attached. This would not break the existing api, but enables existing extensions to add dual-stack support in a easy way.
