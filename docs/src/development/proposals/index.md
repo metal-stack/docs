@@ -18,7 +18,7 @@ Possible states are:
 Once a proposal was accepted, an issue should be raised and the implementation should be done in a separate PR.
 
 | Name                      | Description                                    |      State      |
-| :------------------------ | :--------------------------------------------- | :-------------: |
+|:--------------------------|:-----------------------------------------------|:---------------:|
 | [MEP-1](MEP1/README.md)   | Distributed Control Plane Deployment           | `In Discussion` |
 | [MEP-2](MEP2/README.md)   | Two Factor Authentication                      |    `Aborted`    |
 | [MEP-3](MEP3/README.md)   | Machine Re-Installation to preserve local data |   `Completed`   |
@@ -30,3 +30,4 @@ Once a proposal was accepted, an issue should be raised and the implementation s
 | [MEP-10](MEP10/README.md) | SONiC Support                                  |   `Completed`   |
 | [MEP-11](MEP11/README.md) | Auditing of metal-stack resources              |   `Completed`   |
 | [MEP-12](MEP12/README.md) | Rack Spreading                                 |   `Completed`   |
+| [MEP-13](MEP13/README.md) | IPv6                                           | `In Discussion` |

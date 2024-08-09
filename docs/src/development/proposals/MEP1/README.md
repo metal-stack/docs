@@ -82,7 +82,7 @@ In order to replicate certain data which must be available across all partitions
   Postgres does not have a multi datacenter with replication in both directions, it just can make the remote instance store the same data.
 - CockroachDB
 
-  Is a Postgresql compatible database enginge on the wire. CockroachDB gives you both, ACID and geo replication with writes allowed from all connected members. It is even possible to configure [Follow the Workload](https://www.cockroachlabs.com/docs/stable/topology-follow-the-workload) and [Geo Partitioning and Replication](https://www.cockroachlabs.com/docs/v19.2/topology-geo-partitioned-replicas).
+  Is a Postgresql compatible database engine on the wire. CockroachDB gives you both, ACID and geo replication with writes allowed from all connected members. It is even possible to configure [Follow the Workload](https://www.cockroachlabs.com/docs/stable/topology-follow-the-workload) and [Geo Partitioning and Replication](https://www.cockroachlabs.com/docs/v19.2/topology-geo-partitioned-replicas).
 
 If we migrate all metal-api entities to be stored the same way we store masterdata, we could use cockroachdb to store all metal entities in one ore more databases spread across all partitions and still ensure consistency and high availability.
 
