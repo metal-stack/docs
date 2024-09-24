@@ -94,7 +94,7 @@ To sum it up:
 
 Within the data center each BGP router is identified by a private autonomous system number (ASN). This ASN is used for internal communication. The default is to have 2-byte ASN. To avoid having to find workarounds in case the ASN address space is exhausted, a 4-byte ASN (see [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)) that supports up to 95 million private ASNs (4200000000–4294967294i, see [RFC 6996](https://www.rfc-editor.org/rfc/rfc6996.html)) is used from the beginning.
 
-ASN numbering in a CLOS topology should follow a model to avoid routing problems (path hunting) due to it's redundant nature. Within a CLOS topology the following ANS numbering model is suggested to solve path hunting problems:
+ASN numbering in a CLOS topology should follow a model to avoid routing problems (path hunting) due to it's redundant nature. Within a CLOS topology the following ASN numbering model is suggested to solve path hunting problems:
 
 - Leaves have unique ASN
 - Spines share an ASN

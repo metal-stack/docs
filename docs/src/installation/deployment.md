@@ -4,7 +4,7 @@ We are bootstrapping the [metal control plane](../overview/architecture.md#Metal
 
 In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles).
 
-In order to wrap up deployment dependencies there is a special [deployment base image](https://hub.docker.com/r/metalstack/metal-deployment-base) hosted on Docker Hub that you can use for running the deployment. Using this Docker image eliminates a lot of moving parts in the deployment and should keep the footprints on your system fairly small and maintainable.
+In order to wrap up deployment dependencies there is a special [deployment base image](https://github.com/metal-stack/metal-deployment-base/pkgs/container/metal-deployment-base) hosted on GitHub that you can use for running the deployment. Using this Docker image eliminates a lot of moving parts in the deployment and should keep the footprints on your system fairly small and maintainable.
 
 This document will from now on assume that you want to use our Ansible deployment roles for setting up metal-stack. We will also use the deployment base image, so you should also have [Docker](https://docs.docker.com/get-docker/) installed. It is in the nature of software deployments to differ from site to site, company to company, user to user. Therefore, we can only describe you the way of how the deployment works for us. It is up to you to tweak the deployment described in this document to your requirements.
 
@@ -290,38 +290,30 @@ Also define the following configurations for `cfssl`:
 - `files/certs/ca-config.json`
   ```json
   {
-      "signing": {
-          "default": {
-              "expiry": "43800h"
-          },
-          "profiles": {
-              "server": {
-                  "expiry": "43800h",
-                  "usages": [
-                      "signing",
-                      "key encipherment",
-                      "server auth"
-                  ]
-              },
-              "client": {
-                  "expiry": "43800h",
-                  "usages": [
-                      "signing",
-                      "key encipherment",
-                      "client auth"
-                  ]
-              },
-              "client-server": {
-                  "expiry": "43800h",
-                  "usages": [
-                      "signing",
-                      "key encipherment",
-                      "client auth",
-                      "server auth"
-                  ]
-              }
-          }
+    "signing": {
+      "default": {
+        "expiry": "43800h"
+      },
+      "profiles": {
+        "server": {
+          "expiry": "43800h",
+          "usages": ["signing", "key encipherment", "server auth"]
+        },
+        "client": {
+          "expiry": "43800h",
+          "usages": ["signing", "key encipherment", "client auth"]
+        },
+        "client-server": {
+          "expiry": "43800h",
+          "usages": [
+            "signing",
+            "key encipherment",
+            "client auth",
+            "server auth"
+          ]
+        }
       }
+    }
   }
   ```
 - `files/certs/ca-csr.json`
@@ -335,9 +327,9 @@ Also define the following configurations for `cfssl`:
     },
     "names": [
       {
-        "C":  "DE",
-        "L":  "Munich",
-        "O":  "Metal-Stack",
+        "C": "DE",
+        "L": "Munich",
+        "O": "Metal-Stack",
         "OU": "DevOps",
         "ST": "Bavaria"
       }
@@ -355,9 +347,9 @@ Also define the following configurations for `cfssl`:
     },
     "names": [
       {
-        "C":  "DE",
-        "L":  "Munich",
-        "O":  "Metal-Stack",
+        "C": "DE",
+        "L": "Munich",
+        "O": "Metal-Stack",
         "OU": "DevOps",
         "ST": "Bavaria"
       }
@@ -380,9 +372,9 @@ Also define the following configurations for `cfssl`:
     },
     "names": [
       {
-        "C":  "DE",
-        "L":  "Munich",
-        "O":  "Metal-Stack",
+        "C": "DE",
+        "L": "Munich",
+        "O": "Metal-Stack",
         "OU": "DevOps",
         "ST": "Bavaria"
       }
@@ -400,9 +392,9 @@ Also define the following configurations for `cfssl`:
     },
     "names": [
       {
-        "C":  "DE",
-        "L":  "Munich",
-        "O":  "Metal-Stack",
+        "C": "DE",
+        "L": "Munich",
+        "O": "Metal-Stack",
         "OU": "DevOps",
         "ST": "Bavaria"
       }
@@ -413,18 +405,16 @@ Also define the following configurations for `cfssl`:
   ```json
   {
     "CN": "metal-api",
-    "hosts": [
-      "<your-metal-api-dns-ingress-domain>"
-    ],
+    "hosts": ["<your-metal-api-dns-ingress-domain>"],
     "key": {
       "algo": "rsa",
       "size": 4096
     },
     "names": [
       {
-        "C":  "DE",
-        "L":  "Munich",
-        "O":  "Metal-Stack",
+        "C": "DE",
+        "L": "Munich",
+        "O": "Metal-Stack",
         "OU": "DevOps",
         "ST": "Bavaria"
       }
@@ -660,24 +650,24 @@ You can find installation instructions for Gardener on the Gardener website bene
 1. Register the [os-extension-provider-metal](https://github.com/metal-stack/os-metal-extension) controller by deploying the [controller-registration](https://github.com/metal-stack/os-metal-extension/blob/v0.4.1/example/controller-registration.yaml) into your Gardener cluster, this controller can transform the operating system configuration from Gardener into Ignition user data
 1. You need to use the Gardener's [networking-calico](https://github.com/gardener/gardener-extension-networking-calico) controller for setting up shoot CNI, you will have to put specific provider configuration into the shoot spec to make it work with metal-stack:
    ```yaml
-        networking:
-          type: calico
-          # we can peer with the frr within 10.244.0.0/16, which we do with the metallb
-          # the networks for the shoot need to be disjunct with the networks of the seed, otherwise the VPN connection will not work properly
-          # the seeds are typically deployed with podCIDR 10.244.128.0/18 and serviceCIDR 10.244.192.0/18
-          # the shoots are typically deployed with podCIDR 10.244.0.0/18 and serviceCIDR 10.244.64.0/18
-          pods: 10.244.0.0/18
-          services: 10.244.64.0/18
-          providerConfig:
-            apiVersion: calico.networking.extensions.gardener.cloud/v1alpha1
-            kind: NetworkConfig
-            backend: vxlan
-            ipv4:
-              pool: vxlan
-              mode: Always
-              autoDetectionMethod: interface=lo
-            typha:
-              enabled: false
+   networking:
+     type: calico
+     # we can peer with the frr within 10.244.0.0/16, which we do with the metallb
+     # the networks for the shoot need to be disjunct with the networks of the seed, otherwise the VPN connection will not work properly
+     # the seeds are typically deployed with podCIDR 10.244.128.0/18 and serviceCIDR 10.244.192.0/18
+     # the shoots are typically deployed with podCIDR 10.244.0.0/18 and serviceCIDR 10.244.64.0/18
+     pods: 10.244.0.0/18
+     services: 10.244.64.0/18
+     providerConfig:
+       apiVersion: calico.networking.extensions.gardener.cloud/v1alpha1
+       kind: NetworkConfig
+       backend: vxlan
+       ipv4:
+         pool: vxlan
+         mode: Always
+         autoDetectionMethod: interface=lo
+       typha:
+         enabled: false
    ```
 1. For your seed cluster you will need to provide the provider secret for metal-stack containing the key `metalAPIHMac`, which is the API HMAC to grant editor access to the metal-api
 1. Checkout our current provider configuration for [infrastructure](https://github.com/metal-stack/gardener-extension-provider-metal/blob/master/pkg/apis/metal/v1alpha1/types_infrastructure.go) and [control-plane](https://github.com/metal-stack/gardener-extension-provider-metal/blob/master/pkg/apis/metal/v1alpha1/types_controlplane.go) before deploying your shoot
