@@ -1,15 +1,30 @@
-# metalctl size reservations
+# metalctl size reservation delete
 
-manage size reservations
+deletes the reservation
 
 ```
-metalctl size reservations [flags]
+metalctl size reservation delete <id> [flags]
 ```
 
 ## Options
 
 ```
-  -h, --help   help for reservations
+      --bulk-output             when used with --file (bulk operation): prints results at the end as a list. default is printing results intermediately during the operation, which causes single entities to be printed in a row.
+  -f, --file string             filename of the create or update request in yaml format, or - for stdin.
+                                
+                                Example:
+                                $ metalctl reservation describe reservation-1 -o yaml > reservation.yaml
+                                $ vi reservation.yaml
+                                $ # either via stdin
+                                $ cat reservation.yaml | metalctl reservation delete <id> -f -
+                                $ # or via file
+                                $ metalctl reservation delete <id> -f reservation.yaml
+                                
+                                the file can also contain multiple documents and perform a bulk operation.
+                                	
+  -h, --help                    help for delete
+      --skip-security-prompts   skips security prompt for bulk operations
+      --timestamps              when used with --file (bulk operation): prints timestamps in-between the operations
 ```
 
 ## Options inherited from parent commands
@@ -42,6 +57,5 @@ metalctl size reservations [flags]
 
 ## SEE ALSO
 
-* [metalctl size](metalctl_size.md)	 - manage size entities
-* [metalctl size reservations list](metalctl_size_reservations_list.md)	 - list size reservations
+* [metalctl size reservation](metalctl_size_reservation.md)	 - manage reservation entities
 
