@@ -123,3 +123,24 @@ Here is a video showing a screen capture of a machine's serial console while run
 <iframe src="https://www.youtube-nocookie.com/embed/3oEhInk6BaU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 ```
+
+## Offline Resilience
+
+It is possible to use metal-stack without any external dependency by integrating your own DNS and NTP configuration into the stack. This feature is great for workloads requiring strong independence and reliability. Even in case of an Internet connection failure, your infrastructure remains operational. Existing machines do not encounter any downtime as well as new machines can be provisioned. All you need to have in place is a DNS and NTP server configured and accessible for metal-stack.
+
+NTP servers need to be configured on the pixiecore and the metal-hammer microservices. This can be achieved by providing a list of NTP servers with the following Ansible variable through metal-roles:
+
+```yaml
+pixiecore_metal_hammer_ntp_servers: []
+```
+
+In the background, the pixiecore is taking the NTP servers and passing it via the `MetalConfig` to the metal-hammer. When booting bare-metal servers, the metal-hammer needs to configure NTP servers. It recognises the ones from the `MetalConfig` and configures itself accordingly.
+If no NTP servers are passed along, the following standard servers are used:
+
+- 0.de.pool.ntp.org
+- 1.de.pool.ntp.org
+- 2.de.pool.ntp.org
+
+Moreover, your images for machines and firewalls need to be configured with your custom DNS and NTP servers. The customisation can be made via the fields `ntp_servers` an `dns_servers` and specifying a list of servers in the creation request for the machine or firewall.
+
+This feature is related to [MEP14](https://docs.metal-stack.io/dev/development/proposals/MEP14/README/).
