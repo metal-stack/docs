@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Configurable Filesystem layout for Machine Allocation · metal-stack</title><meta name="title" content="Configurable Filesystem layout for Machine Allocation · metal-stack"/><meta property="og:title" content="Configurable Filesystem layout for Machine Allocation · metal-stack"/><meta property="twitter:title" content="Configurable Filesystem layout for Machine Allocation · metal-stack"/><meta name="description" content="Documentation for metal-stack."/><meta property="og:description" content="Documentation for metal-stack."/><meta property="twitter:description" content="Documentation for metal-stack."/><meta property="og:url" content="https://docs.metal-stack.io/development/proposals/MEP8/README/"/><meta property="twitter:url" content="https://docs.metal-stack.io/development/proposals/MEP8/README/"/><link rel="canonical" href="https://docs.metal-stack.io/development/proposals/MEP8/README/"/><script data-outdated-warner src="../../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../../assets/documenter.js"></script><script src="../../../../search_index.js"></script><script src="../../../../siteinfo.js"></script><script src="../../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../../assets/themeswap.js"></script><link href="../../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../../../assets/youtube.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../../"><img src="../../../../assets/logo.svg" alt="metal-stack logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../../">metal-stack</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../../">Introduction</a></li><li><span class="tocitem">Overview</span><ul><li><a class="tocitem" href="../../../../overview/architecture/">Architecture</a></li><li><a class="tocitem" href="../../../../overview/networking/">Networking</a></li><li><a class="tocitem" href="../../../../overview/hardware/">Hardware Support</a></li><li><a class="tocitem" href="../../../../overview/os/">Operating Systems</a></li><li><a class="tocitem" href="../../../../overview/kubernetes/">Kubernetes Integration</a></li><li><a class="tocitem" href="../../../../overview/isolated-kubernetes/">Isolated Kubernetes</a></li><li><a class="tocitem" href="../../../../overview/gpu-support/">GPU Support</a></li><li><a class="tocitem" href="../../../../overview/storage/">Storage</a></li><li><a class="tocitem" href="../../../../overview/comparison/">Comparison</a></li></ul></li><li><a class="tocitem" href="../../../../quickstart/">Quickstart</a></li><li><span class="tocitem">Installation &amp; Administration</span><ul><li><a class="tocitem" href="../../../../installation/deployment/">Installation</a></li><li><a class="tocitem" href="../../../../installation/updates/">Releases and Updates</a></li><li><a class="tocitem" href="../../../../installation/monitoring/">Monitoring</a></li><li><a class="tocitem" href="../../../../installation/troubleshoot/">Troubleshoot</a></li></ul></li><li><span class="tocitem">User Guides</span><ul><li><a class="tocitem" href="../../../../external/mini-lab/README/">mini-lab</a></li><li><a class="tocitem" href="../../../../external/metalctl/README/">metalctl</a></li><li><a class="tocitem" href="../../../../external/csi-driver-lvm/README/">csi-driver-lvm</a></li><li><a class="tocitem" href="../../../../external/firewall-controller/README/">firewall-controller</a></li></ul></li><li><a class="tocitem" href="../../../../apidocs/apidocs/">API Documentation</a></li><li><span class="tocitem">Development</span><ul><li><a class="tocitem" href="../../../client_libraries/">Client Libraries</a></li><li><a class="tocitem" href="../../../roadmap/">Roadmap</a></li><li><a class="tocitem" href="../../">Enhancement Proposals</a></li><li><a class="tocitem" href="../../../contributing/">Contributing</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Configurable Filesystem layout for Machine Allocation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Configurable Filesystem layout for Machine Allocation</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/metal-stack/docs.git" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="github.com/metal-stack/docs.git" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Configurable-Filesystem-layout-for-Machine-Allocation"><a class="docs-heading-anchor" href="#Configurable-Filesystem-layout-for-Machine-Allocation">Configurable Filesystem layout for Machine Allocation</a><a id="Configurable-Filesystem-layout-for-Machine-Allocation-1"></a><a class="docs-heading-anchor-permalink" href="#Configurable-Filesystem-layout-for-Machine-Allocation" title="Permalink"></a></h1><p>The current implementation uses a hard coded filesystem layout depending on the specified size and image. This is done in the metal-hammer. This worked well in the past because we had a small amount of sizes and images. But we reached a point where this is to restricted for all use cases we have to fulfill. It also forces us to modify the metal-hammer source code to support a new filesystem layout.</p><p>This proposal tries to address this issue by introducing a filesystem layout struct in the metal-api which is then configurable per machine allocation. The original behavior of automatic filesystem layout decision must still be present, because there must be no API change for existing API consumers. It should be a additional feature during machine allocation.</p><h2 id="API-and-behavior"><a class="docs-heading-anchor" href="#API-and-behavior">API and behavior</a><a id="API-and-behavior-1"></a><a class="docs-heading-anchor-permalink" href="#API-and-behavior" title="Permalink"></a></h2><p>The API will get a new endpoint <code>filesystemlayouts</code>to create/update/delete a set of available <code>filesystemlayouts</code>.</p><h3 id="Constraints"><a class="docs-heading-anchor" href="#Constraints">Constraints</a><a id="Constraints-1"></a><a class="docs-heading-anchor-permalink" href="#Constraints" title="Permalink"></a></h3><p>In order to keep the actual machine allocation api compatible, there must be no difference while allocating a machine. To achieve this every <code>filesystemlayout</code> defines constraints which specifies for which combination of <code>sizes</code> and <code>images</code> this layout should be used by default. The specified constraints over all <code>filesystemlayouts</code> therefore must be collision free, to be more specific, there must be exactly one layout outcome for every possible combination of <code>sizes</code> and <code>images</code>.</p><p>The <code>size</code> constraint must be a list of the exact size ids, the <code>image</code> constraint must be a map of os to semver compatible version constraint. For example:</p><ul><li><code>debian: &quot;&gt;= 10.20210101&quot;</code> or <code>debian: &quot;&lt; 10.20210101&quot;</code></li></ul><p>The general form of a <code>image</code> constraint is a map from <code>os</code> to <code>versionconstraint</code> where:</p><p><code>os</code> must match the first part of the image without the version. <code>versionconstraint</code> must be the comparator, a space and the version, or simply <code>*</code> to match all versions of this <code>os</code>. The comparator must be one of: &quot;=&quot;, &quot;!=&quot;, &quot;&gt;&quot;, &quot;&lt;&quot;, &quot;&gt;=&quot;, &quot;=&gt;&quot;, &quot;&lt;=&quot;, &quot;=&lt;&quot;, &quot;~&quot;, &quot;~&gt;&quot;, &quot;^&quot;</p><p>It must also be possible to have a <code>filesystemlayout</code> in development or for other special purposes, which can be specified during the machine allocation. To have such a layout, both constraints <code>sizes</code> and <code>images</code>must be empty list.</p><h3 id="Reinstall"><a class="docs-heading-anchor" href="#Reinstall">Reinstall</a><a id="Reinstall-1"></a><a class="docs-heading-anchor-permalink" href="#Reinstall" title="Permalink"></a></h3><p>The current reinstall implementation the metal-hammer detects during the installation on which disk the OS was installed and reports back to the metal-api the Report struct which has two properties <code>primarydisk</code> and <code>ospartition</code>. Both fields are not required anymore because the logic is now shifted to the <code>filesystemlayout</code> definition. If <code>Disk.WipeOnReinstall</code> is set to true, this disk will be wiped, default is false and is preserved.</p><h3 id="Handling-of-s2-xlarge-machines"><a class="docs-heading-anchor" href="#Handling-of-s2-xlarge-machines">Handling of s2-xlarge machines</a><a id="Handling-of-s2-xlarge-machines-1"></a><a class="docs-heading-anchor-permalink" href="#Handling-of-s2-xlarge-machines" title="Permalink"></a></h3><p>These machines are a bit special compared to our <code>c1-*</code> machines because they have rotating hard disks for the mass storage purpose. The downside is that the on board SATA-DOM has the same naming as the HDDs and can not be specified as the first /dev/sda disk because all HDDs are also /dev/sd* disks. Therefore we had a special SATA-DOM detection algorithm inside metal-hammer which simply checks for the smallest /dev/sd disk and took this to install the OS.</p><p>This is not possible with the current approach, but we figured out that the SATA-DOM is always <code>/dev/sde</code>. So we can create a special <code>filesystemlayout</code> where the installations is made on this disk.</p><h3 id="Possible-Filesystemlayout-hierarchies"><a class="docs-heading-anchor" href="#Possible-Filesystemlayout-hierarchies">Possible Filesystemlayout hierarchies</a><a id="Possible-Filesystemlayout-hierarchies-1"></a><a class="docs-heading-anchor-permalink" href="#Possible-Filesystemlayout-hierarchies" title="Permalink"></a></h3><p>It is only possible to create a filesystem on top of a block device. The creation of a block device can be done on multiple ways, depending on the requirements regarding performance, space and redundancy of the filesystem. It also depends on the disks available on the server.</p><p>The current approach implements the following hierarchies:</p><p><img src="../filesystems.png" alt="filesystems"/></p><h3 id="Implementation"><a class="docs-heading-anchor" href="#Implementation">Implementation</a><a id="Implementation-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation" title="Permalink"></a></h3><pre><code class="language-go hljs">// FilesystemLayout to be created on the given machine
+type FilesystemLayout struct {
+  // ID unique layout identifier
+  ID          string
+  // Description is human readable
+  Description string
+  // Filesystems to create on the server
+  Filesystems []Filesystem
+  // Disks to configure in the server with their partitions
+  Disks       []Disk
+  // Raid if not empty, create raid arrays out of the individual disks, to place filesystems onto
+  Raid        []Raid
+  // VolumeGroups to create
+  VolumeGroups []VolumeGroup
+  // LogicalVolumes to create on top of VolumeGroups
+  LogicalVolumes []LogicalVolume
+  // Constraints which must match to select this Layout
+  Constraints FilesystemLayoutConstraints
+}
+
+type FilesystemLayoutConstraints struct {
+  // Sizes defines the list of sizes this layout applies to
+  Sizes []string
+  // Images defines a map from os to versionconstraint
+  // the combination of os and versionconstraint per size must be conflict free over all filesystemlayouts
+  Images map[string]string
+}
+
+type RaidLevel string
+type Format string
+type GPTType string
+
+// Filesystem defines a single filesystem to be mounted
+type Filesystem struct {
+  // Path defines the mountpoint, if nil, it will not be mounted
+  Path           *string
+  // Device where the filesystem is created on, must be the full device path seen by the OS
+  Device         string
+  // Format is the type of filesystem should be created
+  Format         Format
+  // Label is optional enhances readability
+  Label          *string
+  // MountOptions which might be required
+  MountOptions   []string
+  // CreateOptions during filesystem creation
+  CreateOptions  []string
+}
+
+// Disk represents a single block device visible from the OS, required
+type Disk struct {
+  // Device is the full device path
+  Device          string
+  // Partitions to create on this device
+  Partitions      []Partition
+  // WipeOnReinstall, if set to true the whole disk will be erased if reinstall happens
+  // during fresh install all disks are wiped
+  WipeOnReinstall bool
+}
+
+// Raid is optional, if given the devices must match.
+// TODO inherit GPTType from underlay device ?
+type Raid struct {
+  // ArryName of the raid device, most often this will be /dev/md0 and so forth
+  ArryName    string
+  // Devices the devices to form a raid device
+  Devices []Device
+  // Level the raidlevel to use, can be one of 0,1,5,10 
+  // TODO what should be support
+  Level   RaidLevel
+  // CreateOptions required during raid creation, example: --metadata=1.0 for uefi boot partition
+  CreateOptions []string
+  // Spares defaults to 0
+  Spares  int
+}
+
+
+// VolumeGroup is optional, if given the devices must match.
+type VolumeGroup struct {
+  // Name of the volumegroup without the /dev prefix
+  Name string
+  // Devices the devices to form a volumegroup device
+  Devices []string
+  // Tags to attach to the volumegroup
+  Tags []string
+}
+
+// LogicalVolume is a block devices created with lvm on top of a volumegroup
+type LogicalVolume struct {
+  // Name the name of the logical volume, without /dev prefix, will be accessible at /dev/vgname/lvname
+  Name string
+  // VolumeGroup the name of the volumegroup
+  VolumeGroup string
+  // Size of this LV in mebibytes (MiB)
+  Size uint64
+  // LVMType can be either striped or raid1
+  LVMType LVMType
+}
+
+// Partition is a single partition on a device, only GPT partition types are supported
+type Partition struct {
+  // Number of this partition, will be added to the device once partitioned
+  Number    int
+  // Label to enhance readability
+  Label     *string
+  // Size given in MebiBytes (MiB)
+  // if &quot;0&quot; is given the rest of the device will be used, this requires Number to be the highest in this partition
+  Size      string
+  // GPTType defines the GPT partition type
+  GPTType   *GPTType
+}
+
+const (
+  // VFAT is used for the UEFI boot partition
+  VFAT = Format(&quot;vfat&quot;)
+  // EXT3 is usually only used for /boot
+  EXT3 = Format(&quot;ext3&quot;)
+  // EXT4 is the default fs
+  EXT4 = Format(&quot;ext4&quot;)
+  // SWAP is for the swap partition
+  SWAP = Format(&quot;swap&quot;)
+  // None
+  NONE = Format(&quot;none&quot;)
+
+  // GPTBoot EFI Boot Partition
+  GPTBoot = GPTType(&quot;ef00&quot;)
+  // GPTLinux Linux Partition
+  GPTLinux = GPTType(&quot;8300&quot;)
+  // GPTLinuxRaid Linux Raid Partition
+  GPTLinuxRaid = GPTType(&quot;fd00&quot;)
+  // GPTLinux Linux Partition
+  GPTLinuxLVM = GPTType(&quot;8e00&quot;)
+
+  // LVMTypeLinear append across all physical volumes
+  LVMTypeLinear = LVMType(&quot;linear&quot;)
+  // LVMTypeStriped stripe across all physical volumes
+  LVMTypeStriped = LVMType(&quot;striped&quot;)
+  // LVMTypeStripe mirror with raid across all physical volumes
+  LVMTypeRaid1 = LVMType(&quot;raid1&quot;)
+)</code></pre><p>Example <code>metalctl</code> outputs:</p><pre><code class="language-bash hljs">$ metalctl filesystemlayouts ls
+ID             DESCRIPTION         SIZES                         IMAGES
+default        default fs layout   c1-large-x86, c1-xlarge-x86   debian &gt;=10, ubuntu &gt;=20.04, centos &gt;=7
+ceph           fs layout for ceph  s2-large-x86, s2-xlarge-x86   debian &gt;=10, ubuntu &gt;=20.04
+firewall       firewall fs layout  c1-large-x86, c1-xlarge-x86   firewall &gt;=2
+storage        storage fs layout   s3-large-x86                  centos &gt;=7
+s3             storage fs layout   s2-xlarge-x86                 debian &gt;=10, ubuntu &gt;=20.04, &gt;=firewall-2
+default-devel  devel fs layout </code></pre><p>The <code>default</code> layout reflects what is actually implemented in metal-hammer to guarantee backward compatibility.</p><pre><code class="language-yaml hljs">---
+id: default
+constraints:
+  sizes:
+    - c1-large-x86
+    - c1-xlarge-x86
+  images:
+    debian: &quot;&gt;=10&quot;
+    ubuntu: &quot;&gt;=20.04&quot;
+    centos: &quot;&gt;=7&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sda1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F 32&quot;
+    label: &quot;efi&quot; # required to be compatible with old images
+  - path: &quot;/&quot;
+    device: &quot;/dev/sda2&quot;
+    format: &quot;ext4&quot;
+    label: &quot;root&quot; # required to be compatible with old images
+  - path: &quot;/var/lib&quot;
+    device: &quot;/dev/sda3&quot;
+    format: &quot;ext4&quot;
+    label: &quot;varlib&quot; # required to be compatible with old images
+  - path: &quot;/tmp&quot;
+    device: &quot;tmpfs&quot;
+    format: &quot;tmpfs&quot;
+    mountoptions: [&quot;defaults&quot;,&quot;noatime&quot;,&quot;nosuid&quot;,&quot;nodev&quot;,&quot;noexec&quot;,&quot;mode=1777&quot;,&quot;size=512M&quot;]
+disks:
+  - device: &quot;/dev/sda&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        type: GPTBoot
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        type: GPTLinux
+      - number: 3
+        label: &quot;varlib&quot;
+        size: 0 # to end of partition
+        type: GPTLinux</code></pre><p>The <code>firewall</code> layout reuses the built in nvme disk to store the logs, which is way faster and larger than what the sata-dom ssd provides.</p><pre><code class="language-yaml hljs">---
+id: firewall
+constraints:
+  sizes:
+    - c1-large-x86
+    - c1-xlarge-x86
+  images:
+    firewall: &quot;&gt;=2&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sda1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F 32&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/sda2&quot;
+    format: &quot;ext4&quot;
+  - path: &quot;/var&quot;
+    device: &quot;/dev/nvme0n1p1&quot;
+    format: &quot;ext4&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        type: GPTBoot
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        type: GPTLinux
+  - device: &quot;/dev/nvme0n1&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;var&quot;
+        size: 0
+        type: GPTLinux</code></pre><p>The <code>storage</code> layout will be used for the storage servers, which must have mirrored boot disks.</p><pre><code class="language-yaml hljs">---
+id: storage
+constraints:
+  sizes:
+    - s3-large-x86
+  images:
+    centos: &quot;&gt;=7&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/md1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F32&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/md2&quot;
+    format: &quot;ext4&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        type: GPTLinuxRaid
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        type: GPTLinuxRaid
+  - device: &quot;/dev/sdb&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        type: GPTLinuxRaid
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        type: GPTLinuxRaid
+raid:
+  - name: &quot;/dev/md1&quot;
+    level: 1
+    devices:
+      - &quot;/dev/sda1&quot;
+      - &quot;/dev/sdb1&quot;
+    options: &quot;--metadata=1.0&quot;
+  - name: &quot;/dev/md2&quot;
+    level: 1
+    devices:
+      - &quot;/dev/sda2&quot;
+      - &quot;/dev/sdb2&quot;
+    options: &quot;--metadata=1.0&quot;</code></pre><p>The <code>s3-storage</code> layout matches the special situation on the s2-xlarge machines.</p><pre><code class="language-yaml hljs">---
+id: s3-storage
+constraints:
+  sizes:
+    - c1-large-x86
+    - s2-xlarge-x86
+  images:
+    debian: &quot;&gt;=10&quot;
+    ubuntu: &quot;&gt;=20.04&quot;
+    centos: &quot;&gt;=7&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sde1&quot;
+    format: &quot;vfat&quot;
+    options: &quot;-F 32&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/sde2&quot;
+    format: &quot;ext4&quot;
+  - path: &quot;/var/lib&quot;
+    device: &quot;/dev/sde3&quot;
+    format: &quot;ext4&quot;
+disks:
+  - device: &quot;/dev/sde&quot;
+    wipe: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        type: GPTBoot
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        type: GPTLinux
+      - number: 3
+        label: &quot;varlib&quot;
+        size: 0 # to end of partition
+        type: GPTLinux</code></pre><p>A sample <code>lvm</code> layout which puts <code>/var/lib</code> as stripe on the nvme device</p><pre><code class="language-yaml hljs">---
+id: lvm
+description: &quot;lvm layout&quot;
+constraints:
+  size:
+    - s2-xlarge-x86
+  images:
+    debian: &quot;&gt;=10&quot;
+    ubuntu: &quot;&gt;=20.04&quot;
+    centos: &quot;&gt;=7&quot;
+filesystems:
+  - path: &quot;/boot/efi&quot;
+    device: &quot;/dev/sda1&quot;
+    format: &quot;vfat&quot;
+    createoptions: 
+      - &quot;-F 32&quot;
+    label: &quot;efi&quot;
+  - path: &quot;/&quot;
+    device: &quot;/dev/sda2&quot;
+    format: &quot;ext4&quot;
+    label: &quot;root&quot;
+  - path: &quot;/var/lib&quot;
+    device: &quot;/dev/vg00/varlib&quot;
+    format: &quot;ext4&quot;
+    label: &quot;varlib&quot;
+  - path: &quot;/tmp&quot;
+    device: &quot;tmpfs&quot;
+    format: &quot;tmpfs&quot;
+    mountoptions: [&quot;defaults&quot;,&quot;noatime&quot;,&quot;nosuid&quot;,&quot;nodev&quot;,&quot;noexec&quot;,&quot;mode=1777&quot;,&quot;size=512M&quot;]
+volumegroups:
+  - name: &quot;vg00&quot;
+    devices:
+      - &quot;/dev/nvmne0n1&quot;
+      - &quot;/dev/nvmne0n2&quot;
+logicalvolumes:
+  - name: &quot;varlib&quot;
+    volumegroup: &quot;vg00&quot;
+    size: 200
+    lvmtype: &quot;striped&quot;
+disks:
+  - device: &quot;/dev/sda&quot;
+    wipeonreinstall: true
+    partitions:
+      - number: 1
+        label: &quot;efi&quot;
+        size: 500
+        gpttype: &quot;ef00&quot;
+      - number: 2
+        label: &quot;root&quot;
+        size: 5000
+        gpttype: &quot;8300&quot;
+  - device: &quot;/dev/nvmne0n1&quot;
+    wipeonreinstall: false
+  - device: &quot;/dev/nvmne0n2&quot;
+    wipeonreinstall: false</code></pre><h2 id="Components-which-requires-modifications"><a class="docs-heading-anchor" href="#Components-which-requires-modifications">Components which requires modifications</a><a id="Components-which-requires-modifications-1"></a><a class="docs-heading-anchor-permalink" href="#Components-which-requires-modifications" title="Permalink"></a></h2><ul><li>metal-hammer:<ul><li>change implementation from build in hard coded logic</li><li>move logic to create fstab from install.sh to metal-hammer</li></ul></li><li>metal-api:<ul><li>new endpoint <code>filesystemlayouts</code></li><li>add optional spec of <code>filesystemlayout</code> during <code>allocation</code> with validation if given <code>filesystemlayout</code> is possible on given size.</li><li>add <code>allocation.filesystemlayout</code> in the response, based on either the specified <code>filesystemlayout</code> or the calculated one.</li><li>implement <code>filesystemlayouts</code> validation for:<ul><li>matching to disks in the size</li><li>no overlapping with the sizes/imagefilter specified in <code>filesystemlayouts</code></li><li>all devices specified exists from top to bottom (fs -&gt; disks -&gt; device || fs -&gt; raid -&gt; devices)</li></ul></li></ul></li><li>metalctl:<ul><li>implement <code>filesystemlayouts</code></li></ul></li><li>metal-go:<ul><li>adopt api changes</li></ul></li><li>metal-images:<ul><li>install mdadm for raid support</li></ul></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.3.0 on <span class="colophon-date" title="Tuesday 15 October 2024 14:22">Tuesday 15 October 2024</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
