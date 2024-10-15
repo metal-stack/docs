@@ -42,7 +42,7 @@ The following network cards are officially supported and verified by the metal-s
 | Intel    | XXV710     | DA2 DualPort 2x25G SFP28    | stable |
 | Intel    | E810       | DA2 DualPort 2x25G SFP28    | stable |
 | Intel    | E810       | CQDA2 DualPort 2x100G SFP28 | stable |
-| Mellanox | ConnectX-5 | ConnectX-5 MCX512A-ACAT     | stable |
+| Mellanox | ConnectX-5 | MCX512A-ACAT 2x25G SFP28    | stable |
 
 ## Switches
 
