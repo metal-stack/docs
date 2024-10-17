@@ -32,3 +32,56 @@ Make a network dual address family capable, that means that you can add multiple
 Then the machine creation will stay the same for the single stack and dual-stack case, but the ip address allocation from one network must return a pair of ip addresses if the network is dual-stack.
 It would also be possible to return by default only the IPv4 ip address when allocate one, but add the possibility to specify the addressfamily. With this the ip address allocation can be called for both addressfamilies if the machine needs to be dual-stack attached. This would not break the existing api, but enables existing extensions to add dual-stack support in a easy way.
 To prevent additional checking what addressfamilies are available in this network during a ip allocation call, we could store the addressfamilies in the network.
+
+### Not considered
+
+- isolated clusters
+
+### Examples
+
+Simple case dual-stack cluster with private tenant networks for both address families, internet network from a shared customer address space e.g. 2002:a::/48.
+
+tenant super network:
+  - 10.0.0.0/12
+  - 2001::/48
+
+
+tenant network: was allocated with: metalctl network allocate --partition fra --project bla --name tenant-nw
+  - name tenant-nw
+  - 10.214.0.0/22
+  - 2001:a:/64
+
+machine:
+  - 10.214.0.1/32: was allocated with: metalctl network ip allocate --network tenant-nw
+  - 2001:a::1/128: was allocated with: metalctl network ip allocate --network tenant-nw --addressfamily ipv6
+
+firewall:
+  - 10.214.0.2/32
+  - 2002:a::1/128
+
+
+Firewall und die Worker bekommen ein eigenes IPv6 Range 
+
+Internet Super Network IPv6
+  - name: internetv6
+  - 2002:a::/48
+
+Internet Shared Network
+  - 212.34.85.0/24
+
+tenant super network:
+  - 10.0.0.0/12
+  - 2001::/48
+
+internet tenant network:
+  - name: tenant-internet-v6
+  - 2002:a:1:/58: metalctl network allocate --network internetv6
+
+machine: no nat for ipv6
+  - 10.214.0.1/32: was allocated with: metalctl network ip allocate --network tenant-nw
+  - 2002:a:1:1/128: was allocated with: metalctl network ip allocate --network tenant-internet-v6
+
+
+firewall:
+  - 10.214.0.2/32: was allocated with: metalctl network ip allocate --network tenant-nw
+  - 2002:a:1:2/128: was allocated with: metalctl network ip allocate --network tenant-internet-v6
