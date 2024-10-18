@@ -234,3 +234,48 @@ For your network infrastructure it is key to adapt to new configuration. In case
 
 Depending on your switch operating system, the error sources might differ a lot.
 Try to connect to your switch using the console or ssh and investigate the logs. Check if the hard drive is full.
+
+### Switch Replacement and Migration
+
+There are two mechanisms to replace an existing switch with a new one, both of which will transfer existing VRF configuration and machine connections from one switch to another.
+Due to the redundance of the CLOS topology, a switch replacement can be performed without downtime.
+
+#### Replacing a Switch
+
+If the new switch should have the same ID as the old one you should perform a switch replacement.
+To find detailed information about the procedure of a switch replacement use `metalctl switch replace --help`.
+Basically, what you need to do is mark the switch for replacement via `metalctl switch replace`, then physically replace the switch with the new one and configure it.
+The last step is to deploy metal-core on the switch.
+Once metal-core registers the new switch at the metal-api, the old switches configuration and machine connections will be transfered to the new one.
+Note that the replacement only works if the new switch has the same ID as the old one.
+Otherwise metal-core will simply register a new switch and leave the old one untouched.
+
+#### Migrating from one Switch to another
+
+If the new switch should not or cannot have the same ID as the old one, then the `switch migrate` command can be used to achieve the same result as a switch replacement.
+Perform the following steps:
+
+1. Leave the old switch in place.
+1. Install the new switch in the rack without connecting it to any machines yet.
+1. Adjust the metal-stack deployment in the same way as for a switch replacement.
+1. Deploy metal-core on the new switch and wait for it to register at the metal-api. Once the switch is registered it will be listed when you run `metalctl switch ls`.
+1. Run `metalctl switch migrate <old-switch-id> <new-switch-id>`.
+1. Disconnect all machines from the old switch and connect them to the new one.
+
+In between steps 5 and 6 there is a mismatch between the switch-machine-connections known to the metal-api and the real connections.
+Since the metal-api learns about the connections from what a machine reports during registration, a machine registration that occurs in between steps 5 and 6 will result in a condition that looks somewhat broken.
+The metal-api will think that a machine is connected to three switches.
+This, however, should not cause any problems.
+Just move on to step 6 and delete the old switch from the metal-api afterwards.
+If the case just described really occurs, then `metalctl switch delete <old-switch-id>` will throw an error, because deleting a switch with existing machine connections might be dangerous.
+If, apart from that, the migration was successfull, then the old switch can be safely deleted with `metalctl switch delete <old-switch-id> --force`.
+
+#### Preconditions for Migration and Replacement
+
+An invariant that must be satisfied throughout is that the switch ports a machine is connected to must match, i.e. a machine connected to `Ethernet0` on switch 1 must be connected to `Ethernet0` on switch 2 etc.
+Furthermore, the breakout configurations of both switches must match and the new switch must contain at least all of the old switch's interfaces.
+
+#### Migrating from Cumulus to Edgecore SONiC
+
+Both migration and replacement can be used to move from Cumulus to Edgecore SONiC (or vice versa).
+Migrating to or from Broadcom SONiC or mixing Broadcom SONiC with Cumulus or Edgecore SONiC is not supported.
