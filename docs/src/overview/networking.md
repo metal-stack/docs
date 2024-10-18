@@ -80,7 +80,7 @@ Not all tenant servers are connected to the same leaf. Instead they can be distr
 
 #### BGP Unnumbered
 
-In BGP traditionally each BGP peer-facing interface requires a separate IPv4 address. This consumes a lot of IP addresses. RFC 5549 defines the BGP unnumbered standard. It allows to use interface's IPv6 link local address (LLA) to set up a BGP session with a peer. With BGP unnumbered the IPv6 LLA of the remote is automatically discovered via Router Advertisement (RA) protocol. Important: This does not (!) mean that IPv6 must be deployed in the network. BGP uses RFC 5549 to encode IPv4 routes as reachable over IPv6 next-hop using the LLA. Having unnumbered interfaces does not mean no IPv4 address may be in place. It is a good practice to configure an IP address to the never failing and always present local loopback interface (lo). This lo address is reachable over BGP from other peers because the RFC 5549 standard provides an encoding scheme to allow a router to advertise IPv4 routes with an IPv6 next-hop. BGP unnumbered also has an advantage from security perspective. It removes IPv4 and global IPv6 addresses from router interfaces, thus reducing the attack vector.
+In BGP traditionally each BGP peer-facing interface requires a separate IPv4 address. This consumes a lot of IP addresses. [RFC 5549](https://datatracker.ietf.org/doc/html/rfc5549) defines the BGP unnumbered standard. It allows to use interface's IPv6 link local address (LLA) to set up a BGP session with a peer. With BGP unnumbered the IPv6 LLA of the remote is automatically discovered via Router Advertisement (RA) protocol. Important: This does not (!) mean that IPv6 must be deployed in the network. BGP uses [RFC 5549](https://datatracker.ietf.org/doc/html/rfc5549) to encode IPv4 routes as reachable over IPv6 next-hop using the LLA. Having unnumbered interfaces does not mean no IPv4 address may be in place. It is a good practice to configure an IP address to the never failing and always present local loopback interface (lo). This lo address is reachable over BGP from other peers because the [RFC 5549](https://datatracker.ietf.org/doc/html/rfc5549) standard provides an encoding scheme to allow a router to advertise IPv4 routes with an IPv6 next-hop. BGP unnumbered also has an advantage from security perspective. It removes IPv4 and global IPv6 addresses from router interfaces, thus reducing the attack vector.
 
 To sum it up:
 
@@ -88,17 +88,19 @@ To sum it up:
 - There is no IPv6 deployment in the network required.
 - IPv6 just has to be enabled on the BGP peers to provide LLA and RA.
 
-In BGP, ASN is how BGP peers know each other.
+*In External BGP, ASN is how BGP peers know each other.*
 
 #### ASN Numbering
 
-Within the data center each BGP router is identified by a private autonomous system number (ASN). This ASN is used for internal communication. The default is to have 2-byte ASN. To avoid having to find workarounds in case the ASN address space is exhausted, a 4-byte ASN that supports up to 95 million ASNs (4200000000–4294967294) is used from the beginning.
+Within the data center each BGP router is identified by a private autonomous system number (ASN). This ASN is used for internal communication. The default is to have 2-byte ASN. To avoid having to find workarounds in case the ASN address space is exhausted, a 4-byte ASN (see [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)) that supports up to 95 million private ASNs (4200000000–4294967294i, see [RFC 6996](https://www.rfc-editor.org/rfc/rfc6996.html)) is used from the beginning.
 
 ASN numbering in a CLOS topology should follow a model to avoid routing problems (path hunting) due to it's redundant nature. Within a CLOS topology the following ASN numbering model is suggested to solve path hunting problems:
 
 - Leaves have unique ASN
 - Spines share an ASN
+  `Q: Why is that a good idea? What is the advantage for sharing?`
 - Exit switches share an ASN
+  `Q: Why is that a good idea? What is the advantage for sharing?`
 
 #### Address-Families
 
@@ -109,20 +111,20 @@ As stated, BGP is a multi-protocol routing protocol. Since it is planned to use 
 
 ### EVPN
 
-Ethernet VPN (EVPN) is an overlay virtual network that connects layer-2 segments over layer-3 infrastructure. EVPN is an answer to common problems of entire layer-2 data centers.
+Ethernet VPN (EVPN, see [RFC 7432](https://www.rfc-editor.org/rfc/rfc7432.html)) is an overlay virtual network that connects layer-2 segments over layer-3 infrastructure. EVPN is an answer to common problems of entire layer-2 data centers.
 
-#### Why do we need EVPN
+#### The necessity of EVPN
 
 Challenges such as large failure domains, spanning tree complexities, difficult troubleshooting and scaling issues are addressed by EVPN:
 
 - **administration**: less routers are involved in configuration (with VLAN every switch on routing-paths needs VLAN awareness). The configuration is less error prone due to the nature of EVPN and the good support in FRR.
 - **scaling**: EVPN overcomes scaling issues with traditional VLANs (max. 4094 VLANs).
-- **cost-effectiveness**: EVPN is an overlay virtual network. Not every switch on the routing path needs EVPN awareness. This enables the use of standard routers (in contrast to traditional VLAN); e.g.: spine switches act only as evpn information replicator and do not need to have knowledge of specific virtual networks.
-- **efficiency**: EVPN information is exclusively exchanged via BGP (Multiprotocol BGP). Only a single eBGP session is needed to advertise layer-2 reachability. No other protocols beneath BGP are involved and flood traffic is reduced to a minimum (no "flood-and-learn", no BUM traffic).
+- **cost-effectiveness**: EVPN is an overlay virtual network. Not every switch on the routing path needs EVPN awareness. This enables the use of standard routers (in contrast to traditional VLAN); e.g.: spine switches act only as EVPN information replicator and do not need to have knowledge of specific virtual networks.
+- **efficiency**: EVPN information is exclusively exchanged via BGP (Multiprotocol BGP, see [RFC 4760](https://datatracker.ietf.org/doc/html/rfc4760)). Only a single eBGP session is needed to advertise layer-2 reachability. No other protocols beneath BGP are involved and flood traffic is reduced to a minimum (no "flood-and-learn", no BUM traffic).
 
-Virtual routing permits multiple network paths without the need of multiple switches. Hence the servers are logically isolated by assigning their networks to dedicated virtual routers using virtual routing and forwarding (short: **VRF**).
+Virtual routing permits multiple network paths without the need of multiple switches. Hence the servers are logically isolated by assigning their networks to dedicated virtual routers using virtual routing and forwarding (short, **VRF**, see [Linux Virtual Routing and Forwarding](https://docs.kernel.org/networking/vrf.html) and [SONiC VRF support](https://github.com/sonic-net/SONiC/blob/master/doc/vrf/sonic-vrf-hld.md)).
 
-#### How do we use EVPN
+#### The operation of EVPN
 
 EVPN (technology) is based on BGP as control plane protocol (underlay) and VXLAN as data plane protocol (overlay).
 
@@ -130,11 +132,13 @@ As EVPN is an overlay network, only the VXLAN Tunnel End Points (VTEPs) must be 
 
 In EVPN routing is assumed to occur in the context of a VRF. VRF enables true multitenancy. Therewith, VRF is the first step for EVPN configuration and there is a 1:1 relationship between tenant and VRF.
 
+`Q: How should we imagine this separation? A VRF is created for each new tenant. Will the IPv4 addresses continue to be obtained from the same pool? A more detailed description would be useful.`
+
 To enable layer-2 connectivity, we need a special interface to route between layer-2 networks. This interface is called Switched VLAN Interface (SVI). The SVI is realized with a VLAN. It is part of a VRF (layer-3).
 
 The VTEP configuration requires the setup of a VXLAN interface. A VLAN aware bridge interconnects the VXLAN interface and the SVI.
 
-Required Interfaces to establish the EVPN control plane:
+Required resources to establish the EVPN control plane:
 
 - VRF: because routing happens in the context of this interface.
 - SVI: because remote host routes for symmetric routing are installed over this interface.
@@ -169,7 +173,7 @@ Implementation of the network operation requires the data center infrastructure 
 
 ### Physical Wiring
 
-Reference: See the CLOS overview picture in ./README.md.
+Reference: See the [CLOS overview picture](#CLOS)
 
 | Name                        | Wiring                                                                                        |
 | :-------------------------- | :-------------------------------------------------------------------------------------------- |
@@ -180,6 +184,11 @@ Reference: See the CLOS overview picture in ./README.md.
 | Exit                        | Network switch that connects to spines and interconnects to external networks.                |
 | Management Server           | Jump-host to access all network switches within the CLOS topology for administrative purpose. |
 | Management Switch           | Connected to the management port of each of the network switches.                             |
+
+
+`Q: A illustration image would be nice! I made one, is that useful?`
+
+![](Implementation-Overview.drawio.svg)
 
 Tenant servers are organized into a layer called projects. In case those tenant servers require access to or from external networks, a new tenant server to function as a firewall is created. Leaf and spine switches form the fundament of the CLOS network to facilitate redundancy, resilience and scalability. Exit switches establish connectivity to or from external networks. Management Switch and Management Server are mandatory parts that build a management network to access the network switches for administration.
 
@@ -308,7 +317,7 @@ Application of the route map `only-self-out` enables to announce only local ip(s
 
 To allow for peering between FRR and other routing daemons on a tenant server a `listen range` is specified to accept iBGP sessions on the network `10.244.0.0/16`. Therewith it gets possible that pods / containers like metal-lb with IPs of this range may peer with FRR.
 
-This is the only place where we use iBGP in our topology. For local peering this has the advantage, that we don't need an additional ASN that has to be handled / pruned in the AS-path of routes. Routes coming from other routing daemons look as if they are configured on the tenant server's lo interface from the viewpoint of the leaves. iBGP routes are differently handled than eBGP routes in BGPs best path algorithm. Generally BGP has the rule to prefer eBGP routes over iBGP routes (s. ['eBGP over iBGP'](https://medium.com/netdevops/how-bgp-best-path-selection-works-80e6e7b2da2b) ). BGP adds automatically an weight based on the route type. To overcome this issue, we set the weight of iBGP routes to the same weight that eBGP routes have, namely 32768 (`set weight 32768`). Without this configuration we will only get a single route to the IPs announced via iBGP. So this setting is essential for HA/failover!
+This is the only place where we use iBGP in our topology. For local peering this has the advantage, that we don't need an additional ASN that has to be handled / pruned in the AS-path of routes. Routes coming from other routing daemons look as if they are configured on the tenant server's lo interface from the viewpoint of the leaves. iBGP routes are differently handled than eBGP routes in BGPs best path algorithm. Generally BGP has the rule to prefer eBGP routes over iBGP routes (see ['eBGP over iBGP'](https://medium.com/netdevops/how-bgp-best-path-selection-works-80e6e7b2da2b) ). BGP adds automatically an weight based on the route type. To overcome this issue, we set the weight of iBGP routes to the same weight that eBGP routes have, namely 32768 (`set weight 32768`). Without this configuration we will only get a single route to the IPs announced via iBGP. So this setting is essential for HA/failover!
 
 Statistics of the established BGP session can be viewed locally from the tenant server via: `sudo vtysh -c 'show bgp ipv4 unicast'`
 
@@ -344,6 +353,7 @@ iface swp1
 There is a VRF definition `iface vrf3981` to create a distinct routing table and a section `vrf vrf3981` that enslaves swp1 (connects the tenant server) into the VRF. Those host facing ports are also called `edge ports`.
 
 Unfortunately, due to a kernel bug, IPv6 is not reliably enabled, so it is enforced explicitly via `post-up sysctl -w net.ipv6.conf.swp1.disable_ipv6=0`. If this `post-up` trigger is missing the LLA of the interface might be absent.
+`Q: Is that still the case?`
 
 Additional to the VRF definition the leaf must be configured to provide and connect a VXLAN interface to establish a VXLAN tunnel. This network virtualization begins at the leaves. Therefore, the leaves are also called Network Virtualization Edges (NVEs). The leaves encapsulate and decapsulate VXLAN packets.
 
