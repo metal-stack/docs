@@ -77,7 +77,7 @@ A minimal physical hardware setup may contain at least the following components:
 |:---|:-----------|:--------------|:--------------------|:-------------------------------------------------------------------------|
 | 2x | Edge-Core  | AS5500 Series | AS5512-54x (10G)    | Leaf / Exit switches                                                     |
 | 1x | Supermicro | Microcloud    | SYS-5039MA16-H12RFT | Usable machines                                                          |
-| 1x | Unifi      | Edgemax       | Edgerouter Pro      | Front router for internet and out-of-band access to servers and switches |
+| 1x | Teltonika  | Router        | RUTXR1              | Front router for internet and out-of-band access to servers and switches |
 
 Besides that, a 6HE rack with 1000mm depth and a portable LTE modem is needed.
 
