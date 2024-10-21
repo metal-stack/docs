@@ -116,8 +116,8 @@ type Disk struct {
 // Raid is optional, if given the devices must match.
 // TODO inherit GPTType from underlay device ?
 type Raid struct {
-  // ArryName of the raid device, most often this will be /dev/md0 and so forth
-  ArryName    string
+  // ArrayName of the raid device, most often this will be /dev/md0 and so forth
+  ArrayName    string
   // Devices the devices to form a raid device
   Devices []Device
   // Level the raidlevel to use, can be one of 0,1,5,10 
