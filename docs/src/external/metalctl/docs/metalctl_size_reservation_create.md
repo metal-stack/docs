@@ -1,29 +1,35 @@
-# metalctl switch delete
+# metalctl size reservation create
 
-deletes the switch
+creates the reservation
 
 ```
-metalctl switch delete <id> [flags]
+metalctl size reservation create [flags]
 ```
 
 ## Options
 
 ```
+      --amount int32            the amount to associate with this reservation
       --bulk-output             when used with --file (bulk operation): prints results at the end as a list. default is printing results intermediately during the operation, which causes single entities to be printed in a row.
+      --description string      the description to associate with this reservation
   -f, --file string             filename of the create or update request in yaml format, or - for stdin.
                                 
                                 Example:
-                                $ metalctl switch describe switch-1 -o yaml > switch.yaml
-                                $ vi switch.yaml
+                                $ metalctl reservation describe reservation-1 -o yaml > reservation.yaml
+                                $ vi reservation.yaml
                                 $ # either via stdin
-                                $ cat switch.yaml | metalctl switch delete <id> -f -
+                                $ cat reservation.yaml | metalctl reservation create -f -
                                 $ # or via file
-                                $ metalctl switch delete <id> -f switch.yaml
+                                $ metalctl reservation create -f reservation.yaml
                                 
                                 the file can also contain multiple documents and perform a bulk operation.
                                 	
-      --force                   forcefully delete the switch accepting the risk that it still has machines connected to it
-  -h, --help                    help for delete
+  -h, --help                    help for create
+      --id string               the id to associate with this reservation
+      --labels strings          the labels to associate with this reservation
+      --partitions strings      the partition ids to associate with this reservation
+      --project string          the project id to associate with this reservation
+      --size string             the size id to associate with this reservation
       --skip-security-prompts   skips security prompt for bulk operations
       --timestamps              when used with --file (bulk operation): prints timestamps in-between the operations
 ```
@@ -58,5 +64,5 @@ metalctl switch delete <id> [flags]
 
 ## SEE ALSO
 
-* [metalctl switch](metalctl_switch.md)	 - manage switch entities
+* [metalctl size reservation](metalctl_size_reservation.md)	 - manage reservation entities
 
