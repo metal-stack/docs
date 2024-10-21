@@ -31,3 +31,4 @@ Once a proposal was accepted, an issue should be raised and the implementation s
 | [MEP-11](MEP11/README.md) | Auditing of metal-stack resources              |   `Completed`   |
 | [MEP-12](MEP12/README.md) | Rack Spreading                                 |   `Completed`   |
 | [MEP-13](MEP13/README.md) | IPv6                                           | `In Discussion` |
+| [MEP-14](MEP14/README.md) | Independence from external sources             | `In Discussion` |
