@@ -59,8 +59,7 @@ firewall:
   - 10.214.0.2/32
   - 2002:a::1/128
 
-
-Firewall und die Worker bekommen ein eigenes IPv6 Range 
+Firewall and Worker Nodes get their own dedicated IPv6 cidr.
 
 Internet Super Network IPv6
   - name: internetv6
