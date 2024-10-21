@@ -246,7 +246,7 @@ If the new switch should have the same ID as the old one you should perform a sw
 To find detailed information about the procedure of a switch replacement use `metalctl switch replace --help`.
 Basically, what you need to do is mark the switch for replacement via `metalctl switch replace`, then physically replace the switch with the new one and configure it.
 The last step is to deploy metal-core on the switch.
-Once metal-core registers the new switch at the metal-api, the old switches configuration and machine connections will be transfered to the new one.
+Once metal-core registers the new switch at the metal-api, the old switches configuration and machine connections will be transferred to the new one.
 Note that the replacement only works if the new switch has the same ID as the old one.
 Otherwise metal-core will simply register a new switch and leave the old one untouched.
 
@@ -268,7 +268,7 @@ The metal-api will think that a machine is connected to three switches.
 This, however, should not cause any problems.
 Just move on to step 6 and delete the old switch from the metal-api afterwards.
 If the case just described really occurs, then `metalctl switch delete <old-switch-id>` will throw an error, because deleting a switch with existing machine connections might be dangerous.
-If, apart from that, the migration was successfull, then the old switch can be safely deleted with `metalctl switch delete <old-switch-id> --force`.
+If, apart from that, the migration was successful, then the old switch can be safely deleted with `metalctl switch delete <old-switch-id> --force`.
 
 #### Preconditions for Migration and Replacement
 

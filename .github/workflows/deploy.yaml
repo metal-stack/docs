@@ -15,6 +15,10 @@ jobs:
         with:
           submodules: "true"
           lfs: true
+
+      - name: Check spelling
+        uses: crate-ci/typos@master
+
       - uses: julia-actions/setup-julia@latest
         with:
           version: 1.9.4
