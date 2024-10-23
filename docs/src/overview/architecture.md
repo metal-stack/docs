@@ -141,6 +141,10 @@ If no NTP servers are passed along, the following standard servers are used:
 - 1.de.pool.ntp.org
 - 2.de.pool.ntp.org
 
-Moreover, your images for machines and firewalls need to be configured with your custom DNS and NTP servers. The customisation can be made via the fields `ntp_servers` an `dns_servers` and specifying a list of servers in the creation request for the machine or firewall.
+Moreover, machine and firewall images need to be configured with your custom DNS and NTP servers. The customisation can be made via the fields `ntp_servers` an `dns_servers` and specifying a list of servers in the creation request for the machine or firewall.
+
+Within a partition default values for DNS and NTP servers can be configured. They are applied to all machines and firewalls within this partition, but can be replaced by specifying different ones inside the machine allocation request.
+
+Thus, for creating a partition as well as a machine or a firewall, the flags `dnsservers` and `ntpservers` can be provided within the `metalctl` command.
 
 This feature is related to [MEP14](https://docs.metal-stack.io/dev/development/proposals/MEP14/README/).
