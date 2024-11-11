@@ -126,7 +126,7 @@ Here is a video showing a screen capture of a machine's serial console while run
 
 ## Offline Resilience
 
-It is possible to use metal-stack without any external dependency by integrating your own DNS and NTP configuration into the stack. This feature is great for workloads requiring strong independence and reliability. Even in case of an Internet connection failure, your infrastructure remains operational. Existing machines do not encounter any downtime as well as new machines can be provisioned. All you need to have in place is a DNS and NTP server configured and accessible for metal-stack.
+It is possible to use metal-stack without any external network dependencies by integrating your own DNS and NTP configuration into the stack. This feature is great for workloads requiring strong independence and reliability. Even in case of an internet connection failure, your infrastructure remains operational. Existing machines do not encounter any downtime as well as new machines can be provisioned. All you need to have in place is a DNS and NTP server configured and accessible for metal-stack.
 
 NTP servers need to be configured on the pixiecore and the metal-hammer microservices. This can be achieved by providing a list of NTP servers with the following Ansible variable through metal-roles:
 
@@ -146,5 +146,7 @@ Moreover, machine and firewall images need to be configured with your custom DNS
 Within a partition default values for DNS and NTP servers can be configured. They are applied to all machines and firewalls within this partition, but can be replaced by specifying different ones inside the machine allocation request.
 
 Thus, for creating a partition as well as a machine or a firewall, the flags `dnsservers` and `ntpservers` can be provided within the `metalctl` command.
+
+In order to be fully offline resilient, make sure to check out `metal-image-cache-sync`. This component provides copies of `metal-images`, `metal-kernel` and `metal-hammer`.
 
 This feature is related to [MEP14](https://docs.metal-stack.io/dev/development/proposals/MEP14/README/).
