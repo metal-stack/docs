@@ -1,19 +1,15 @@
-# metalctl partition capacity
+# metalctl switch migrate
 
-show partition capacity
+migrate machine connections and other configuration from one switch to another
 
 ```
-metalctl partition capacity [flags]
+metalctl switch migrate <oldSwitchID> <newSwitchID> [flags]
 ```
 
 ## Options
 
 ```
-  -h, --help                help for capacity
-      --id string           filter on partition id. [optional]
-      --project-id string   consider project-specific counts, e.g. size reservations. [optional]
-      --size string         filter on size id. [optional]
-      --sort-by strings     order by (comma separated) column(s), sort direction can be changed by appending :asc or :desc behind the column identifier. possible values: description|id|name
+  -h, --help   help for migrate
 ```
 
 ## Options inherited from parent commands
@@ -46,5 +42,5 @@ metalctl partition capacity [flags]
 
 ## SEE ALSO
 
-* [metalctl partition](metalctl_partition.md)	 - manage partition entities
+* [metalctl switch](metalctl_switch.md)	 - manage switch entities
 
