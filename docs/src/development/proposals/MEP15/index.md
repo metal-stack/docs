@@ -28,7 +28,7 @@ Vendors that implement these driver APIs properly may work right out of the box 
 
 ## Bundling Functionality in the metal-bmc
 
-In order to minimize the BMC interface and spread library usage, we should try to bundle as much of the implementation as possible in a single microservice. This microservice should have a proto / gRPC API for access.
+In order to minimize the BMC interface, we should try to bundle as much of the implementation as possible in a single microservice. This microservice should have a proto / gRPC API for access.
 
 A suitable microservice is already in place on the mgmt-servers called the [metal-bmc](https://github.com/metal-stack/metal-bmc), which can be extended for this purpose. The metal-bmc will implement the server API. The API can be called by the metal-api (indirectly through NSQ), the metal-hammer and a metal-bmc CLI.
 
