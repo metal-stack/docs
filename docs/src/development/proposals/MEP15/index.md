@@ -24,15 +24,15 @@ Vendors that implement these driver APIs properly may work right out of the box 
 - The current interface implements functions using different underlying drivers whenever it fits, so it's not obvious if IPMI or Redfish is used, sometimes information from different protocols differ.
 - There are almost no unit tests and no automated integration tests (despite indirect integration testing through our release integration, which is creating and deleting machines).
 - The CLI is not implementing the entire API interface. It is implemented only roughly. To use it for testing, it requires ad hoc code changes and recompilation.
-- There is no possibility for an operator to provide the user / password that a server was shipped with in order to intialize it with these credentials. Such that the metal-hammer must be booted first before it can be managed through BMC. This also implies that the implemtation relies on inband to work.
+- There is no possibility for an operator to provide the user / password that a server was shipped with in order to initialize it with these credentials. Such that the metal-hammer must be booted first before it can be managed through BMC. This also implies that the implementation relies on inband to work.
 
 ## Bundling Functionality in the metal-bmc
 
-In order to minimize the BMC interface and spreaded library usage, we should try to bundle as much of the implementation as possible in a single microservice. This microservice should have a proto / gRPC API for access.
+In order to minimize the BMC interface and spread library usage, we should try to bundle as much of the implementation as possible in a single microservice. This microservice should have a proto / gRPC API for access.
 
 A suitable microservice is already in place on the mgmt-servers called the [metal-bmc](https://github.com/metal-stack/metal-bmc), which can be extended for this purpose. The metal-bmc will implement the server API. The API can be called by the metal-api (indirectly through NSQ), the metal-hammer and a metal-bmc CLI.
 
-In general, it should be preferred to run actions from remote (a.k.a outband) in order to have the functionality easily accessible for other services. Another advantage is to only bundle heavy-weight propriatery tools like `sum` in a single component. There are only few exceptions where for example an IPMI inband connection is required. For this, we need to offer a special package, which purpose can be described as enabling a server to be managed from remote. This is explained in more detail in a later section of this MEP.
+In general, it should be preferred to run actions from remote (a.k.a outband) in order to have the functionality easily accessible for other services. Another advantage is to only bundle heavy-weight proprietary tools like `sum` in a single component. There are only few exceptions where for example an IPMI inband connection is required. For this, we need to offer a special package, which purpose can be described as enabling a server to be managed from remote. This is explained in more detail in a later section of this MEP.
 
 ## metal-bmc CLI
 
