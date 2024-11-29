@@ -1,5 +1,7 @@
 # Solve the bootstrap problem
 
+TODO: this is not a MEP, better put it into installation
+
 Setting up a metal-stack.io environment in your own datacenter requires a control plane to be present which hosts the metal-stack api.
 If you plan to spin up kubernetes clusters, either with gardener.cloud or cluster api, the requirement for this control plane raises.
 The control plane must be running in a kubernetes cluster, which offers at least the following features:
