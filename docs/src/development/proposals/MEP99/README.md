@@ -128,7 +128,13 @@ resource needle-control-plane {
 TODO: Pacemaker or Heartbeat ?
 TODO: LVM Volumes
 
+Logical View
+
 ![needle-control-plane-ha](needle-control-plane-ha.drawio.svg)
+
+Physical View
+
+![needle-rack](needle-rack.drawio.svg)
 
 1. Partition
 
