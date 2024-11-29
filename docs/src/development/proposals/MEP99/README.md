@@ -132,9 +132,14 @@ Logical View
 
 ![needle-control-plane-ha](needle-control-plane-ha.drawio.svg)
 
-Physical View
+Physical View, minimal ha setup which is only suitable for 1 Seed and 1 Shoot
 
 ![needle-rack](needle-rack.drawio.svg)
+
+Physical View, bigger ha setup which is spread to two datacenters, capable to create 1 Seed with 3 nodes and 2 Shoots with 3 nodes each and still 2 waiting machines. 
+
+![needle-rack-big](needle-rack-big.drawio.svg)
+
 
 1. Partition
 
