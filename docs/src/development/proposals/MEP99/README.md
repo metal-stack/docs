@@ -164,6 +164,12 @@ TODO: Where to connect the `needle` servers
 
 - Naming of the metal-stack chain elements, is `needle` and `nail` appropriate ?
 - Storage in the `needle` partition
+  - https://min.io/docs/directpv
+  - lightOS
+  - https://github.com/poettering/diskomator --> Crazy
+  - https://jing.rocks/2023/06/13/Experimenting-with-NVMe-over-TCP.html from the needle, also replicated with drbd ?
 - S3 Object storage is considered as provided
 - AirGapped is out of scope for now
 - IP address ranges and families
+- Consider https://github.com/gardener/gardener/blob/master/docs/proposals/28-autonomous-shoot-clusters.md for the `needle` `seed`
+- Take a look at: https://github.com/robgil/microdatacenter
