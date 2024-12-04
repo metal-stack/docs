@@ -38,7 +38,7 @@ TODO: can we provide a list which of the requirements can be solved with all of 
 ## Use your own dogfood
 
 With metal-stack.io we already have the possibility to create an manage kubernetes cluster with the help of gardener.cloud.
-Use this stack to create a the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
+Use this stack to create the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
 This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memore and storage.
@@ -48,9 +48,9 @@ This is a chain of two metal-stack environments.
 
 ### Architekture
 
-A high-level architecture consists of two metal-stack.io environments, one for the control plane, the second one for the production or real environment. It might also be possible to call the initial metal-stack.io environment the metal-stack seed, and the actual production environment the metal-stack seed.
+A high-level architecture consists of two metal-stack.io environments, one for the control plane, the second one for the production or real environment. It might also be possible to call the initial metal-stack.io environment the metal-stack `seed`, and the actual production environment the metal-stack `shoot`.
 
-We could even use some names for this environments which match better to metal, like `needle` and nail. So, a `needle` metal-stack is used to create a `nail` metal-stack environment.
+We could even use some names for this environments which match better to metal, like `needle` and `nail`. So, a `needle` metal-stack is used to create a `nail` metal-stack environment.
 
 ![metal-stack-chain](autonomous-control-plane-images/metal-stack-chain.drawio.svg)
 
@@ -58,16 +58,16 @@ The `needle` and the `nail` metal-stack have both a control plane and a set of p
 
 #### Needle
 
-In case of the `needle` the control plane is small and running inside a kind cluster, the physical bare metal machines, can be any machines and switches which are supported by metal stack, but can be smaller in terms of cpu, memory and network speed, because these machines must only be capable of running the `nail` metal stack control plane.
+The `needle` control plane is kept very small and running inside a `kind` cluster. The physical bare metal machines can be any machines and switches which are supported by metal stack, but can be smaller in terms of cpu, memory and network speed, because these machines must only be capable of running the `nail` metal stack control plane.
 
 1. Control Plane
 
-In the most simple case the `needle` control plane is based on kind which is running on a machine which was setup manually/partly automated with a debian:12 operating system.
-This machine provides a decent amount of cpu, memory and storage locally to store all persistent data locally. The amount of cpus and memory depends on the required size of the expected `nail` control plane. A typical single socket server with 8-16 cores and 64GB of RAM and two NVMe drives of 1TB would be a good starting point.
+In the most simple case the `needle` control plane is based on `kind` which is running on a machine which was setup manually/partly automated with a debian:12 operating system.
+This machine provides a decent amount of cpu, memory and storage locally to store all persistent data. The amount of cpus and memory depends on the required size of the expected `nail` control plane. A typical single socket server with 8-16 cores and 64GB of RAM and two NVMe drives of 1TB would be a good starting point.
 
-In a typical kind setup, stateful set would not survive their data once the kind cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the kind cluster for the PVCs. With that, kind could be terminated and started again, for example to update and reboot the host os, or update kind itself, the data will still be there.
+In a typical `kind` setup, a stateful set would loose the data once the `kind` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `kind` cluster for the PVCs. With that, `kind` could be terminated and started again, for example to update and reboot the host os, or update `kind` itself and the data will persist.
 
-Example kind configuration for persistent storage on the hosts os:
+Example `kind` configuration for persistent storage on the hosts os:
 
 ```yaml
 kind: Cluster
@@ -82,10 +82,10 @@ nodes:
 
 ```
 
-As mentioned before, kind is used to host the `needle` control plane. For a gardener managed kubernetes setup, metal-stack and gardener will be deployed into this cluster. This deployment can be done by a gitlab runner which is running on this machine.
-The mini-lab will be used as a base for this deployment. The current development of gardener-in-minilab must be extended to host all required extensions to make this a working metal stack control plane which can manage the machines in the attached bare metal setup.
+As mentioned before, `kind` is used to host the `needle` control plane. For a gardener managed kubernetes setup, metal-stack and gardener will be deployed into this cluster. This deployment can be done by a gitlab runner which is running on this machine.
+The mini-lab will be used as a base for this deployment. The current development of [gardener-in-minilab](https://github.com/metal-stack/mini-lab/pull/202) must be extended to host all required extensions to make this a working metal stack control plane which can manage the machines in the attached bare metal setup.
 
-A second kind cluster is started on this machine to host services which are required to complete the service. A non-complete list would be:
+A second `kind` cluster is started on this machine to host services which are required to complete the service. A non-complete list would be:
 
 - PowerDNS to server as a DNS Server for all dns entries which needs to be created in the needle, like api.needle.metal-stack.local, gardener-api.needle.metal-stack.local and the dns entries for the api servers of the create kubernetes clusters.
 - NTP
@@ -102,7 +102,7 @@ Running the `needle` control plane on a single physical server is not as availab
 
 Setting up a second server with the same software components is an option, but the problem of data redundancy must be solved, because neither the gardener control plane, nor the metal-stack control plane can be instantiated twice.
 
-Given that we provide part of the local storage of the server as backing storage for the stateful sets in the kind cluster, the data stored on the server itself must be synced to a second server in some way.
+Given that we provide part of the local storage of the server as backing storage for the stateful sets in the `kind` cluster, the data stored on the server itself must be synced to a second server in some way.
 
 Her comes [DRBD](https://github.com/LINBIT/drbd) into play, this is a linux kernel module which can be configured to mirror one or more local block devices to another server connected over tcp. With the help of [pacemaker](https://www.clusterlabs.org/pacemaker/) a coordinated failover of resources running on top of filesystems created on such replicated drbd devices, a high available statefule server pair is possible. It is also possible to prevent split brain if both servers have a out-of-band management build in with power off capability.
 DRBD can also be configured to sync storage between WAN links with a higher latency by using a async mechanism.
