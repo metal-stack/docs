@@ -1,6 +1,4 @@
-# Solve the bootstrap problem
-
-TODO: this is not a MEP, better put it into installation
+# Autonomous Control Plane, aka solve the bootstrap problem
 
 Setting up a metal-stack.io environment in your own datacenter requires a control plane to be present which hosts the metal-stack api.
 If you plan to spin up kubernetes clusters, either with gardener.cloud or cluster api, the requirement for this control plane raises.
@@ -127,7 +125,6 @@ resource needle-control-plane {
 }
 ```
 
-TODO: Pacemaker or Heartbeat ?
 TODO: LVM Volumes
 
 Logical View
@@ -138,7 +135,7 @@ Physical View, minimal ha setup which is only suitable for 1 Seed and 1 Shoot
 
 ![needle-rack](autonomous-control-plane-images/needle-rack.drawio.svg)
 
-Physical View, bigger ha setup which is spread to two datacenters, capable to create 1 Seed with 3 nodes and 2 Shoots with 3 nodes each and still 2 waiting machines. 
+Physical View, bigger ha setup which is spread to two datacenters, capable to create 1 Seed with 3 nodes and 2 Shoots with 3 nodes each and still 2 waiting machines.
 
 ![needle-rack-big](autonomous-control-plane-images/needle-rack-big.drawio.svg)
 
@@ -146,10 +143,6 @@ Physical View, bigger ha setup which is spread to two datacenters, capable to cr
 
 The partition which is managed by the metal-stack `needle` can be a simple and small hardware setup but yet capable enough to host the metal-stack `nail` control plane.
 It can follow the metal-stack minimal setup which provides about 8-16 small servers connected to a 1G/s or 10G/s network dataplane. Central storage is optional as the persistence of the services running in these clusters is always backed up to a central object storage. Operations would be much easier if a central storage is provided.
-
-TODO: howto provide storage
-TODO: Maybe the `needle` control plane server provides storage from the drbd volume ? Bad Idea ?
-TODO: Small Lightbits, other appliance like Synology at.al.
 
 A seed must be created which is responsible for hosting the control planes of the shoots in this partition. The amount of shoots should be minimal, most of the time, two shoots, one for hosting gardener and one for metal-stack.
 
@@ -163,14 +156,15 @@ TODO: Where to connect the `needle` servers
 
 - Naming of the metal-stack chain elements, is `needle` and `nail` appropriate ?
 - Storage in the `needle` partition
-  - https://min.io/docs/directpv --> new to me, dont know exactly how this works, looks interesting
+  - [MinIO DirectPV](https://min.io/docs/directpv) --> new to me, dont know exactly how this works, looks interesting
   - lightOS
-  - https://github.com/poettering/diskomator --> Crazy
+  - [Diskomator](https://github.com/poettering/diskomator) --> Crazy
   - the needle server as initiator, maybe also replicated with drbd ?
-    - https://ssdcentral.net/getting-started-with-nvme-over-fabrics-with-tcp/
-    - https://jing.rocks/2023/06/13/Experimenting-with-NVMe-over-TCP.html
+    - [NVMEoTCP Howto](https://ssdcentral.net/getting-started-with-nvme-over-fabrics-with-tcp/)
+    - [NVMEoTCP Howto](https://jing.rocks/2023/06/13/Experimenting-with-NVMe-over-TCP.html)
+  - Storage Appliance like Synology
 - S3 Object storage is considered as provided
 - AirGapped is out of scope for now
 - IP address ranges and families
-- Consider https://github.com/gardener/gardener/blob/master/docs/proposals/28-autonomous-shoot-clusters.md for the `needle` `seed`
-- Take a look at: https://github.com/robgil/microdatacenter
+- Consider [Autonomous Shoots](https://github.com/gardener/gardener/blob/master/docs/proposals/28-autonomous-shoot-clusters.md) for the `needle` `seed`
+- Take a look at: [Description of a Microdatacenter](https://github.com/robgil/microdatacenter)
