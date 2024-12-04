@@ -17,6 +17,11 @@ The most obvious and simple solution is to use one of the managed kubernetes off
 But there are use cases, where it is not possible because of network restrictions, or because the company compliances does forbidd the usage of external datacenter products.
 For such cases a solution must be found which produces the control plane inside the own datacenter but with reasonable day two operational effort.
 
+```@contents
+Pages = ["autonomous-control-plane.md"]
+Depth = 5
+```
+
 ## Possible Solutions
 
 No complete list.
