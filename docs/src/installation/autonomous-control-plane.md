@@ -49,7 +49,7 @@ A high-level architecture consists of two metal-stack.io environments, one for t
 
 We could even use some names for this environments which match better to metal, like `needle` and nail. So, a `needle` metal-stack is used to create a `nail` metal-stack environment.
 
-![metal-stack-chain](metal-stack-chain.drawio.svg)
+![metal-stack-chain](autonomous-control-plane-images/metal-stack-chain.drawio.svg)
 
 The `needle` and the `nail` metal-stack have both a control plane and a set of physical bare metal machines they manage and operate on.
 
@@ -91,7 +91,7 @@ A second kind cluster is started on this machine to host services which are requ
 - Optional: Letsencrypt [boulder](https://github.com/letsencrypt/boulder) as a certificate authority
 - ...
 
-![needle-control-plane](needle-control-plane.drawio.svg)
+![needle-control-plane](autonomous-control-plane-images/needle-control-plane.drawio.svg)
 
 1.1. Control Plane High Availability
 
@@ -132,16 +132,15 @@ TODO: LVM Volumes
 
 Logical View
 
-![needle-control-plane-ha](needle-control-plane-ha.drawio.svg)
+![needle-control-plane-ha](autonomous-control-plane-images/needle-control-plane-ha.drawio.svg)
 
 Physical View, minimal ha setup which is only suitable for 1 Seed and 1 Shoot
 
-![needle-rack](needle-rack.drawio.svg)
+![needle-rack](autonomous-control-plane-images/needle-rack.drawio.svg)
 
 Physical View, bigger ha setup which is spread to two datacenters, capable to create 1 Seed with 3 nodes and 2 Shoots with 3 nodes each and still 2 waiting machines. 
 
-![needle-rack-big](needle-rack-big.drawio.svg)
-
+![needle-rack-big](autonomous-control-plane-images/needle-rack-big.drawio.svg)
 
 1. Partition
 
@@ -154,7 +153,7 @@ TODO: Small Lightbits, other appliance like Synology at.al.
 
 A seed must be created which is responsible for hosting the control planes of the shoots in this partition. The amount of shoots should be minimal, most of the time, two shoots, one for hosting gardener and one for metal-stack.
 
-![needle-partition](needle-partition.drawio.svg)
+![needle-partition](autonomous-control-plane-images/needle-partition.drawio.svg)
 
 1. Network Diagram
 
