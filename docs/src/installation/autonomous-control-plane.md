@@ -10,7 +10,7 @@ The control plane must be running in a kubernetes cluster, which offers at least
 - Access to a DNS provider which is supported by one of the dns extensions in use.
 
 This cluster must also be highly available to prevent complete loss of control over the managed resources in the datacenter.
-Regular kubernetes updates to apply security fixes and feature updates must be possible in a automated manner.
+Regular kubernetes updates to apply security fixes and feature updates must be possible in an automated manner.
 
 The most obvious and simple solution is to use one of the managed kubernetes offerings from another cloud provider.
 
