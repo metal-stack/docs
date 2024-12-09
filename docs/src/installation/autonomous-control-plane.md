@@ -65,7 +65,7 @@ The `needle` control plane is kept very small and running inside a `kind` cluste
 In the most simple case the `needle` control plane is based on `kind` which is running on a machine which was setup manually/partly automated with a debian:12 operating system.
 This machine provides a decent amount of cpu, memory and storage locally to store all persistent data. The amount of cpus and memory depends on the required size of the expected `nail` control plane. A typical single socket server with 8-16 cores and 64GB of RAM and two NVMe drives of 1TB would be a good starting point.
 
-In a typical `kind` setup, a stateful set would loose the data once the `kind` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `kind` cluster for the PVCs. With that, `kind` could be terminated and started again, for example to update and reboot the host os, or update `kind` itself and the data will persist.
+In a typical `kind` setup, a stateful set would lose the data once the `kind` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `kind` cluster for the PVCs. With that, `kind` could be terminated and started again, for example to update and reboot the host os, or update `kind` itself and the data will persist.
 
 Example `kind` configuration for persistent storage on the hosts os:
 
