@@ -41,7 +41,7 @@ With metal-stack.io we already have the possibility to create an manage kubernet
 Use this stack to create the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
-This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memore and storage.
+This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memory and storage.
 For this initial control plane cluster we could use [kind](https://kind.sigs.k8s.io/) running on a single server which manages the initial metal-stack partitin to host the control plane for the real setup.
 
 This is a chain of two metal-stack environments.
