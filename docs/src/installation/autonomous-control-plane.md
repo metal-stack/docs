@@ -14,7 +14,7 @@ Regular kubernetes updates to apply security fixes and feature updates must be p
 
 The most obvious and simple solution is to use one of the managed kubernetes offerings from another cloud provider.
 
-But there are use cases, where it is not possible because of network restrictions, or because the company compliances does forbidd the usage of external datacenter products.
+But there are use cases, where it is not possible because of network restrictions, or because the company compliances forbid the usage of external datacenter products.
 For such cases a solution must be found which produces the control plane inside the own datacenter but with reasonable day two operational effort.
 
 ```@contents
