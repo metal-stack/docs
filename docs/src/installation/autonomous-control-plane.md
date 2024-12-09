@@ -46,7 +46,7 @@ For this initial control plane cluster we could use [kind](https://kind.sigs.k8s
 
 This is a chain of two metal-stack environments.
 
-### Architekture
+### Architecture
 
 A high-level architecture consists of two metal-stack.io environments, one for the control plane, the second one for the production or real environment. It might also be possible to call the initial metal-stack.io environment the metal-stack `seed`, and the actual production environment the metal-stack `shoot`.
 
