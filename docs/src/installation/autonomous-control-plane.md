@@ -104,7 +104,7 @@ Setting up a second server with the same software components is an option, but t
 
 Given that we provide part of the local storage of the server as backing storage for the stateful sets in the `kind` cluster, the data stored on the server itself must be synced to a second server in some way.
 
-Her comes [DRBD](https://github.com/LINBIT/drbd) into play, this is a linux kernel module which can be configured to mirror one or more local block devices to another server connected over tcp. With the help of [pacemaker](https://clusterlabs.org/projects/pacemaker/) a coordinated failover of resources running on top of filesystems created on such replicated drbd devices, a high available stateful server pair is possible. It is also possible to prevent split brain if both servers have a out-of-band management build in with power off capability.
+Here comes [DRBD](https://github.com/LINBIT/drbd) into play, this is a linux kernel module which can be configured to mirror one or more local block devices to another server connected over tcp. With the help of [pacemaker](https://clusterlabs.org/projects/pacemaker/) a coordinated failover of resources running on top of filesystems created on such replicated drbd devices, a high available stateful server pair is possible. It is also possible to prevent split brain if both servers have a out-of-band management build in with power off capability.
 DRBD can also be configured to sync storage between WAN links with a higher latency by using a async mechanism.
 
 Sample drbd configuration:
