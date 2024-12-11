@@ -37,7 +37,7 @@ TODO: can we provide a list which of the requirements can be solved with all of 
 
 ## Use your own dogfood
 
-With metal-stack.io we already have the possibility to create an manage kubernetes cluster with the help of gardener.cloud.
+With metal-stack.io we already have the possibility to create and manage kubernetes clusters with the help of [Gardener](https://gardener.cloud).
 Use this stack to create the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
