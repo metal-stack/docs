@@ -42,7 +42,7 @@ Use this stack to create the control plane clusters only. Do not try to create m
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
 This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memory and storage.
-For this initial control plane cluster we could use [kind](https://kind.sigs.k8s.io/) running on a single server which manages the initial metal-stack partitin to host the control plane for the real setup.
+For this initial control plane cluster we could use [kind](https://kind.sigs.k8s.io/) running on a single server which manages the initial metal-stack partition to host the control plane for the real setup.
 
 This is a chain of two metal-stack environments.
 
