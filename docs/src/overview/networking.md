@@ -199,7 +199,7 @@ To operate the CLOS topology, software defined configuration to enable BGP, VRF,
 
 ![Network VRFs across the different switch layers](network-vrfs.drawio.svg)
 
-> Picture 6: This illustration illustrates VRF tenant separation and shows VRF termination happening on the firewall for the tenant VRF and external network VRFs.
+> Picture 6: This illustration shows the VRF tenant separation and VRF termination happening on the firewall for the tenant VRF and external network VRFs.
 
 ### Network Operating Systems
 
