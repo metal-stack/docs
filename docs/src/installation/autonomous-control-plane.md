@@ -157,6 +157,23 @@ A seed must be created which is responsible for hosting the control planes of th
 
 TODO: Where to connect the `needle` servers
 
+#### Nail
+
+`nail` is the metal-stack environment which serves for end user production use, the control plane is running in a shoot which in the `needle` and the `seed(s)` and `shoot(s)` for end users are created on the machines provided by this environment.
+These machines can be of a different type in terms of size, but more importantly, these machines are connected to another network dataplane. Also the management infrastructure is separated from the `needle` management.
+
+## Failure Scenarios
+
+Everything could fail, everything will fail at some point. But this must kept in mind and nothing bad should happen if only one component at a time fails.
+If more than one fails, the restoration to a working state must be easily possible and well documented.
+
+We must ensure both. To ensure we have all possible breakages in mind, we collect a list of them here and explain what impact a certain failure have.
+
+| Scenario          | expected outage                                            |
+|-------------------|------------------------------------------------------------|
+| kind cluster gone | management of `needle` infrastructure not possible anymore |
+
+
 ## Open Topics
 
 - Naming of the metal-stack chain elements, is `needle` and `nail` appropriate ?
