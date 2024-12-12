@@ -10,11 +10,11 @@ The control plane must be running in a kubernetes cluster, which offers at least
 - Access to a DNS provider which is supported by one of the dns extensions in use.
 
 This cluster must also be highly available to prevent complete loss of control over the managed resources in the datacenter.
-Regular kubernetes updates to apply security fixes and feature updates must be possible in a automated manner.
+Regular kubernetes updates to apply security fixes and feature updates must be possible in an automated manner.
 
 The most obvious and simple solution is to use one of the managed kubernetes offerings from another cloud provider.
 
-But there are use cases, where it is not possible because of network restrictions, or because the company compliances does forbidd the usage of external datacenter products.
+But there are use cases, where it is not possible because of network restrictions, or because the company compliances forbid the usage of external datacenter products.
 For such cases a solution must be found which produces the control plane inside the own datacenter but with reasonable day two operational effort.
 
 ```@contents
@@ -37,16 +37,16 @@ TODO: can we provide a list which of the requirements can be solved with all of 
 
 ## Use your own dogfood
 
-With metal-stack.io we already have the possibility to create an manage kubernetes cluster with the help of gardener.cloud.
+With metal-stack.io we already have the possibility to create and manage kubernetes clusters with the help of [Gardener](https://gardener.cloud).
 Use this stack to create the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
-This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memore and storage.
-For this initial control plane cluster we could use [kind](https://kind.sigs.k8s.io/) running on a single server which manages the initial metal-stack partitin to host the control plane for the real setup.
+This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memory and storage.
+For this initial control plane cluster we could use [kind](https://kind.sigs.k8s.io/) running on a single server which manages the initial metal-stack partition to host the control plane for the real setup.
 
 This is a chain of two metal-stack environments.
 
-### Architekture
+### Architecture
 
 A high-level architecture consists of two metal-stack.io environments, one for the control plane, the second one for the production or real environment. It might also be possible to call the initial metal-stack.io environment the metal-stack `seed`, and the actual production environment the metal-stack `shoot`.
 
@@ -65,7 +65,7 @@ The `needle` control plane is kept very small and running inside a `kind` cluste
 In the most simple case the `needle` control plane is based on `kind` which is running on a machine which was setup manually/partly automated with a debian:12 operating system.
 This machine provides a decent amount of cpu, memory and storage locally to store all persistent data. The amount of cpus and memory depends on the required size of the expected `nail` control plane. A typical single socket server with 8-16 cores and 64GB of RAM and two NVMe drives of 1TB would be a good starting point.
 
-In a typical `kind` setup, a stateful set would loose the data once the `kind` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `kind` cluster for the PVCs. With that, `kind` could be terminated and started again, for example to update and reboot the host os, or update `kind` itself and the data will persist.
+In a typical `kind` setup, a stateful set would lose the data once the `kind` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `kind` cluster for the PVCs. With that, `kind` could be terminated and started again, for example to update and reboot the host os, or update `kind` itself and the data will persist.
 
 Example `kind` configuration for persistent storage on the hosts os:
 
@@ -104,7 +104,7 @@ Setting up a second server with the same software components is an option, but t
 
 Given that we provide part of the local storage of the server as backing storage for the stateful sets in the `kind` cluster, the data stored on the server itself must be synced to a second server in some way.
 
-Her comes [DRBD](https://github.com/LINBIT/drbd) into play, this is a linux kernel module which can be configured to mirror one or more local block devices to another server connected over tcp. With the help of [pacemaker](https://clusterlabs.org/projects/pacemaker/) a coordinated failover of resources running on top of filesystems created on such replicated drbd devices, a high available statefule server pair is possible. It is also possible to prevent split brain if both servers have a out-of-band management build in with power off capability.
+Here comes [DRBD](https://github.com/LINBIT/drbd) into play, this is a linux kernel module which can be configured to mirror one or more local block devices to another server connected over tcp. With the help of [pacemaker](https://clusterlabs.org/projects/pacemaker/) a coordinated failover of resources running on top of filesystems created on such replicated drbd devices, a high available stateful server pair is possible. It is also possible to prevent split brain if both servers have a out-of-band management build in with power off capability.
 DRBD can also be configured to sync storage between WAN links with a higher latency by using a async mechanism.
 
 Sample drbd configuration:
