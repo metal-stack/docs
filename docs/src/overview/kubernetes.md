@@ -1,6 +1,6 @@
 # Kubernetes Integration
 
-metal-stack can also be used as a basis for provisioning Kubernetes clusters.
+One of the main motivations for starting with metal-stack was to use it as a foundation for provisioning Kubernetes clusters. In this chapter, we explain how we integrated metal-stack to set up fully automated provisioning of Kubernetes clusters, including autoscaling capabilities.
 
 ```@contents
 Pages = ["kubernetes.md"]
@@ -9,7 +9,7 @@ Depth = 5
 
 ## metal-stack Components for Kubernetes Integration
 
-The following two components are provided from metal-stack to make the cluster creation possible.
+The following components are generic, meaning that they are independent of the chosen Kubernetes orchestration engine.
 
 ### metal-ccm
 
@@ -29,18 +29,38 @@ Please check out the [guide](../external/firewall-controller/README.md) on how t
 
 ## Gardener with metal-stack
 
-With the help of the [Gardener](https://gardener.cloud/) project, metal-stack can be used for spinning up Kubernetes clusters quickly and reliably on bare metal machines. Gardener is an open-source project and a system to manage Kubernetes clusters. Based on one cluster, other K8s clusters can be created by Gardener on many different cloud providers.
+[Gardener](https://gardener.cloud/) is an open source project for orchestrated Kubernetes cluster provisioning. It supports many different cloud providers, metal-stack being one of them. Using the Gardener project, metal-stack can act as a machine provider for Kubernetes worker nodes.
 
-At first, the most important Gardener terms are explained. More information can also be found in the [glossary](https://github.com/gardener/documentation/blob/master/website/documentation/glossary/_index.md).
+The idea behind the Gardener project is to start with a dedicated set of Kubernetes clusters (this can be a single cluster, too), which are used to host Kubernetes control planes for new Kubernetes clusters. The new Kubernetes control planes reside in dedicated namespaces of the initial clusters ("Kubernetes in Kubernetes" or "underlay / overlay Kubernetes"). Where initial clusters come from is the subject of a larger debate, with suggestions made in a later section of this document.
 
-**Garden Cluster**
+Gardener's architecture is designed for multi-tenant environments, with a strong distinction between the operator and the end users. In Gardener, Kubernetes control planes for different tenants may reside in the same operator cluster. This approach makes it very suitable for being used with bare metal because it allows taking full advantage of the server resources. Another implication is that end users do not have access to their control plane components, such as the kube-apiserver or the ETCD. These are managed by the operator and in case of metal-stack even physically divided from the end user's workload.
 
-A dedicated Kubernetes cluster that the Gardener control plane runs in. The Kubernetes cluster can be setup e.g. on metalstack.cloud or GCP.
-The Garden cluster can also be used as seed cluster by deploying the Gardenlet into it.
+Gardener allocates machines from a cloud provider and automatically deploys a kubelet to those nodes, which then joins the appropriate control plane. Operators can also nest clusters so that newly provisioned clusters can be used to spin up more clusters, leading to nearly infinite scalability (also known as "kubeception" model).
 
-**Virtual Garden**
+### Terminology
 
-A virtual cluster inside the Garden cluster. The virtual cluster is node less. Is is only a control plane node / cluster with the following components:
+We would like to explain the most important Gardener terms. The terminology used in the Gardener project has many similarities to the architecture of Kubernetes. Additional information can also be found in the [official glossary](https://github.com/gardener/documentation/blob/master/website/documentation/glossary/_index.md).
+
+#### Garden Cluster
+
+The Garden Cluster is a Kubernetes cluster that runs the Gardener Control Plane.
+
+The control plane components introduce dedicated Kubernetes API resources for provisioning new Kubernetes clusters with the Gardener. It also takes care of the validation for many of those Gardener API resources and also reconciling some of them. The components are the following:
+
+- Gardener API Server
+- Gardener Controller Manager
+- Gardener Scheduler
+- Gardener Admission Controller
+
+The control plane components can be deployed in the Garden Cluster through the Gardener Operator.
+
+The Garden cluster can also be used as [seed](#seeds-and-soils) cluster.
+
+#### Virtual Garden
+
+A recommended way to deploy the Gardener is running a "virtual cluster" inside the Garden cluster. It is basically a Kubernetes control plane without any worker nodes, providing the Kubernetes API in an own ETCD. Its purpose is to store all Gardener resources (such that they reside inside a dedicated ETCD) and provide an individual update lifecycle from the Garden Cluster. End users can have access to own project namespaces in the virtual garden, too.
+
+The virtual garden consists of the following components:
 
 - garden kube-apiserver
 - etcd
@@ -48,52 +68,33 @@ A virtual cluster inside the Garden cluster. The virtual cluster is node less. I
 
 More details about the virtual garden can be found in the description of [`gardener-operator`](https://github.com/gardener/gardener/blob/master/docs/concepts/operator.md).
 
-**Gardener Control Plane Components**
+#### Seeds and Soils
 
-The control plane components exist to manage the overall creation, modification and deletion of clusters. The components are the following:
+A seed cluster is a cluster in which an agent component called the `Gardenlet` is running. The gardenlet is connected to the Gardener Control Plane and is responsible for orchestrating the provisioning of new clusters inside the seed cluster. The control plane components for the new clusters run as pods in the seed cluster.
 
-- Gardener API Server
-- Gardener Controller Manager
-- Gardener Scheduler
-- Gardener Admission Controller
+A seed cluster can also be called a soil if the Gardenlet has been manually deployed by the operator and not by the Gardener. Clusters created on the soil can be turned into seed clusters by the operator using a Gardener resource called `ManagedSeed`. This resource causes Gardener to automatically deploy the Gardenlet to the new cluster, such that the resulting cluster is not called a soil.
 
-The control plane components get deployed in the `garden cluster`.
+#### Shoot
 
-**Gardener Agent Component**
+Every Kubernetes cluster that is fully provisioned and managed by Gardener is called a `Shoot` cluster. It consists of the shoot control plane running on the seed cluster and worker nodes running the actual workload.
 
-Gardener has an agent component:
+### Gardener Integration Components
 
-- Gardenlet
-
-The agent gets deployed in every seed cluster.
-
-**Soil**
-
-The soil cluster is a cluster in which the Gardenlet was deployed. However, Gardener or the functionality was not used for this. It  is used for spinning up shooted seeds.
-
-**Seed**
-
-A cluster that hosts shoot cluster control planes as pods in order to manage shoot clusters. Taken from the [glossary](https://github.com/gardener/documentation/blob/master/website/documentation/glossary/_index.md).
-
-**Shoot**
-
-A Kubernetes runtime for the actual applications or services consisting of a shoot control plane running on the seed cluster and worker nodes hosting the actual workload. Taken from the [glossary](https://github.com/gardener/documentation/blob/master/website/documentation/glossary/_index.md).
-
-### Gardener Components
-
-There are some Gardener resources that need to be reconciled when you act as a cloud provider for the Gardener. This section briefly describes the controllers implemented for deploying Kubernetes clusters through Gardener.
+During the provisioning flow of a cluster, Gardener emits resources that are expected to be reconciled by controllers of a cloud provider. This section briefly describes the controllers implemented by metal-stack to allow the creation of a Kubernetes cluster on metal-stack infrastructure.
 
 If you want to learn how to deploy metal-stack with Gardener, please check out the [installation](../installation/deployment.md#Gardener-with-metal-stack-1) section.
 
 #### gardener-extension-provider-metal
 
-The [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal) contains of a set of webhooks and controllers for reconciling or mutating Gardener-specific resources.
+The [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal) contains of a set of webhooks and controllers for reconciling cloud provider specific resources of `type: Metal`, which created by Gardener during the cluster provisioning flow.
 
-The project also contains a validator for metal-type Gardener resources, which you should also deploy in case you want to use metal-stack in combination with Gardener.
+Primarily, its purpose is to reconcile `Infrastructure`, `ControlPlane`, and `Worker` resources.
+
+The project also introduces an own API (`ProviderConfiguration` resources) and consists of an admission-controller to validate them. This admission controller should be deployed in the Gardener control plane cluster.
 
 #### os-metal-extension
 
-Due to the reason we use ignition in our operating system images for userdata, we had to provide an own extension controller for metal-stack, which you can find at Github in the [os-metal-extension](https://github.com/metal-stack/os-metal-extension) repository.
+Due to the reason metal-stack initially used ignition to provision operating system images (today, cloud-init is supported as well) there is an implementation of a controller that translates the generic `OperatingSystemConfig` format of Gardener into ignition userdata. It can be found on Github in the [os-metal-extension](https://github.com/metal-stack/os-metal-extension) repository.
 
 #### machine-controller-manager-provider-metal
 
@@ -101,26 +102,27 @@ Worker nodes are managed through Gardener's [machine-controller-manager](https:/
 
 ### Initial Cluster Setup
 
-Before creating the `garden cluster`, a base K8s cluster need to be in place:
-Some suggestions for the initial K8s cluster:
+Before creating the `garden cluster`, a base K8s cluster needs to be in place.
+Some suggestions for the initial K8s cluster are:
 
 - GCP/GKE
 - metalstack.cloud
 
-#### Initial Cluster on GCP:
+#### Initial Cluster on GCP
 
-- A GCP account need to be in place
-- Ansible [GCP auth role](https://github.com/metal-stack/ansible-common/tree/master/roles/gcp-auth) can be used for authenticating against GCP
-- Ansible [GCP create cluster role](https://github.com/metal-stack/ansible-common/tree/master/roles/gcp-create) can be used for creating the GCP cluster. 
+- A GCP account needs to be in place.
+- The Ansible [gcp-auth role](https://github.com/metal-stack/ansible-common/tree/master/roles/gcp-auth) can be used for authenticating against GCP.
+- The Ansible [gcp-create role](https://github.com/metal-stack/ansible-common/tree/master/roles/gcp-create) can be used for creating a GKE cluster.
 
 Suggestions for default values are:
+
   - `gcp_machine_type`: e2-standard-8
   - `gcp_autoscaling_min_nodes`: 1
   - `gcp_autoscaling_max_nodes`: 3
 
-#### Initial Cluster on metalstack.cloud:
+#### Initial Cluster on metalstack.cloud
 
-- A Kubernetes cluster can be created on [metalstack.cloud](https://metalstack.cloud/de/documentation/UserManual#creating-a-cluster) via UI, CLI or Terraform
+- A Kubernetes cluster can be created on [metalstack.cloud](https://metalstack.cloud/de/documentation/UserManual#creating-a-cluster) via UI, CLI or Terraform.
 
 ### metal-stack Setup
 
@@ -136,6 +138,7 @@ This guide assumes, that metal-stack gets deployed on the same initial cluster a
 #### Garden Cluster Setup
 
 After setting up the initial K8s cluster and metal-stack, Gardener can be deployed with the [Gardener Ansible role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/gardener).
+
 This deploys the following components:
 
   - virtual garden
