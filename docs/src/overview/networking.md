@@ -189,10 +189,17 @@ Reference: See the [CLOS overview picture](#CLOS)
 | Management Server           | Jump-host to access all network switches within the CLOS topology for administrative purpose. |
 | Management Switch           | Connected to the management port of each of the network switches.                             |
 
+![Physical Wiring](network-physical-wiring.drawio.svg)
+
+> Picture 5: This illustration shows an example of a suitable physical wiring inside a metal-stack partition.
 
 Tenant servers are organized into a layer called projects. In case those tenant servers require access to or from external networks, a new tenant server to function as a firewall is created. Leaf and spine switches form the fundament of the CLOS network to facilitate redundancy, resilience and scalability. Exit switches establish connectivity to or from external networks. Management Switch and Management Server are mandatory parts that build a management network to access the network switches for administration.
 
 To operate the CLOS topology, software defined configuration to enable BGP, VRF, EVPN and VXLAN must be set up.
+
+![Network VRFs across the different switch layers](network-vrfs.drawio.svg)
+
+> Picture 6: This illustration shows the VRF tenant separation and VRF termination happening on the firewall for the tenant VRF and external network VRFs.
 
 ### Network Operating Systems
 
