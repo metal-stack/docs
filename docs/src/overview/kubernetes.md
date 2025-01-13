@@ -27,7 +27,7 @@ To make the firewalls created with metal-stack easily configurable through Kuber
 
 Please check out the [guide](../external/firewall-controller/README.md) on how to use it.
 
-## Gardener with metal-stack
+## Gardener
 
 [Gardener](https://gardener.cloud/) is an open source project for orchestrated Kubernetes cluster provisioning. It supports many different cloud providers, metal-stack being one of them. Using the Gardener project, metal-stack can act as a machine provider for Kubernetes worker nodes.
 
