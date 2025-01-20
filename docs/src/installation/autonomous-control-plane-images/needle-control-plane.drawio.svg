@@ -1,4 +1,4 @@
-<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="981px" height="608px" viewBox="-0.5 -0.5 981 608" content="&lt;mxfile&gt;&lt;diagram id=&quot;DT60iPpxJqhLlHo0ZxwR&quot; name=&quot;Page-1&quot;&gt;1Zjfk5owEMf/Gh5xhAjC4513bR/aTmd86HOEHGQaskwIov3ru2hQMejcXNXTJ5PvbkLy2Wx+6JBZsfqqaJn/gJQJxx+nK4e8OL7vkSjEn1ZZb5Uw9rdCpnhqnPbCnP9lRhwbteYpq3qOGkBoXvbFBKRkie5pVClo+m5vIPpfLWnGLGGeUGGrv3mqc6N6Ybw3fGM8y82nI3+6NRS0czYzqXKaQnMgkVeHzBSA3paK1YyJFl7HZdvuywnrbmCKSf2eBob7korazO0nYynO0x/PmVoyZYap193cFdQyZW3zsUOem5xrNi9p0lobjDZquS4E1jwsCrpg4hdUXHOQqCU4LOyTPGPPmiPQ70cOGtoeqODZoPuTMSxAayjQ8MaFmIEAdHqRIHEUz2ZG2IKtTlLxdqxxkTIomFZrdOkaBCY8Zn0SU232wY4jo+UHcQ5iI1KzwLJd1/sYYMGEYTgkxArJHy7R9oSi3ATHxXWtFQi3FBSn/F8RGgB4EvYlyMZ9spFNlkwHyE68C5CdnCFb4WrnCW4qj0QziILPoxlYNLELKlxa8jMQvQ9BvACrXRKvu7NkYsHabcu9pL4Aq9BilVGVMnl2f70bVCSY3g7V1EJVQsNUKs+l5qehCo9XlW+noDeUgpdAFVmoFlCL9D4X1TGp3WXuFqTik/nnspVmssLbh1sqWOK9UrmbfeweGVp7WHjDxOzidR4i5ql7zwl7jHDobnc9hN57EFbkIcDFNzw/PfudUoBqXymj0egRaE0GzoXr0bKfEBnX+BbDhljIayyMVS0314/2kawpv9OryPF7IZhc79TA6v7hvbEd/H1BXv8B&lt;/diagram&gt;&lt;/mxfile&gt;">
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="981px" height="608px" viewBox="-0.5 -0.5 981 608" content="&lt;mxfile&gt;&lt;diagram id=&quot;DT60iPpxJqhLlHo0ZxwR&quot; name=&quot;Page-1&quot;&gt;1ZhNk6IwEIZ/DUcsIKJwnHFmZw+7W1vlYc8RMpDakKZCEN1fv43EDwxaU7vq6Mnk7U5Ink7nQ4fMitWbomX+HVImnMBLVw55cYLAn3ox/rTKulOiKOiETPHUOO2FOf/DjOgZteYpq3qOGkBoXvbFBKRkie5pVClo+m7vIPpfLWnGLGGeUGGrv3iqc6P6k3hv+Mp4lptPR8G0MxR062xmUuU0heZAIq8OmSkA3ZWK1YyJFt6WS9fuywnrbmCKSf2RBob7korazO0HYynOM/DmTC2ZMsPU6+3cFdQyZW1zzyHPTc41m5c0aa0NRhu1XBcCaz4WBV0w8RMqrjlI1BIcFvZJnrFnzRHotyMHDW0PVPBs0P3JGBagNRRoeOdCzEAAOr1IkDiKZxuBodJ2wlYHkkHyxqBgWq3RZWsNTXjM+iSm2uyDHUdGyw/iHMZGpGaBZbuu9zHAggnDcEiIFZLfBLt7Qk1uYuPistYKhFsKijP+rwAN8DvJ+hJg4z7YyAZLpgNgx/4FwI5tsFymHdkKFztPcE95JJphFH4ezdCiiV1Q4dKSn4Ho/xPEC7Da5fB6e5SMLVi7XbmX0xdgNbFYZVSlTJ7dXu8GFQmnt0M1tVCV0DCVynOp+WmoJserKrBT0B9KwUugiixUC6hFep+L6pjU7i53C1Lxyfxz2UozWeHlwy0VLPFaqdzNPnaPDK09bHLDxNzG6zxEzFP3nhP2GOHQ1e56CP2PIKzIQ4CLb3h++vYzpQDVPlJGo9Ej0BoPnAvXo2W/IDKu8SmGDbGQ11jwVC0314/2jawpv9OryPF7IRxf79TA6v7dvbEd/HtBXv8C&lt;/diagram&gt;&lt;/mxfile&gt;">
     <defs/>
     <g>
         <rect x="0" y="17" width="980" height="590" fill="none" stroke="rgb(0, 0, 0)" pointer-events="all"/>
@@ -25,13 +25,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-end; justify-content: unsafe center; width: 368px; height: 1px; padding-top: 474px; margin-left: 41px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                kind: needle-control-plane
+                                k3s: needle-control-plane
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="225" y="474" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    kind: needle-control-plane
+                    k3s: needle-control-plane
                 </text>
             </switch>
         </g>

@@ -42,7 +42,7 @@ Use this stack to create the control plane clusters only. Do not try to create m
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
 This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memory and storage.
-For this initial control plane cluster we could use [kind](https://kind.sigs.k8s.io/) running on a single server which manages the initial metal-stack partition to host the control plane for the real setup.
+For this initial control plane cluster we could use [k3s](https://k3s.io/) running on a single server which manages the initial metal-stack partition to host the control plane for the real setup.
 
 This is a chain of two metal-stack environments.
 
@@ -58,20 +58,20 @@ The `needle` and the `nail` metal-stack have both a control plane and a set of p
 
 #### Needle
 
-The `needle` control plane is kept very small and running inside a `kind` cluster. The physical bare metal machines can be any machines and switches which are supported by metal stack, but can be smaller in terms of cpu, memory and network speed, because these machines must only be capable of running the `nail` metal stack control plane.
+The `needle` control plane is kept very small and running inside a `k3s` cluster. The physical bare metal machines can be any machines and switches which are supported by metal stack, but can be smaller in terms of cpu, memory and network speed, because these machines must only be capable of running the `nail` metal stack control plane.
 
 1. Control Plane
 
-In the most simple case the `needle` control plane is based on `kind` which is running on a machine which was setup manually/partly automated with a debian:12 operating system.
+In the most simple case the `needle` control plane is based on `k3s` which is running on a machine which was setup manually/partly automated with a debian:12 operating system.
 This machine provides a decent amount of cpu, memory and storage locally to store all persistent data. The amount of cpus and memory depends on the required size of the expected `nail` control plane. A typical single socket server with 8-16 cores and 64GB of RAM and two NVMe drives of 1TB would be a good starting point.
 
-In a typical `kind` setup, a stateful set would lose the data once the `kind` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `kind` cluster for the PVCs. With that, `kind` could be terminated and started again, for example to update and reboot the host os, or update `kind` itself and the data will persist.
+In a typical `k3s` setup, a stateful set would lose the data once the `k3s` cluster was terminated and started again. But there is a possibility to define parts of the local storage of the server to be provided to the `k3s` cluster for the PVCs. With that, `k3s` could be terminated and started again, for example to update and reboot the host os, or update `k3s` itself and the data will persist.
 
-Example `kind` configuration for persistent storage on the hosts os:
+Example `k3s` configuration for persistent storage on the hosts os:
 
 ```yaml
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
+k3s: Cluster
+apiVersion: k3s.x-k8s.io/v1alpha4
 name: needle-control-plane
 nodes:
 - role: control-plane
@@ -82,10 +82,10 @@ nodes:
 
 ```
 
-As mentioned before, `kind` is used to host the `needle` control plane. For a gardener managed kubernetes setup, metal-stack and gardener will be deployed into this cluster. This deployment can be done by a gitlab runner which is running on this machine.
+As mentioned before, `k3s` is used to host the `needle` control plane. For a gardener managed kubernetes setup, metal-stack and gardener will be deployed into this cluster. This deployment can be done by a gitlab runner which is running on this machine.
 The mini-lab will be used as a base for this deployment. The current development of [gardener-in-minilab](https://github.com/metal-stack/mini-lab/pull/202) must be extended to host all required extensions to make this a working metal stack control plane which can manage the machines in the attached bare metal setup.
 
-A second `kind` cluster is started on this machine to host services which are required to complete the service. A non-complete list would be:
+A second `k3s` cluster is started on this machine to host services which are required to complete the service. A non-complete list would be:
 
 - PowerDNS to server as a DNS Server for all dns entries which needs to be created in the needle, like api.needle.metal-stack.local, gardener-api.needle.metal-stack.local and the dns entries for the api servers of the create kubernetes clusters.
 - NTP
@@ -102,7 +102,7 @@ Running the `needle` control plane on a single physical server is not as availab
 
 Setting up a second server with the same software components is an option, but the problem of data redundancy must be solved, because neither the gardener control plane, nor the metal-stack control plane can be instantiated twice.
 
-Given that we provide part of the local storage of the server as backing storage for the stateful sets in the `kind` cluster, the data stored on the server itself must be synced to a second server in some way.
+Given that we provide part of the local storage of the server as backing storage for the stateful sets in the `k3s` cluster, the data stored on the server itself must be synced to a second server in some way.
 
 Here comes [DRBD](https://github.com/LINBIT/drbd) into play, this is a linux kernel module which can be configured to mirror one or more local block devices to another server connected over tcp. With the help of [pacemaker](https://clusterlabs.org/projects/pacemaker/) a coordinated failover of resources running on top of filesystems created on such replicated drbd devices, a high available stateful server pair is possible. It is also possible to prevent split brain if both servers have a out-of-band management build in with power off capability.
 DRBD can also be configured to sync storage between WAN links with a higher latency by using a async mechanism.
@@ -169,10 +169,9 @@ If more than one fails, the restoration to a working state must be easily possib
 
 We must ensure both. To ensure we have all possible breakages in mind, we collect a list of them here and explain what impact a certain failure have.
 
-| Scenario          | expected outage                                            |
-|-------------------|------------------------------------------------------------|
-| kind cluster gone | management of `needle` infrastructure not possible anymore |
-
+| Scenario         | expected outage                                            |
+|------------------|------------------------------------------------------------|
+| k3s cluster gone | management of `needle` infrastructure not possible anymore |
 
 ## Open Topics
 
