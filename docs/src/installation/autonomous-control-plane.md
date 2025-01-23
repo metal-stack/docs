@@ -178,12 +178,14 @@ We must ensure both. To ensure we have all possible breakages in mind, we collec
 - Naming of the metal-stack chain elements, is `needle` and `nail` appropriate ?
 - Storage in the `needle` partition
   - [MinIO DirectPV](https://min.io/docs/directpv/) --> new to me, dont know exactly how this works, looks interesting
-  - lightOS
+  - [Lightbits](https://www.lightbitslabs.com/)
   - [Diskomator](https://github.com/poettering/diskomator) --> Crazy
   - the needle server as initiator, maybe also replicated with drbd ?
     - [NVMEoTCP Howto](https://ssdcentral.net/getting-started-with-nvme-over-fabrics-with-tcp/)
     - [NVMEoTCP Howto](https://jing.rocks/2023/06/13/Experimenting-with-NVMe-over-TCP.html)
   - Storage Appliance like Synology
+  - [CubeFS](https://cubefs.io/)
+  - [TrueNAS](https://www.truenas.com/)
 - S3 Object storage is considered as provided
 - AirGapped is out of scope for now
 - IP address ranges and families
