@@ -8,6 +8,7 @@ The control plane must be running in a kubernetes cluster, which offers at least
 - Persistent Storage
 - Access to a object storage for automatic backups of the stateful sets
 - Access to a DNS provider which is supported by one of the dns extensions in use.
+- DNS entries must be externally accessible to ensure a working DNS Challenge
 
 This cluster must also be highly available to prevent complete loss of control over the managed resources in the datacenter.
 Regular kubernetes updates to apply security fixes and feature updates must be possible in an automated manner.
@@ -21,6 +22,16 @@ For such cases a solution must be found which produces the control plane inside 
 Pages = ["autonomous-control-plane.md"]
 Depth = 5
 ```
+
+## Meeting Notes
+
+- to produce the initial cluster we can use either a single bare metal machine if HA is not a hard requirement. To achieve HA the initial cluster can be either formed from 3 bare metal machines or a single virtual machine.
+- For 3 bare metal machine a loadbalancing mechanism for the ingress is required. kube-vip could be a possible solution.
+- Explain which components run on which machine, especially STS.
+- Describe how local storage works on k3s
+- Describe day2 Scenarios for the bare metal and virtual machine initial cluster setup
+- We could divide our control plane into 3 clusters metal-stack, gardener and monitoring
+- Storage for the control plane is a open and difficult topic and will be clarified later. For now we start without a central storage solution and rely on backup-restore for our stateful sets.
 
 ## Possible Solutions
 
@@ -186,6 +197,7 @@ We must ensure both. To ensure we have all possible breakages in mind, we collec
   - Storage Appliance like Synology
   - [CubeFS](https://cubefs.io/)
   - [TrueNAS](https://www.truenas.com/)
+  - [NetApp](https://netapp.com)
 - S3 Object storage is considered as provided
 - AirGapped is out of scope for now
 - IP address ranges and families
