@@ -27,28 +27,40 @@ Depth = 5
 
 - to produce the initial cluster we can use either a single bare metal machine if HA is not a hard requirement. To achieve HA the initial cluster can be either formed from 3 bare metal machines or a single virtual machine.
 - For 3 bare metal machine a loadbalancing mechanism for the ingress is required. kube-vip could be a possible solution.
-- Explain which components run on which machine, especially STS.
 - Describe how local storage works on k3s
+- Monitoring backends Victoria Metrics Cluster?
 - Describe day2 Scenarios for the bare metal and virtual machine initial cluster setup
 - We could divide our control plane into 3 clusters metal-stack, gardener and monitoring
 - Storage for the control plane is a open and difficult topic and will be clarified later. For now we start without a central storage solution and rely on backup-restore for our stateful sets.
 
-## Possible Solutions
-
-No complete list.
-
-- vmware and rancher
-- talos
-- 3 physical machines with kubespray
-...
-
-All of these solutions add another stack which is probably new to the team which already operates the metal-stack environment.
-
-TODO: can we provide a list which of the requirements can be solved with all of the alternatives.
-
 ## Use your own dogfood
 
-With metal-stack.io we already have the possibility to create and manage kubernetes clusters with the help of [Gardener](https://gardener.cloud).
+The most obvious solutions would be to just deploy a Kubernetes cluster manually utilizing existing tooling for the deployment (not a complete list):
+
+- k3s
+- kubeadm
+- vmware and rancher
+- talos
+- kubespray
+- ...
+
+However, all of these solutions add another stack which is probably new to the team which already operates the metal-stack environment. In general metal-stack in combination with [Gardener](https://gardener.cloud) already contains all necessary tools in order to build this cluster. Not only do we re-use the solutions that are already used but there will also be no dependencies to other products / vendors.
+
+The only problem with this approach is that Gardener cannot yet create an initial cluster, which might change with the implementation of [GEP-28](https://github.com/gardener/gardener/blob/master/docs/proposals/28-autonomous-shoot-clusters.md). In the meantime, we could use [k3s](https://k3s.io/), which manages the initial metal-stack partition to host the control plane for the real setup.
+
+## The Matryoshka principle
+
+Instead of using the K3s cluster for the production control plane, we propose using it as a minimal control plane cluster which only purpose it is to host the production control plane cluster. This layer of indirection brings some reasonable advantages:
+
+- With an interruption or loss of this minimal control plane cluster the production control plane stays unaffected, end-users can still manage their clusters as normal
+- A dedicated operational team can take care of 2-day maintenance of this installation, which might be handy because the tooling like `k3s` is a little different than the rest of the setup (it's likely that more manual maintenance is required than for all the other clusters)
+- As the amount of shoot clusters to host is static the resource requirements will not change significantly over time, so the lack of scalability is not such a big issue
+
+![](./autonomous-control-plane-images/metal-stack-autonomous-control-plane-full.drawio.svg)
+
+--->> TODO: continue, muss zum Klettern
+
+
 Use this stack to create the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
 If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
 
