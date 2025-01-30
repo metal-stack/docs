@@ -1,22 +1,21 @@
-# Autonomous Control Plane, aka solve the bootstrap problem
+# Autonomous Control Plane
 
-Setting up a metal-stack.io environment in your own datacenter requires a control plane to be present which hosts the metal-stack api.
-If you plan to spin up kubernetes clusters, either with gardener.cloud or cluster api, the requirement for this control plane raises.
-The control plane must be running in a kubernetes cluster, which offers at least the following features:
+As described in the [deployment chapter](./deployment.md), we strongly recommend Kubernetes as the target platform for running the metal-stack control plane.
 
-- Loadbalancing
-- Persistent Storage
-- Access to a object storage for automatic backups of the stateful sets
-- Access to a DNS provider which is supported by one of the dns extensions in use.
-- DNS entries must be externally accessible to ensure a working DNS Challenge
+Kubernetes clusters for this purpose are readily available from hyperscalers, metalstack.cloud, or other cloud providers. Simply using a managed Kubernetes cluster greatly simplifies a metal-stack installation. However, sometimes it might be desirable to host the metal-stack control plane autonomously, without the help of another cloud provider. Reasons for this might include corporate policies that prohibit the use of external data center products, or network constraints.
 
-This cluster must also be highly available to prevent complete loss of control over the managed resources in the datacenter.
-Regular kubernetes updates to apply security fixes and feature updates must be possible in an automated manner.
+The Kubernetes cluster hosting the metal-stack control plane must provide at least the following features:
 
-The most obvious and simple solution is to use one of the managed kubernetes offerings from another cloud provider.
+- Load balancing (for exposing the APIs)
+- Persistent storage (for the databases and key-value stores)
+- Access to object storage for automated backups of the stateful sets
+- Access to a DNS provider supported by one of the used DNS extensions
+- Externally accessible DNS records for obtaining officially signed certificates through DNS challenges
 
-But there are use cases, where it is not possible because of network restrictions, or because the company compliances forbid the usage of external datacenter products.
-For such cases a solution must be found which produces the control plane inside the own datacenter but with reasonable day two operational effort.
+This metal-stack control plane cluster must also be highly available to prevent a complete loss of control over the managed resources in the data center.
+Regular Kubernetes updates to apply security fixes and feature updates must be possible in an automated manner. The Day-2 operational overhead of running this cluster in your own datacenter must be reasonable.
+
+In this chapter, we propose a solution for setting up a metal-stack environment with an autonomous control plane that is independent of another cloud provider.
 
 ```@contents
 Pages = ["autonomous-control-plane.md"]
@@ -33,43 +32,38 @@ Depth = 5
 - We could divide our control plane into 3 clusters metal-stack, gardener and monitoring
 - Storage for the control plane is a open and difficult topic and will be clarified later. For now we start without a central storage solution and rely on backup-restore for our stateful sets.
 
-## Use your own dogfood
+## Use Your Own Dogfood
 
-The most obvious solutions would be to just deploy a Kubernetes cluster manually utilizing existing tooling for the deployment (not a complete list):
+The most obvious solutions would be to just deploy a Kubernetes cluster manually in your own data center is by utilizing existing tooling for the deployment:
 
 - k3s
 - kubeadm
 - vmware and rancher
 - talos
 - kubespray
-- ...
+- ... (not a complete list)
 
-However, all of these solutions add another stack which is probably new to the team which already operates the metal-stack environment. In general metal-stack in combination with [Gardener](https://gardener.cloud) already contains all necessary tools in order to build this cluster. Not only do we re-use the solutions that are already used but there will also be no dependencies to other products / vendors.
+However, all these solutions add another layer of complexity that needs to be maintained and operated by people who also need to learn and understand metal-stack. In general, metal-stack in combination with [Gardener](https://gardener.cloud) contains all the necessary tools to provide KaaS, so it makes sense to reuse what is already in place without introducing new dependencies on other products and vendors.
 
-The only problem with this approach is that Gardener cannot yet create an initial cluster, which might change with the implementation of [GEP-28](https://github.com/gardener/gardener/blob/master/docs/proposals/28-autonomous-shoot-clusters.md). In the meantime, we could use [k3s](https://k3s.io/), which manages the initial metal-stack partition to host the control plane for the real setup.
+The only problem here is that Gardener is not yet able to create an initial cluster, which may change with the implementation of [GEP-28](https://github.com/gardener/gardener/blob/master/docs/proposals/28-autonomous-shoot-clusters.md). In the meantime, we suggest using [k3s](https://k3s.io/), which manages the initial metal-stack partition to host the control plane, since the maintenance overhead is acceptable and it is easy to deploy.
 
-## The Matryoshka principle
+TODO: K3s nodes can be bare metal machines or virtual machines, when using VMs a single K3s node might be feasible, too
 
-Instead of using the K3s cluster for the production control plane, we propose using it as a minimal control plane cluster which only purpose it is to host the production control plane cluster. This layer of indirection brings some reasonable advantages:
+## The Matryoshka Principle
 
-- With an interruption or loss of this minimal control plane cluster the production control plane stays unaffected, end-users can still manage their clusters as normal
-- A dedicated operational team can take care of 2-day maintenance of this installation, which might be handy because the tooling like `k3s` is a little different than the rest of the setup (it's likely that more manual maintenance is required than for all the other clusters)
-- As the amount of shoot clusters to host is static the resource requirements will not change significantly over time, so the lack of scalability is not such a big issue
+Instead of directly using the K3s cluster for the production control plane, we propose using it as a minimal control plane cluster which only purpose it is to host the production control plane cluster. This layer of indirection brings some reasonable advantages:
+
+- In the event of an interruption or loss of this minimal control plane cluster, the production control plane remains unaffected, and end users can continue to manage their clusters as normal.
+- A dedicated operations team can take care of the Day-2 maintenance of this installation, which can be handy because the tools like `k3s` are a little different from the rest of the setup (it is likely that more manual maintenance is required than for any other cluster).
+- Since the number of shoot clusters to host is static, the resource requirements are minimal and will not change significantly over time. There are no huge resource requirements in terms of cpu, memory and storage. As such, the lack of scalability is not such a big issue.
+
+So, our proposal is to chain two metal-stack control planes. The initial control plane cluster would use [k3s](https://k3s.io/) and on this cluster we can spin up a cluster for the production control plane with the use of Gardener.
+
+### Architecture
 
 ![](./autonomous-control-plane-images/metal-stack-autonomous-control-plane-full.drawio.svg)
 
 --->> TODO: continue, muss zum Klettern
-
-
-Use this stack to create the control plane clusters only. Do not try to create more clusters for other purposes than metal-stack control planes.
-If this restriction applies, the requirement for a control plane for this metal-stack setup can be minimal.
-
-This metal-stack setup also requires a control plane to host metal-api and gardener, but this control plane does not have huge resource requirements in terms of cpu, memory and storage.
-For this initial control plane cluster we could use [k3s](https://k3s.io/) running on a single server which manages the initial metal-stack partition to host the control plane for the real setup.
-
-This is a chain of two metal-stack environments.
-
-### Architecture
 
 A high-level architecture consists of two metal-stack.io environments, one for the control plane, the second one for the production or real environment. It might also be possible to call the initial metal-stack.io environment the metal-stack `seed`, and the actual production environment the metal-stack `shoot`.
 
