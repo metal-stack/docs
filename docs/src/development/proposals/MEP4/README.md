@@ -29,7 +29,6 @@ These are some general requirements / higher objectives that MEP-4 has to fulfil
 
 - Should be able to run with mini-lab without requiring to setup complex auth backends (dex, LDAP, keycloak, ...)
   - Simple to start with, more complex options for production setups
-- Should utilize auth mechanisms that we have already in place to best possible degree
 - Fine-grained access permissions (every endpoint maps to a permission)
 - Tenant scoping (disallow resource access to resources of other tenants)
 - Project scoping (disallow resource access to resources of other projects)
@@ -53,8 +52,8 @@ Client implementations for the most relevant languages (go, python) are generate
 
 This api is divided into end-user and admin access at the top level. The proposed APIs are:
 
-- `api.v2`: For end-user facing services
-- `admin.v2`: For operators and controllers which need access to unscoped entities
+- `metalstack.api.v2`: For end-user facing services
+- `metalstack.admin.v2`: For operators and controllers which need access to unscoped entities
 
 The methods of the API can have different role scopes (and can be narrowed down further with fine-grained method permissions):
 
@@ -69,7 +68,6 @@ And has methods with different visibility scopes:
 
 - `self`: Methods that only the logged in user can access, e.g. show permissions with the presented token
 - `public`: Methods that do not require any specific authorization
-- `private`: Methods that are not exposed
 
 ### API
 
@@ -87,7 +85,7 @@ Is put into a new github repo which implements the services defined in the `api`
 
 ### Migration of the Consumers
 
-To allow consumers to migrate to the `v2` API gradually, both apis, the new and the old, are deployed in parallel. In the control-plane both apis are deployed side-by-side behind the ingress. `api.example.com` is forwarded to `metal-api` and `metal.example.com` is forwarded to the new `api-server`.
+To allow consumers to migrate to the `v2` API gradually, both apis, the new and the old, are deployed in parallel. In the control-plane both apis are deployed side-by-side behind the ingress. `api.example.com` is forwarded to `metal-api` and `metal.example.com` is forwarded to the new `metal-apiserver`.
 
 The api-server will talk to the existing metal-api during the process of migration services away to the new grpc api.
 
@@ -96,11 +94,15 @@ The migration process can be done in the following manner:
 for each resource in the metal-api:
 
 - create a new proto3 based definition in the `api` repo.
-- implement at least a small wrapper service in the `api-server` which asks the metal-api for this resource an maps the response back the caller in the grpc format.
+- implement the business logic per service in the new `metal-apiserver` without calling the metal-api.
+- clients must be able to talk to `v1` and `v2` backend in parallel
+- Deprecate the already migrated service in the swagger route to notify the client that this route should not be used anymore.
 - identify all consumers of this resource and replace them to use the grpc instead of the rest api
-- move the business logic incl. the backend calls to ipam, metal-db, masterdata-ap, nsq for this resource from the metal-api to the api-server
+- move the business logic incl. the backend calls to ipam, metal-db, masterdata-api, nsq for this resource from the metal-api to the `metal-apiserver`
 
-We will try to migrate the rethinkdb backend implementation to a generic approach during this effort.
+We will migrate the rethinkdb backend implementation to a generic approach during this effort.
+
+- Try to enhance the generic rethinkdb interface with `project` scoped methods.
 
 There are a lot of consumers of metal-api, which need to be migrated:
 

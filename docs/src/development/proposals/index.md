@@ -18,11 +18,11 @@ Possible states are:
 Once a proposal was accepted, an issue should be raised and the implementation should be done in a separate PR.
 
 | Name                      | Description                                    |      State      |
-| :------------------------ | :--------------------------------------------- | :-------------: |
+|:--------------------------|:-----------------------------------------------|:---------------:|
 | [MEP-1](MEP1/README.md)   | Distributed Control Plane Deployment           | `In Discussion` |
 | [MEP-2](MEP2/README.md)   | Two Factor Authentication                      |    `Aborted`    |
 | [MEP-3](MEP3/README.md)   | Machine Re-Installation to preserve local data |   `Completed`   |
-| [MEP-4](MEP4/README.md)   | Multi-tenancy for the metal-api                | `In Discussion` |
+| [MEP-4](MEP4/README.md)   | Multi-tenancy for the metal-api                |  `In Progress`  |
 | [MEP-5](MEP5/README.md)   | Shared Networks                                |   `Completed`   |
 | [MEP-6](MEP6/README.md)   | DMZ Networks                                   |   `Completed`   |
 | [MEP-8](MEP8/README.md)   | Configurable Filesystemlayout                  |   `Completed`   |
