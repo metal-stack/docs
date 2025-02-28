@@ -35,6 +35,7 @@ makedocs(
         "Quickstart" => "quickstart.md",
         "Installation & Administration" => Any[
             "Installation" => "installation/deployment.md",
+            "Autonomous Control Plane" => "installation/autonomous-control-plane.md",
             "Releases and Updates" => "installation/updates.md",
             "Monitoring" => "installation/monitoring.md",
             "Troubleshoot" => "installation/troubleshoot.md",
