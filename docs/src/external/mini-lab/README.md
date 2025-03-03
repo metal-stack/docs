@@ -14,6 +14,7 @@ The mini-lab is a small, virtual setup to locally run the metal-stack. It deploy
     - [Reinstall machine](#reinstall-machine)
     - [Free machine](#free-machine)
 - [Flavors](#flavors)
+- [Network Topology](#network-topology)
 
 <!-- /TOC -->
 
@@ -90,8 +91,8 @@ After the deployment and waiting for a short amount of time, two machines in sta
 docker compose run --rm metalctl machine ls
 
 ID                                          LAST EVENT   WHEN     AGE  HOSTNAME  PROJECT  SIZE          IMAGE  PARTITION
-e0ab02d2-27cd-5a5e-8efc-080ba80cf258        PXE Booting  3s
-2294c949-88f6-5390-8154-fa53d93a3313        PXE Booting  5s
+00000000-0000-0000-0000-000000000001        PXE Booting  3s
+00000000-0000-0000-0000-000000000002        PXE Booting  5s
 ```
 
 Wait until the machines reach the waiting state:
@@ -100,8 +101,8 @@ Wait until the machines reach the waiting state:
 docker compose run --rm metalctl machine ls
 
 ID                                          LAST EVENT   WHEN     AGE  HOSTNAME  PROJECT  SIZE          IMAGE  PARTITION
-e0ab02d2-27cd-5a5e-8efc-080ba80cf258        Waiting      8s                               v1-small-x86         mini-lab
-2294c949-88f6-5390-8154-fa53d93a3313        Waiting      8s                               v1-small-x86         mini-lab
+00000000-0000-0000-0000-000000000001        Waiting      8s                               v1-small-x86         mini-lab
+00000000-0000-0000-0000-000000000002        Waiting      8s                               v1-small-x86         mini-lab
 ```
 
 Create a firewall and a machine with:
@@ -157,14 +158,14 @@ Two machines are now installed and have status "Phoned Home"
 ```bash
 docker compose run --rm metalctl machine ls
 ID                                          LAST EVENT   WHEN   AGE     HOSTNAME  PROJECT                               SIZE          IMAGE                             PARTITION
-e0ab02d2-27cd-5a5e-8efc-080ba80cf258        Phoned Home  2s     21s     machine   00000000-0000-0000-0000-000000000000  v1-small-x86  Ubuntu 20.04 20200331             mini-lab
-2294c949-88f6-5390-8154-fa53d93a3313        Phoned Home  8s     18s     fw        00000000-0000-0000-0000-000000000000  v1-small-x86  Firewall 2 Ubuntu 20200730        mini-lab
+00000000-0000-0000-0000-000000000001        Phoned Home  2s     21s     machine   00000000-0000-0000-0000-000000000000  v1-small-x86  Ubuntu 20.04 20200331             mini-lab
+00000000-0000-0000-0000-000000000002        Phoned Home  8s     18s     fw        00000000-0000-0000-0000-000000000000  v1-small-x86  Firewall 2 Ubuntu 20200730        mini-lab
 ```
 
 Login with user name metal and the console password from
 
 ```bash
-docker compose run --rm metalctl machine consolepassword e0ab02d2-27cd-5a5e-8efc-080ba80cf258
+docker compose run --rm metalctl machine consolepassword 00000000-0000-0000-0000-000000000001
 ```
 
 To remove the kind cluster, the switches and machines, run:
@@ -180,7 +181,7 @@ Reinstall a machine with
 ```bash
 docker compose run --rm metalctl machine reinstall \
         --image ubuntu-20.04 \
-        e0ab02d2-27cd-5a5e-8efc-080ba80cf258
+        00000000-0000-0000-0000-000000000001
 ```
 
 ### Free machine
@@ -188,15 +189,17 @@ docker compose run --rm metalctl machine reinstall \
 Free a machine with `make free-machine01` or
 
 ```bash
-docker compose run --rm metalctl machine rm e0ab02d2-27cd-5a5e-8efc-080ba80cf258
+docker compose run --rm metalctl machine rm 00000000-0000-0000-0000-000000000001
 ```
 
 ## Flavors
 
 There are two versions, or flavors, of the mini-lab environment which differ in regards to the NOS running on the leaves:
 
-- `cumulus` -- runs 2 Cumulus switches.
-- `sonic` -- runs 2 SONiC switches
+- `cumulus`: runs 2 Cumulus switches.
+- `sonic`: runs 2 SONiC switches
+- `capms`: runs the SONiC flavor but with three instead of two machines (this is used for  [cluster-provider-metal-stack](https://github.com/metal-stack/cluster-api-provider-metal-stack) in order to have dedicated hosts for control plane / worker / firewall)
+- `gardener`: installs the [Gardener](https://gardener.cloud) in the mini-lab
 
 In order to start specific flavor, you can define the flavor as follows:
 
@@ -204,6 +207,12 @@ In order to start specific flavor, you can define the flavor as follows:
 export MINI_LAB_FLAVOR=sonic
 make
 ```
+
+## Network topology
+
+An Nginx is running inside of the www container to allow automatic testing of outgoing connections.
+
+![Network topology](docs/network.svg)
 
 ## Page Tree
 
