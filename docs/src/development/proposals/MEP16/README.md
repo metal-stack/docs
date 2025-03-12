@@ -54,13 +54,13 @@ Cluster API allows to move the resource and therefore the control over the boots
 
 When using the fcm in this context, it should also obey this rule. But in order to keep the fcm separated from cluster api internals, we'd like to propose the `firewall.metal-stack.io/paused` annotation to pause the reconciliation. Managing this pause annotation on the `FirewallDeployment` is in the responsibility of the capms controller manager.
 
-This annoation still needs to be propagated to nested resources like `FirewallSet` and `Firewall`.
+This annotation still needs to be propagated to nested resources like `FirewallSet` and `Firewall`.
 
-Furthermore Cluster API also requires to have an unbroken chain of owner refrences. In practice this means `Firewall` is owned by `FirewallSet` which is in turn owned by `FirewallDeployment`. This is a [Kubernetes feature](https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/) and good practice anyways.
+Furthermore Cluster API also requires to have an unbroken chain of owner references. In practice this means `Firewall` is owned by `FirewallSet` which is in turn owned by `FirewallDeployment`. This is a [Kubernetes feature](https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/) and good practice anyways.
 
 ## Affected Components
 
-For some working items, we already created proof of concept PRs, which might need to be splitted up and are not yet production ready.
+For some working items, we already created proof of concept PRs, which might need to be split up and are not yet production ready.
 
 - Firewall Controller Manager
   - must be configured to watch all namespaces for `FirewallDeployment` [fcm#66](https://github.com/metal-stack/firewall-controller-manager/pull/66)
@@ -75,7 +75,7 @@ For some working items, we already created proof of concept PRs, which might nee
   - cluster-template
     - needs to install CRDs for the FCM in order to be respected during moves [capms#82](https://github.com/metal-stack/cluster-api-provider-metal-stack/pull/82)
     - eventually also install the FCM itself
-  - `MetalStackCluster` resource defintion
+  - `MetalStackCluster` resource definition
     - add `MetalStackCluster.Spec.FirewallTemplate`
     - make `Spec.NodeNetworkID` optional if `Spec.FirewallTemplate` given
 
