@@ -8,6 +8,8 @@ In case of Gardener on metal-stack the [Firewall Controller Manager](https://git
 
 ## Overview
 
+![architectural overvier](firewall-for-capms-overview.svg)
+
 The capms controller manager should now create the node network if needed. And when a firewall template exists for the cluster, a firewall deployment should be created and updated on every change.
 
 The fcm should now observe all firewall deployments across all namespaces. It then creates firewall sets and later firewalls. It handles and implement rolling updates.
