@@ -1,7 +1,7 @@
 # Firewall Support for Cluster API Provider
 
 Currently the creation and management of firewalls is out of scope for the [Cluster API Provider metal-stack](https://github.com/metal-stack/cluster-api-provider-metal-stack), or in short CAPMS. In practice this requires operators to create the firewall and therefore also the node network before generating the cluster.
-When either the firewall rules, the firewall image or the firewall machine size change, the current appraoch also requires the operator to manually roll the firewall by creating a new one and deleting the old firewall. 
+When either the firewall rules, the firewall image or the firewall machine size change, the current approach also requires the operator to manually roll the firewall by creating a new one and deleting the old firewall. 
 
 To gain a production ready implementation for Cluster API to automatically manage the deployment of firewalls, it makes sense to build on top of prior art.
 In case of Gardener on metal-stack the [Firewall Controller Manager](https://github.com/metal-stack/firewall-controller-manager), or short fcm, is used. 
