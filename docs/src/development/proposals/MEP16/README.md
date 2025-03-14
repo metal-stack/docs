@@ -12,15 +12,15 @@ For this reason, we have a gap in the metal-stack project in terms of a missing 
 
 Parts of these problems are probably going to decrease with the work on [MEP-4](../MEP4/README.md) where there will be dedicated APIs for users and administrators of metal-stack including fine-grained access tokens.
 
-With this MEP we want to describe a way to improve this current situation and allow other users that do not rely on the Gardener integration – for whatever motivation they have not to – to adequately manage firewalls. For this, we propose an alternative configuration for the firewall-controller that is more versatile and independent of the Gardener.
-
+With this MEP we want to describe a way to improve this current situation and allow other users that do not rely on the Gardener integration – for whatever motivation they have not to – to adequately manage firewalls. For this, we propose an alternative configuration for the firewall-controller that is native to metal-stack and more independent of the Gardener.
 
 ## Proposal
 
+- The firewall-controller can use the metal-api as a configuration source.
 - The firewall rules of the firewall entity can be updated through the metal-api.
 - The firewall-controller can be configured through a dedicated config file.
 - Inside this config file the data source for all its dynamic configuration tasks can be set independently.
-- For example the data source of the core firewall rules could be set the Gardener seed or the metal-api firewall entity, while the CWNPs should be fetched and applied from a given kubeconfig.
+- For example the data source of the core firewall rules could be set the Gardener seed or the metal-api firewall entity, while the CWNPs should be fetched and applied from a given kubeconfig (the shoot Kubeconfig in the Gardener case).
 - This configuration file is intended to be injected through userdata along with potential source connection credentials.
 
 ```yaml
@@ -81,8 +81,9 @@ reports:
 ### Advantages
 
 - Offers a native metal-stack solution that improves managing firewalls for users by adding dynamic reconfiguration through the metal-api
-- Improve consistency throughout the API (firewall rules would reflect what is in metal-api)
-- Other providers like Cluster API can leverage this approach, too
+  - e.g., in the mini-lab, users can now allocate a machine, then an IP address and announce this IP from the machine without having to re-create the firewall but by adding a firewall rule to the firewall entity.
+- Improve consistency throughout the API (firewall rules would reflect what is persisted in metal-api).
+- Other providers like Cluster API can leverage this approach, too.
 - It can contribute to solving the shoot migration issue (in Cluster API case the `clusterctl move` for firewall objects)
   - For Gardener takes the seed out of the equation (of which the kubeconfig changes during shoot migration)
   - However: Things like egress rules, rate limiting, etc. are currently not part of the firewall entity in the metal-api (these would need to be added to the firewall entity as otherwise there is no feature parity)
@@ -124,31 +125,59 @@ spec:
 
 ### Cluster API Provider Metal Stack
 
-The proposed changes would allow the cluster-api-provider-metal-stack to be able to manage firewalls to the same extent as metal-stack can with Gardener.
-Here the firewall would need to be configured to use a kubeconfig to a cluster to reconcil`CWNP`s and the `FirewallMonitor`. This cluster might be a separate monitoring or configuration cluster that is accessible by the firewall and the FCM or the workload cluster itself if the CRDs are installed.
+In Cluster API there are essentially two main clusters: the management cluster and the workload cluster.
+Typically a local bootstrap cluster is created in kind which acts as the management cluster. It creates the workload cluster. Thereafter the ownership of the workload cluster is typically moved to a different cluster which will then become the management cluster.
+The new management cluster might actually be the workload cluster itself.
 
-Once the firewall-controller is able to update the status of the `FirewallMonitor`, the FCM is able to perform battle proof rolling updates of the firewall.
-Due to the fact that the bootstrap cluster is typically being run in a kind cluster, there is no way for the firewall-controller to access the `Firewall` resource within. By using the metal-api as a data source, there is now a way for the firewall-controller to operate on.
+In contrast to Gardener, Cluster API tries to be as non-opinionated and as standard as possible. It is common practice to not install any non-required components or CRDs into the workload cluster. Therefore we cannot expect custom resources like `ClusterwideNetworkPolicy` or `FirewallMonitor` to be installed in the workload cluster. Therefore it's the responsibility of the operator to tell cluster-api-provider-metal-stack the kubeconfig for the cluster where these CRDs are installed and defined in.
 
-- firewall-controller
-  - for FirewallMonitor and CWNP use user provided SecretRef to Kubeconfig 
-  - for LoadBalancer use workload cluster kubeconfig
+A viable configuration for a `MetalStackCluster` that generates firewall rules based of `Service` type `LoadBalancer` and `ClusterwideNetworkPolicy` and expects them to be deployed in the workload cluster is shown below. The `FirewallMonitor` will be reported into the same cluster.
 
 ```yaml
 kind: MetalStackCluster
 metadata:
-    # existing fields omitted
+    name: ${CLUSTER_NAME}
 spec:
     firewallTemplate:
         # existing fields omitted
         staticRuleSet: []
+        additionalFiles:
+        - path: /etc/firewall-controller/workload.yaml
+          secretRef:
+              # this is the kubeconfig generated by kubeadm
+              name: ${CLUSTER_NAME}-kubeconfig
+        
         controllerConfig: |
             ---
             main:
+                kind: metal-api
+                config:
+                    url: ${METAL_API_URL}
+                    hmac: ${METAL_API_HMAC}
+                    type: ${METAL_API_HMAC_TYPE}
             additional:
+            - kind: kubernetes
+              config:
+                  kubeconfigPath: /etc/firewall-controller/workload.yaml
+                  components:
+                  - kind: ClusterwideNetworkPolicy
+                    namespace: firewall
+                  - kind: Service
+            
             reports:
-        additionalFiles:
+            - kind: kubernetes
+              config:
+                  kubeconfigPath: /etc/firewall-controller/workload.yaml
+                  components:
+                  - kind: FirewallMonitor
+                    namespace: firewall
+                    name: firewall-monitor-${CLUSTER_NAME}
+
 ```
+
+This approach allows maximum flexibility as intended by Cluster API and is still able to provide robust rolling updates of firewalls.
+
+An advanced use case of this flexibility would be a management cluster, that is in charge of multiple workload clusters. Where one workload cluster acts as a monitoring or tooling cluster, receives logs and the firewall monitor for the other workload clusters. The CWNPs could be defined here, all in a separate namespace.
 
 ## Roadmap
 
