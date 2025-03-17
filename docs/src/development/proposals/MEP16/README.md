@@ -95,13 +95,13 @@ reports:
 
 ### Firewall Controller Manager
 
-- firewall-controller
-  - Allow OPTIONAL configuration source (metal-api with view HMAC), which is considered when no seed kubeconfig was passed in the userdata
-- firewall-controller-manager
-  - Update the firewall entity in the metal-api
-- metal-api
-  - Allow update of firewall rules in the machine allocation spec
-  - Add egress rules, rate limiting, etc to the firewall entity
+The firewall-controller should allow retrieving the main configuration of the firewall from the metal-api (with view HMAC) as an alternative to the kubeconfig based approach that is used in our Gardener setup.
+
+In this scenario, the firewall-controller-manager is responsible to update the firewall entity in the metal-api whenever the firewall rules change of the firewall resource.
+
+Of course the metail-api needs to update firewall rules in the machine allocation spec. Additionally ingress and egress rules need to be added to the firewall entity.
+
+The desired behavior will be configured in the `FirewallDeployment`. Specifically for the Gardener use case, the generation of the shoot kubeconfig for the firewall to be able to access the `Firewall` resource definition in the seed cluster will be hidden behind the `generateGardenerFirewallControllerSecret` flag.
 
 ```yaml
 kind: FirewallDeployment
@@ -186,6 +186,14 @@ This approach allows maximum flexibility as intended by Cluster API and is still
 
 An advanced use case of this flexibility would be a management cluster, that is in charge of multiple workload clusters. Where one workload cluster acts as a monitoring or tooling cluster, receives logs and the firewall monitor for the other workload clusters. The CWNPs could be defined here, all in a separate namespace.
 
+#### Cluster API Caveats
+
+When the cluster is pivoted and reconciles its own firewall, a malfunctioning firewall prevents the cluster from self-healing and requires manual intervention by creating a new firewall. This is an inherent problem of the cluster-api approach. It can be circumvented by using an extra cluster to manage workload clusters.
+
+In the current form of this approach firewalls and therefore the firewall egress and ingress rules are managed by the cluster operators that manage the cluster-api resources.
+Hence it will not be possible to gain a fine-grained control over every cluster operator's choices from a central ruleset at the level of metal-stack firewalls.
+In case this control surfaces as a requirement, it would need to be implemented in a firewall external to metal-stack.
+
 ## Roadmap
 
 In general this proposal is not thought to be implemented in one batch. Instead an incremental approach is required.
@@ -195,6 +203,8 @@ In general this proposal is not thought to be implemented in one batch. Instead 
    - Add `firewall.metal-stack.io/paused` annotation (managed by CAPMS during move, theoretically useful for Gardener shoot migration as well to avoid shallow deletion).
    - Reconcile multiple `FirewallDeployment` resources per namespace.
    - Allow setting the `firewall.metal-stack.io/no-controller-connection` annotation through the `FirewallDeployment` (either through the template or inheritance)
+   - add `MetalStackCluster.Spec.FirewallTemplate`
+   - make `MetalStackCluster.Spec.NodeNetworkID` optional if `Spec.FirewallTemplate` given
 2. Extend firewall-controller with the configuration file (no different data sources than kubernetes) and let the FCM generate this configuration file along with the rest of the userdata.
 3. Add metal-api as configuration source.
    - Allow updates of firewall rules in the firewall entity.
