@@ -76,7 +76,7 @@ reports:
 ### Non-Goals
 
 - Resolving the missing differentiation between users and administrators by lettings users pass userdata and SSH keys to the firewall creation.
-  - This is even more related to MEP-4 than this MEP.
+  - This is even more related to [MEP-4](../MEP4/README.md) than this MEP.
 
 ### Advantages
 
@@ -90,8 +90,8 @@ reports:
 
 ### Caveats
 
-- Metal-View access is too broad for firewalls. Mitigated by MEP-4.
-- Polling of the firewall-controller is bad for performance. Mitigated by MEP-4.
+- Metal-View access is too broad for firewalls. Mitigated by [MEP-4](../MEP4/README.md).
+- Polling of the firewall-controller is bad for performance. Mitigated by [MEP-4](../MEP4/README.md).
 
 ### Firewall Controller Manager
 
