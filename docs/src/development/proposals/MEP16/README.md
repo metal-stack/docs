@@ -1,10 +1,10 @@
 # metal-api as an Alternative Configuration Source for the firewall-controller
 
-In the current situation, a firewall as provisioned by metal-stack is a fully immutable entity. Any modifications on the firewall like changing the firewall ruleset must be done _somehow_ by the user – the metal-api and hence the metal-stack is not aware of its current state. 
+In the current situation, a firewall as provisioned by metal-stack is a fully immutable entity. Any modifications on the firewall like changing the firewall ruleset must be done _somehow_ by the user – the metal-api and hence metal-stack is not aware of its current state. 
 
 As part of our [integration with the Gardener project](https://docs.metal-stack.io/stable/overview/kubernetes/#Gardener) we offer a solution called the [firewall-controller](https://github.com/metal-stack/firewall-controller), which is part of our [firewall OS images](https://github.com/metal-stack/metal-images/blob/6318a624861b18a559a9d37299bca5f760eef524/firewall/Dockerfile#L57-L58) and addresses shortcomings of the firewall resource's immutability, which would otherwise be completely impractible to work with. The firewall-controller crashes infinitely if it is not properly configured through the userdata when using the firewall image of metal-stack.
 
-The firewall-controller approach is tightly coupled to the Gardener and it requires the administrator of the Gardener installation to pass a shoot and a seed kubeconfig through machine userdata when creating the firewall. How this userdata has to look like is not documented and is just part of another project called the [firewall-controller-manager](https://github.com/metal-stack/firewall-controller-manager), which task is to orchestrate rolling updates of firewall machines in a way that network traffic interruption is minimal when updating a firewall or applying a change to an immutable firewall configuration.
+The firewall-controller approach is tightly coupled to Gardener and it requires the administrator of the Gardener installation to pass a shoot and a seed kubeconfig through machine userdata when creating the firewall. How this userdata has to look like is not documented and is just part of another project called the [firewall-controller-manager](https://github.com/metal-stack/firewall-controller-manager), which task is to orchestrate rolling updates of firewall machines in a way that network traffic interruption is minimal when updating a firewall or applying a change to an immutable firewall configuration.
 
 In general, a firewall entity in metal-stack has similarities to the machine entity but it has a fundamental difference: A user gains ownership over a machine after provisioning. They can access it through SSH, modify it at will and this is completely wanted. For firewalls, however, we do not want a user to access the provisioned firewall as the firewall is a privileged part of the infrastructure with access to the underlay network. The underlay can not be tampered with at any given point in time by a user as it can destroy the entire network traffic flow inside a metal-stack partition.
 
@@ -181,6 +181,8 @@ stringData:
                     namespace: firewall
                     name: firewall-monitor-${CLUSTER_NAME}
 ```
+
+Here the firewall-controller-config will be referenced by the `MetalStackCluster` as a `Secret`. Please note that the `secretRef`s in `additionalFiles` will not be fetched and will directly be passed to the `FirewallDeployment`. At first the reconciliation of it in the FCM will fail due to the missing Kubeconfig secret. After the `MetalStackCluster` has been marked as ready, CAPI will create this missing secret. Effectively the firewall and initial control plane node should be created at the same time.
 
 This approach allows maximum flexibility as intended by Cluster API and is still able to provide robust rolling updates of firewalls.
 
