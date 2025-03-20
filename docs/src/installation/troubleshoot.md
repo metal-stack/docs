@@ -288,9 +288,9 @@ In case you would like to wire this machine to another pair of switches inside t
 
 To resolve this state, the approach for recabling a machine works as follows:
 
-1. Free the machine if it still has an allocation
-1. Reconnect the machine to the new switch pair
-1. Leave the machine turned off and wait until the machine reaches the dead state in the metal-api
-1. Delete the machine from the metal-api through `metalctl machine delete <id> --remove-from-database --yes-i-really-mean-it`
-1. The machine will soon appear again because the metal-bmc discovers its BMC
-1. Power on the machine again and let the metal-hammer register the machine
+1. Free the machine if it still has an allocation.
+1. Reconnect the machine to the new switch pair.
+1. Leave the machine turned off or turn it off and wait until the machine reaches the dead state (💀) in the metal-api.
+1. Delete the machine through `metalctl machine delete <id> --remove-from-database --yes-i-really-mean-it`. This cleans up the existing machine connections, too.
+1. The machine will soon show up again because the [metal-bmc](https://github.com/metal-stack/metal-bmc) discovers it through the DHCP address obtained by the machine BMC.
+1. Power on the machine again and let the metal-hammer register the machine.
