@@ -12,16 +12,18 @@ For this reason, we have a gap in the metal-stack project in terms of a missing 
 
 Parts of these problems are probably going to decrease with the work on [MEP-4](../MEP4/README.md) where there will be dedicated APIs for users and administrators of metal-stack including fine-grained access tokens.
 
-With this MEP we want to describe a way to improve this current situation and allow other users that do not rely on the Gardener integration – for whatever motivation they have not to – to adequately manage firewalls. For this, we propose an alternative configuration for the firewall-controller that is native to metal-stack and more independent of the Gardener.
+With this MEP we want to describe a way to improve this current situation and allow other users that do not rely on the Gardener integration – for whatever motivation they have not to – to adequately manage firewalls. For this, we propose an alternative configuration for the firewall-controller that is native to metal-stack and more independent of Gardener.
 
 ## Proposal
 
-- The firewall-controller can use the metal-api as a configuration source.
-- The firewall rules of the firewall entity can be updated through the metal-api.
-- The firewall-controller can be configured through a dedicated config file.
-- Inside this config file the data source for all its dynamic configuration tasks can be set independently.
-- For example the data source of the core firewall rules could be set the Gardener seed or the metal-api firewall entity, while the CWNPs should be fetched and applied from a given kubeconfig (the shoot Kubeconfig in the Gardener case).
-- This configuration file is intended to be injected through userdata along with potential source connection credentials.
+The central idea of this proposal is allowing the firewall-controller to use the metal-api as a configuration source. This should serve as an alternative strategy to the currently used Seed Kubeconfig based approach in the Gardener use-case.
+Updates of the firewall rules of the firewall entity should be possible through the metal-api.
+
+The firewall-controller itself should now be able to decide which of the two main strategies should be used for the base configuration: a kubeconfig or the metal-api. This should be possible through a dedicated _firewall-controller-config_.
+
+Using this config will now allow operators to fine-tune the data sources for all of its dynamic configuration tasks independently.
+For example the data source of the core firewall rules could be set the Gardener seed or the metal-api firewall entity, while the CWNPs should be fetched and applied from a given kubeconfig (the shoot Kubeconfig in the Gardener case).
+This configuration file is intended to be injected through userdata along with potential source connection credentials.
 
 ```yaml
 # the main configuration source contributes
