@@ -94,7 +94,7 @@ Physical view, minimal setup for a initial cluster with a single physical node:
 
 Physical View, bigger ha setup which is spread across two data centers:
 
-![HA Initial Cluster](autonomous-control-plane-images/ha-initial-cluster.svg)
+![HA Initial Cluster](autonomous-control-plane-images/ha-initial-cluster.drawio.svg)
 
 ### Control Plane High Availability
 
