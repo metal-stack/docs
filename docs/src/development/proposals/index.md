@@ -25,15 +25,15 @@ Once a proposal was accepted, an issue should be raised and the implementation s
 | [MEP-4](MEP4/README.md)   | Multi-tenancy for the metal-api                |  `In Progress`  |
 | [MEP-5](MEP5/README.md)   | Shared Networks                                |   `Completed`   |
 | [MEP-6](MEP6/README.md)   | DMZ Networks                                   |   `Completed`   |
-| [MEP-7]                   | Passing environment variables to machines      |   `Declined`    |
+| MEP-7                     | Passing environment variables to machines      |   `Declined`    |
 | [MEP-8](MEP8/README.md)   | Configurable Filesystemlayout                  |   `Completed`   |
 | [MEP-9](MEP9/README.md)   | No Open Ports To the Data Center               |   `Completed`   |
 | [MEP-10](MEP10/README.md) | SONiC Support                                  |   `Completed`   |
-| [MEP-11](MEP11/README.md) | Auditing of metal-stack resources              |   `Completed`   |
+| [MEP-11](MEP11/README.md) | Auditing ^of metal-stack resources             |   `Completed`   |
 | [MEP-12](MEP12/README.md) | Rack Spreading                                 |   `Completed`   |
 | [MEP-13](MEP13/README.md) | IPv6                                           |   `Completed`   |
 | [MEP-14](MEP14/README.md) | Independence from external sources             |   `Completed`   |
-| [MEP-15]                  | HAL Improvements                               | `In Discussion` |
-| [MEP-16]                  | Firewall Support for Cluster API Provider      | `In Discussion` |
-| [MEP-17]                  | Announced IP visibility                        | `In Discussion` |
+| MEP-15                    | HAL Improvements                               | `In Discussion` |
+| MEP-16                    | Firewall Support for Cluster API Provider      | `In Discussion` |
+| MEP-17                    | Announced IP visibility                        | `In Discussion` |
 | [MEP-18](MEP18/README.md) | Autonomous Control Plane                       | `In Discussion` |

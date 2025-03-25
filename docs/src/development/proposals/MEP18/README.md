@@ -132,6 +132,15 @@ Here is an example of how a scenario documentation could look like:
 **Impact**: Management of the initial cluster infrastructure not possible anymore, the target cluster continues to run but cannot be managed because the API servers are gone. end-users are not affected by this incident.
 **Remediation**: The initial cluster nodes must be provisioned from scratch and re-deployed through the CI mechanism. The backups of the stateful sets are automatically restored during this process.
 
+## Implementation
+
+As part of this proposal, we provide the following tools and integrations in order to setup an autonomous control plane:
+
+- Deployment roles for the services like PowerDNS and NTP for the initial cluster
+- Stretch goal: Deployment role to setup k3s in clustered configuration for the initial cluster and update it
+- Extend the Gardener on mini-lab integration to allow shoot creation in the mini-lab
+- Steady integration of the setup (maybe something like [k3d](https://github.com/k3d-io/k3d) in the mini-lab)
+
 ## Appendix
 
 [^1]: ![metal-stack-chain](autonomous-control-plane-images/metal-stack-chain.drawio.svg)
