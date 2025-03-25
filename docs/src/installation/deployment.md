@@ -545,7 +545,7 @@ Checkout the [role documentation](https://github.com/metal-stack/metal-roles/tre
 
 metal-stack currently supports two authentication methods:
 
-- [dex](https://github.com/dexidp/dex) for providing user authentication through [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC)
+- user authentication through [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC)
 - [HMAC](https://en.wikipedia.org/wiki/HMAC) auth, typically used for access by technical users (because we do not have service account tokens at the time being)
 
 In the metal-api, we have three different user roles for authorization:
@@ -556,11 +556,27 @@ In the metal-api, we have three different user roles for authorization:
 
 How the user permissions are used is documented in the [technical API docs](../apidocs/apidocs.md).
 
-If you decided to set up a dex server, you can parametrize the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal) for using the dex server by defining the variable `metal_api_dex_address`.
+If you decided to use OIDC, you can parametrize the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal) for this by defining the variable `metal_masterdata_api_tenants` with the following configuration:
 
-!!! info
-
-    We also have dedicated controllers for using the dex server for Kubernetes clusters when deploying metal-stack along with the Gardener in your environment. The approach is described in further detail in the section [Gardener with metal-stack](@ref).
+```yaml
+---
+metal_masterdata_api_tenants:
+- meta:
+    id: <id>
+    kind: Tenant
+    apiversion: v1
+    version: 0
+  name: <name>
+  iam_config:
+    issuer_config:
+        client_id: <client_id>
+        url: <oidc_url>
+    idm_config:
+      idm_type: <type> # "AD" | "UX"
+    group_config:
+      namespace_max_length: 20
+  description: <description>
+```
 
 ## Bootstrapping a Partition
 

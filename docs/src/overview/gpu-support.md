@@ -29,7 +29,7 @@ helm install --wait \
   --create-namespace \
     nvidia/gpu-operator \
     --set driver.enabled=false \
-    --set toolkit.enabled=false
+    --set toolkit.enabled=true
 ```
 
 After that `kubectl describe node` must show the gpu in the capacity like so:
