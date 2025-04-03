@@ -1,49 +1,5 @@
 # metal-api as an Alternative Configuration Source for the firewall-controller
 
-TODO:
-- list of controllers in firewall controllers
-  - cwnp
-  - droptailer
-  - firewall monitor
-  - service type load balancer
-  - firewall entity
-  - firewall resource
-  - self update
-- attach to node network
-- more specific instead of generic config
-
-```yaml
-name: best-firewall-ever
-
-controllers:
-  firewall:
-    # one of kubernetes, metalAPI or static
-    kubernetes:
-      kubeconfig: /path/to/seed.yaml
-    metalAPI:
-      url: https://metal-api
-      hmac: some-hmac
-      type: Metal-View
-      projectID: abc
-    static:
-      egress: []
-      ingress: []
-
-    selfUpdate:
-      enabled: true
-    droptailer:
-      enabled: true
-
-  service:
-    kubeconfig: /path/to/shoot.yaml
-  cwnp:
-    kubeconfig: /path/to/shoot.yaml
-    namespace: firewall
-  monitor:
-    kubeconfig: /path/to/shoot.yaml
-    namespace: firewall
-```
-
 In the current situation, a firewall as provisioned by metal-stack is a fully immutable entity. Any modifications on the firewall like changing the firewall ruleset must be done _somehow_ by the user – the metal-api and hence metal-stack is not aware of its current state.
 
 As part of our [integration with the Gardener project](https://docs.metal-stack.io/stable/overview/kubernetes/#Gardener) we offer a solution called the [firewall-controller](https://github.com/metal-stack/firewall-controller), which is part of our [firewall OS images](https://github.com/metal-stack/metal-images/blob/6318a624861b18a559a9d37299bca5f760eef524/firewall/Dockerfile#L57-L58) and addresses shortcomings of the firewall resource's immutability, which would otherwise be completely impractible to work with. The firewall-controller crashes infinitely if it is not properly configured through the userdata when using the firewall image of metal-stack.
@@ -63,12 +19,12 @@ With this MEP we want to describe a way to improve this current situation and al
 ## Proposal
 
 The central idea of this proposal is allowing the firewall-controller to use the metal-api as a configuration source. This should serve as an alternative strategy to the currently used FCM `Firewall` resource based approach in the Gardener use-case.
-Updates of the firewall rules of the firewall entity should be possible through the metal-api.
+Updates of the firewall rules should be possible through the metal-api.
 
 The firewall-controller itself should now be able to decide which of the two main strategies should be used for the base configuration: a kubeconfig or the metal-api. This should be possible through a dedicated _firewall-controller-config_.
 
 Using this config will now allow operators to fine-tune the data sources for all of its dynamic configuration tasks independently.
-For example the data source of the core firewall rules could be set either from the `Firewall` resource located in the Gardener `Seed` or the metal-api firewall entity, while the CWNPs should be fetched and applied from a given kubeconfig (the `Shoot` Kubeconfig in the Gardener case).
+For example the data source of the core firewall rules could be set either from the `Firewall` resource located in the Gardener `Seed` or the metal-apiserver node network entity, while the CWNPs should be fetched and applied from a given kubeconfig (the `Shoot` Kubeconfig in the Gardener case).
 This configuration file is intended to be injected during firewall creation through the userdata along with potential source connection credentials.
 
 ```yaml
@@ -117,7 +73,6 @@ name: shoot--abc--cluster-firewall-def
 
 controllers:
   firewall:
-
     kubernetes:
       kubeconfig: /etc/firewall-controller/seed.yaml
 
@@ -160,12 +115,12 @@ controllers:
 ### Advantages
 
 - Offers a native metal-stack solution that improves managing firewalls for users by adding dynamic reconfiguration through the metal-api
-  - e.g., in the mini-lab, users can now allocate a machine, then an IP address and announce this IP from the machine without having to re-create the firewall but by adding a firewall rule to the firewall entity.
+  - e.g., in the mini-lab, users can now allocate a machine, then an IP address and announce this IP from the machine without having to re-create the firewall but by adding a firewall rule to the metal-api.
 - Improve consistency throughout the API (firewall rules would reflect what is persisted in metal-api).
 - Other providers like Cluster API can leverage this approach, too.
 - It can contribute to solving the shoot migration issue (in Cluster API case the `clusterctl move` for firewall objects)
   - For Gardener takes the seed out of the equation (of which the kubeconfig changes during shoot migration)
-  - However: Things like egress rules, rate limiting, etc. are currently not part of the firewall entity in the metal-api (these would need to be added to the firewall entity as otherwise there is no feature parity)
+  - However: Things like egress rules, rate limiting, etc. are currently not part of the firewall or network entity in the metal-api. These would need to be added to one of them.
 
 ### Caveats
 
@@ -174,13 +129,9 @@ controllers:
 
 ### Firewall Controller Manager
 
-As described, the firewall-controller should allow retrieving the main configuration of the firewall from the metal-api (with view HMAC) as an alternative to the kubeconfig based approach that is used in our Gardener setup.
+Currently the firewall-controller-manager expects the creators of a `FirewallDeployment` to also override all `spec.userdata` used for ignition or none at all. Because of the overhead in terms of implementation in case an adjustment is needed, this feature isn't actually used.
 
-In this scenario, the firewall-controller-manager is responsible to update the firewall entity in the metal-api whenever the firewall rules change of the firewall resource.
-
-Of course the metal-api needs to update firewall rules in the machine allocation spec. Additionally ingress and egress rules need to be added to the firewall entity.
-
-The desired behavior will be configured in the `FirewallDeployment`. Specifically for the Gardener use case, the generation of the kubeconfig for the firewall-controller to be able to access the `Firewall` resource in the seed cluster will be hidden behind the `generateFirewallControllerKubeconfig` flag.
+Instead we'd like to propose `spec.userdataContents` which will replace the old `userdata`-string by a typed data structure. The FCM will do the heavy lifting while the `FirewallDeployment` creator decides what should be configured.
 
 ```yaml
 kind: FirewallDeployment
@@ -189,8 +140,7 @@ spec:
     - path: /etc/firewall-controller/config.yaml
       content: |
         ---
-        name: ""
-        firewall: {}
+        firewall: {} # ...
     - path: /etc/firewall-controller/seed.yaml
       secretRef:
           name: seed-kubeconfig
@@ -200,15 +150,23 @@ spec:
           name: shoot-kubeconfig
 ```
 
+### Gardener Extension Provider Metal Stack
+
+With this change the GEPM will be responsible to generate the Seed-Kubeconfig and pass the secret reference to the `FirewallDeployment.spec.userdataContents`.
+
+Additionally the GEPM should also make sure to apply required firewall rules to the node network through the metal-apiserver..
+
 ### Cluster API Provider Metal Stack
 
+<!-- TODO: update graphic -->
 ![architectural overview](firewall-for-capms-overview.svg)
 
-In Cluster API there are essentially two main clusters: the management cluster and the workload cluster.
-Typically a local bootstrap cluster is created in kind which acts as the management cluster. It creates the workload cluster. Thereafter the ownership of the workload cluster is typically moved (using `clusterctl move`) to a different cluster which will then become the management cluster.
+<!-- TODO: update text -->
+In Cluster API there are essentially two main clusters: the management cluster and the workload cluster while the CAPMS takes in the role of the GEPM.
+Typically a local bootstrap cluster is created in KinD which acts as the management cluster. It creates the workload cluster. Thereafter the ownership of the workload cluster is typically moved (using `clusterctl move`) to a different cluster which will then become the management cluster.
 The new management cluster might actually be the workload cluster itself.
 
-In contrast to Gardener, Cluster API aims to be less opinionated. It is common practice to not install any non-required components or CRDs into the workload cluster by default. Therefore we cannot expect custom resources like `ClusterwideNetworkPolicy` or `FirewallMonitor` to be installed in the workload cluster. Therefore it's the responsibility of the operator to tell [cluster-api-provider-metal-stack](https://github.com/metal-stack/cluster-api-provider-metal-stack) the kubeconfig for the cluster where these CRDs are installed and defined in.
+In contrast to Gardener, Cluster API aims to be less opinionated and minimal. It is common practice to not install any non-required components or CRDs into the workload cluster by default. Therefore we cannot expect custom resources like `ClusterwideNetworkPolicy` or `FirewallMonitor` to be installed in the workload cluster but strongly recommend our users to do it. Therefore it's the responsibility of the operator to tell [cluster-api-provider-metal-stack](https://github.com/metal-stack/cluster-api-provider-metal-stack) the kubeconfig for the cluster where these CRDs are installed and defined in.
 
 A viable configuration for a `MetalStackCluster` that generates firewall rules based of `Service` type `LoadBalancer` and `ClusterwideNetworkPolicy` and expects them to be deployed in the workload cluster is shown below. The `FirewallMonitor` will be reported into the same cluster.
 
@@ -218,9 +176,6 @@ metadata:
     name: ${CLUSTER_NAME}
 spec:
     firewallTemplate:
-        # existing fields omitted
-        staticRuleSet: []
-
         userdataContents:
           - path: /etc/firewall-controller/config.yaml
             secretName: ${CLUSTER_NAME}-firewall-controller-config
@@ -278,19 +233,24 @@ In case this control surfaces as a requirement, it would need to be implemented 
 
 In general this proposal is not thought to be implemented in one batch. Instead an incremental approach is required.
 
-1. Allow Cluster API to use the FCM (provide immutable firewalls that run without firewall-controller).
-   - Add `spec.staticRuleSet` to Firewall.
-   - Add `firewall.metal-stack.io/paused` annotation (managed by CAPMS during move, theoretically useful for Gardener shoot migration as well to avoid shallow deletion).
-   - Reconcile multiple `FirewallDeployment` resources per namespace.
-   - Allow setting the `firewall.metal-stack.io/no-controller-connection` annotation through the `FirewallDeployment` (either through the template or inheritance).
-   - Add `MetalStackCluster.Spec.FirewallTemplate`.
-   - Make `MetalStackCluster.Spec.NodeNetworkID` optional if `Spec.FirewallTemplate` given.
-2. Extend firewall-controller with the configuration file (no different data sources than kubernetes) and let the FCM generate this configuration file along with the rest of the userdata.
-3. Add metal-api as configuration source.
-   - Allow updates of firewall rules in the firewall entity.
-   - For Cluster API: Let the cluster controller generate the userdata including the configuration for this additional data source.
-4. Move to more generic interface for the FCM (remove Gardener coupling)
+1. Enhance firewall-controller
+  - reduce coupling between controllers
+  - introduce controller config
+  - abstract module to write into distinct nftable rules for every controller
+  - implement `firewall.static`, but not `firewall.metalAPI`
+  - GEPM should set `FirewallDeployment.spec.userdataContents`
+2. Allow Cluster API to use the FCM with static ruleset
+  - Add `firewall.metal-stack.io/paused` annotation (managed by CAPMS during move, theoretically useful for Gardener shoot migration as well to avoid shallow deletion).
+  - Reconcile multiple `FirewallDeployment` resources per namespace.
+  - Allow setting the `firewall.metal-stack.io/no-controller-connection` annotation through the `FirewallDeployment` (either through the template or inheritance).
+  - Add `MetalStackCluster.Spec.FirewallTemplate`.
+  - Make `MetalStackCluster.Spec.NodeNetworkID` optional if `Spec.FirewallTemplate` given.
+3. Add `firewall.metalAPI` as configuration option.
+  - Allow updates of firewall rules in the metal-apiserver.
+  - Depends on [MEP-4](../MEP4/README.md) metal-apiserver progress
+4. Migrate the GEPM to use `firewall.metalAPI`
 
 ## Alternatives Considered
 
 - instead of the generic data sources, for each mechanism a kubeconfig could be provided. Though this is not a scalable nor flexible approach. In the end the same internal data structure is still needed.
+- store network rules in firewall within the metal-apiserver
