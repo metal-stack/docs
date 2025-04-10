@@ -1,5 +1,7 @@
 # Distributed Metal Control Plane
 
+This enhancement proposal was replaced by [MEP18](../MEP18/README.md).
+
 ## Problem Statement
 
 We face the situation that we argue for running bare metal on premise because this way the customers can control where and how their software and data are processed and stored.
