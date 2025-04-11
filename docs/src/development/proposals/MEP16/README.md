@@ -31,23 +31,33 @@ This configuration file is intended to be injected during firewall creation thro
 # the name of the firewall, defaulted to the hostname
 name: best-firewall-ever
 
+sources:
+  # exactly one of kubernetes, metal or static
+  seed:
+    kubeconfig: /path/to/seed.yaml # current gardener behavior
+    namespace: shoot--proj--name
+  shoot:
+    kubeconfig: /path/to/shoot.yaml # current gardener behavior
+    namespace: firewall
+  metal:
+    url: https://metal-api
+    hmac: some-hmac
+    type: Metal-View
+    projectID: abc
+  static:
+    # static should mirror all information provided by the metal or seed/shoot sources
+    firewall: # optional
+      controllerURL: https://...
+    cwnp:
+      egress: []
+      ingress: []
+
 # all sub-controllers running on the firewall
 # each can be configured independently
 controllers:
   # this is the base controller
   firewall:
-
-    # one of kubernetes, metalAPI or static
-    kubernetes:
-      kubeconfig: /path/to/seed.yaml # current gardener behavior
-    metalAPI:
-      url: https://metal-api
-      hmac: some-hmac
-      type: Metal-View
-      projectID: abc
-    static:
-      egress: []
-      ingress: []
+    source: seed # or: metal, static
 
     # these are optional: when not provided, they are disabled
     selfUpdate:
@@ -57,38 +67,44 @@ controllers:
 
   # these are optional: when not provided, they are disabled
   service:
-    kubeconfig: /path/to/shoot.yaml
+    source: shoot # or: metal, static
   cwnp:
-    kubeconfig: /path/to/shoot.yaml
-    namespace: firewall
+    source: shoot # or: metal, static
   monitor:
-    kubeconfig: /path/to/shoot.yaml
-    namespace: firewall
+    source: shoot # currently only shoot is supported
 ```
+
+The existing behavior of the firewall-controller writing into `/etc/nftables/firewall-controller.v4` is not changed. The different controller configuration sources are internally treated in the same way as before. The `static` source can be used to prevent the firewall-controller from crashing and consistently providing a static ruleset. This might be interesting for metal-stack native use cases or environments where the metal-api cannot be accessed.
+
+There must be one central nftables-rule-file-controller that is notified and triggered by all other controllers that contribute to the nftables configuration.
 
 For example, in order to maintain the existing Gardener integration, the configuration file for the firewall-controller will look like this:
 
 ```yaml
 name: shoot--abc--cluster-firewall-def
+sources:
+  seed:
+    kubeconfig: /etc/firewall-controller/seed.yaml
+    namespace: shoot--abc--cluster
+  shoot:
+    kubeconfig: /etc/firewall-controller/shoot.yaml
+    namespace: firewall
 
 controllers:
   firewall:
-    kubernetes:
-      kubeconfig: /etc/firewall-controller/seed.yaml
-
+    source: seed
+    
     selfUpdate:
       enabled: true
     droptailer:
       enabled: true
 
   service:
-    kubeconfig: /etc/firewall-controller/shoot.yaml
+    source: shoot
   cwnp:
-    kubeconfig: /etc/firewall-controller/shoot.yaml
-    namespace: firewall
+    source: shoot
   monitor:
-    kubeconfig: /etc/firewall-controller/shoot.yaml
-    namespace: firewall
+    source: shoot
 ```
 
 Plain metal-stack users might use a configuration like this:
@@ -96,15 +112,51 @@ Plain metal-stack users might use a configuration like this:
 ```yaml
 name: best-firewall-ever
 
+sources:
+  metal:
+    url: https://metal-api
+    hmac: some-hmac
+    type: Metal-View
+    projectID: abc
+  shoot:
+    kubeconfig: /etc/firewall-controller/shoot.yaml
+    namespace: firewall
+    
 controllers:
   firewall:
-    enabled: true
+    source: metal
+    selfUpdate:
+      enabled: true
+    droptailer:
+      enabled: true
 
-    metalAPI:
-      url: https://metal-api
-      hmac: some-hmac
-      type: Metal-View
-      projectID: abc
+  service:
+    source: shoot
+  cwnp:
+    source: shoot
+  monitor:
+    source: shoot
+```
+
+In highly restricted environments that cannot access metal-api the static source could be used:
+
+```yaml
+name: most-restricted-firewall-ever
+
+sources:
+  static:
+    firewall:
+      controllerURL: https://...
+    cwnp:
+      egress: []
+      ingress: []
+
+controllers:
+  firewall:
+    source: static
+
+  cwnp:
+    source: static
 ```
 
 ### Non-Goals
@@ -140,7 +192,11 @@ spec:
     - path: /etc/firewall-controller/config.yaml
       content: |
         ---
-        firewall: {} # ...
+        sources:
+          static: {}
+        controllers:
+          firewall:
+            source: static
     - path: /etc/firewall-controller/seed.yaml
       secretRef:
           name: seed-kubeconfig
@@ -158,10 +214,8 @@ Additionally the GEPM should also make sure to apply required firewall rules to 
 
 ### Cluster API Provider Metal Stack
 
-<!-- TODO: update graphic -->
 ![architectural overview](firewall-for-capms-overview.svg)
 
-<!-- TODO: update text -->
 In Cluster API there are essentially two main clusters: the management cluster and the workload cluster while the CAPMS takes in the role of the GEPM.
 Typically a local bootstrap cluster is created in KinD which acts as the management cluster. It creates the workload cluster. Thereafter the ownership of the workload cluster is typically moved (using `clusterctl move`) to a different cluster which will then become the management cluster.
 The new management cluster might actually be the workload cluster itself.
@@ -192,27 +246,30 @@ stringData:
         ---
         name: ${CLUSTER_NAME}-firewall
 
+        sources:
+          metal:
+            url: ${METAL_API_URL}
+            hmac: ${METAL_API_HMAC}
+            type: ${METAL_API_HMAC_TYPE}
+            projectID: ${METAL_API_PROJECT_ID}
+          shoot:
+            kubeconfig: /etc/firewall-controller/workload.yaml
+            namespace: firewall
+    
         controllers:
           firewall:
-            metalAPI:
-              url: ${METAL_API_URL}
-              hmac: ${METAL_API_HMAC}
-              type: ${METAL_API_HMAC_TYPE}
-              projectID: ${METAL_API_PROJECT_ID}
-
+            source: metal
             selfUpdate:
               enabled: true
             droptailer:
               enabled: true
 
           service:
-            kubeconfig: /etc/firewall-controller/workload.yaml
+            source: shoot
           cwnp:
-            kubeconfig: /etc/firewall-controller/workload.yaml
-            namespace: firewall
+            source: shoot
           monitor:
-            kubeconfig: /etc/firewall-controller/workload.yaml
-            namespace: firewall
+            source: shoot
 ```
 
 Here the firewall-controller-config will be referenced by the `MetalStackCluster` as a `Secret`. Please note that the `Secret`s in `userdataContents` will not be fetched and will directly be passed to the `FirewallDeployment`. At first the reconciliation of it in the FCM will fail due to the missing Kubeconfig secret. After the `MetalStackCluster` has been marked as ready, CAPI will create this missing secret. Effectively the firewall and initial control plane node should be created at the same time.
@@ -237,7 +294,7 @@ In general this proposal is not thought to be implemented in one batch. Instead 
   - reduce coupling between controllers
   - introduce controller config
   - abstract module to write into distinct nftable rules for every controller
-  - implement `firewall.static`, but not `firewall.metalAPI`
+  - implement `sources.static`, but not `sources.metal`
   - GEPM should set `FirewallDeployment.spec.userdataContents`
 2. Allow Cluster API to use the FCM with static ruleset
   - Add `firewall.metal-stack.io/paused` annotation (managed by CAPMS during move, theoretically useful for Gardener shoot migration as well to avoid shallow deletion).
@@ -245,10 +302,10 @@ In general this proposal is not thought to be implemented in one batch. Instead 
   - Allow setting the `firewall.metal-stack.io/no-controller-connection` annotation through the `FirewallDeployment` (either through the template or inheritance).
   - Add `MetalStackCluster.Spec.FirewallTemplate`.
   - Make `MetalStackCluster.Spec.NodeNetworkID` optional if `Spec.FirewallTemplate` given.
-3. Add `firewall.metalAPI` as configuration option.
+3. Add `sources.metal` as configuration option.
   - Allow updates of firewall rules in the metal-apiserver.
   - Depends on [MEP-4](../MEP4/README.md) metal-apiserver progress
-4. Migrate the GEPM to use `firewall.metalAPI`
+4. Migrate the GEPM to use `sources.metal`
 
 ## Alternatives Considered
 
