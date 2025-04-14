@@ -537,7 +537,9 @@ The basic principles of how the metal control plane can be deployed should now b
 
 ### Setting Up the backup-restore-sidecar
 
-The backup-restore-sidecar can come up very handy when you want to add another layer of security to the metal-stack databases in your Kubernetes cluster. The sidecar takes backups of the metal databases in small time intervals and stores them in a blobstore of a cloud provider. This way your metal-stack setup can even survive the deletion of your Kubernetes control plane cluster (including all volumes getting lost). After re-deploying metal-stack to another Kubernetes clusters, the databases come up with the latest backup data in a matter of seconds.
+The backup-restore-sidecar can come up very handy when you want to add another layer of security to the metal-stack databases in your Kubernetes cluster. The sidecar takes backups of the metal databases in small time intervals and stores them in a blobstore of a cloud provider. For each database a lifecycle rule is created. In total three rules with the prefixes `ipam-db-<metal-control-plane-stage-name>`, `rethinkdb-<metal-control-plane-stage-name>` and `masterdata-db-<metal-control-plane-stage-name>` are present. This way your metal-stack setup can even survive the deletion of your Kubernetes control plane cluster (including all volumes getting lost). After re-deploying metal-stack to another Kubernetes clusters, the databases come up with the latest backup data in a matter of seconds.
+
+Encryption can be enabled for the backups, by providing an encryption key. The key must be 32 bytes (AES-256) long. The backups are stored at the storage provider with the `.aes` suffix.
 
 Checkout the [role documentation](https://github.com/metal-stack/metal-roles/tree/master/control-plane) of the individual databases to find out how to configure the sidecar properly. You can also try out the mechanism from the [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar) repository.
 
