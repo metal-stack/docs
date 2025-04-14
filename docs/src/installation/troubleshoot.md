@@ -284,7 +284,7 @@ Migrating to or from Broadcom SONiC or mixing Broadcom SONiC with Cumulus or Edg
 
 As soon as a machine was connected to the management network and a pair of leaf switches, and the metal-hammer successfully registered the machine at the metal-api after PXE boot, the `switch` entity in metal-stack contains the machine ID in a data structure called _machine connections_.
 
-In case you would like to wire this machine to another pair of switches inside this partition, the metal-api would prevent the machine registration because it finds that the machine is already connected to other switches.
+In case you would like to wire this machine to another pair of switches inside this partition, the metal-api would prevent the machine registration because it finds that the machine is already connected to other switches in this partition.
 
 To resolve this state, the approach for recabling a machine works as follows:
 
