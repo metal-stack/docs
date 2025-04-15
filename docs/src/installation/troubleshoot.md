@@ -279,3 +279,18 @@ Furthermore, the breakout configurations of both switches must match and the new
 
 Both migration and replacement can be used to move from Cumulus to Edgecore SONiC (or vice versa).
 Migrating to or from Broadcom SONiC or mixing Broadcom SONiC with Cumulus or Edgecore SONiC is not supported.
+
+### Connect a Machine to Another Switch Pair
+
+As soon as a machine was connected to the management network and a pair of leaf switches, and the metal-hammer successfully registered the machine at the metal-api after PXE boot, the `switch` entity in metal-stack contains the machine ID in a data structure called _machine connections_.
+
+In case you would like to wire this machine to another pair of switches inside this partition, the metal-api would prevent the machine registration because it finds that the machine is already connected to other switches in this partition.
+
+To resolve this state, the approach for recabling a machine works as follows:
+
+1. Free the machine if it still has an allocation.
+1. Reconnect the machine to the new switch pair.
+1. Leave the machine turned off or turn it off and wait until the machine reaches the dead state (💀) in the metal-api.
+1. Delete the machine through `metalctl machine delete <id> --remove-from-database --yes-i-really-mean-it`. This cleans up the existing machine connections, too.
+1. The machine will soon show up again because the [metal-bmc](https://github.com/metal-stack/metal-bmc) discovers it through the DHCP address obtained by the machine BMC.
+1. Power on the machine again and let the metal-hammer register the machine.
