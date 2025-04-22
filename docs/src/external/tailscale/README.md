@@ -6,7 +6,7 @@ These steps will guide you through the process quickly. For a deeper dive, or if
 ## What are Tailscale and Tailnets?
 Tailscale is a Canadian company that offers a virtual private network solution based on WireGuard. 
 
-Instead of relying on centralised VPN servers to route all traffic, Tailscale creates a mesh VPN called Tailnet. It creates encrypted peer-to-peer connections between network subscribers. This approach is claimed to improve troughput and stability while reducing latency.
+Instead of relying on centralised VPN servers to route all traffic, Tailscale creates a mesh VPN called Tailnet. It creates encrypted peer-to-peer connections between network subscribers. This approach is claimed to improve throughput and stability while reducing latency.
 
 Tailscale's solution is composed of components that are mostly open source. Find more information on their [open source sstatement](https://tailscale.com/opensource) and their [GitHub repository](https://github.com/tailscale).
 
@@ -81,7 +81,7 @@ spec:
   type: LoadBalancer
   loadBalancerClass: tailscale
 ```
-### Annotate an existing Servie
+### Annotate an existing Service
 Edit the Service and add the annotation `tailscale.com/expose` with the value "true":
 ```yaml
 apiVersion: v1
