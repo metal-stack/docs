@@ -65,7 +65,7 @@ Alternative ways & troubleshooting:
 - If the operator does not show op in the Machines list, use the guide for [Troubleshooting the Kubernetes operator](https://tailscale.com/kb/1446/kubernetes-operator-troubleshooting)
 ## Expose Services on the Tailnet
 There are three ways to allow traffic to your pods from the tailnet. We can setup a dedicated Service or annotate an existing one. For more routing options, use an Ingress object. For detailed configuration options, review the article about [Expose a Kubernetes cluster workload to your tailnet (cluster ingress)](https://tailscale.com/kb/1439/kubernetes-operator-cluster-ingress)
-### Use add a Load Balancer Service
+### Add a Load Balancer Service
 The installed operator is looking for Service objects with the `spec.type`of `LoadBalancer`and the `spec.loadBalancerClass` of `tailscale`. 
 ```yaml
 ---
@@ -84,6 +84,7 @@ spec:
 ### Annotate an existing Service
 Edit the Service and add the annotation `tailscale.com/expose` with the value "true":
 ```yaml
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -102,6 +103,7 @@ Ingress routes only use TLS over HTTPS. To make this work, you have to enable th
 
 To set the Ingress up, just refer to `tailscale` as the `ingressClassName`:
 ```yaml
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
