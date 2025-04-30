@@ -44,6 +44,7 @@ makedocs(
             "metalctl" => "external/metalctl/README.md",
             "csi-driver-lvm" => "external/csi-driver-lvm/README.md",
             "firewall-controller" => "external/firewall-controller/README.md",
+            "tailscale" => "external/tailscale/README.md",
         ],
         "API Documentation" => "apidocs/apidocs.md",
         "Development" => Any[
