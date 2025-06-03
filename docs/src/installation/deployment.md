@@ -463,7 +463,7 @@ docker run --rm -it \
   -e KUBECONFIG="${KUBECONFIG}" \
   -e K8S_AUTH_KUBECONFIG="${KUBECONFIG}" \
   -e ANSIBLE_INVENTORY=inventories/control-plane.yaml \
-  metalstack/metal-deployment-base:%s \
+  ghcr.io/metal-stack/metal-deployment-base:%s \
   /bin/bash -ce \
     "ansible-playbook obtain_role_requirements.yaml
      ansible-galaxy install -r requirements.yaml
