@@ -49,7 +49,7 @@ makedocs(
         "API Documentation" => "apidocs/apidocs.md",
         "Development" => Any[
             "development/client_libraries.md",
-            "development/roadmap.md",
+            "development/planning_meetings.md",
             "Enhancement Proposals" => "development/proposals/index.md",
             "development/contributing.md",
         ],
