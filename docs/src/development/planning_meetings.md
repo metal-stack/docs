@@ -1,20 +1,23 @@
-# Roadmap
+# Planning Meetings
 
-A roadmap with short-, mid- and long-term planning will be available soon. For now, there is only a backlog.
+We maintain a public board for planning development tasks in metal-stack on GitHub: https://github.com/orgs/metal-stack/projects/34.
 
-## Short-term
+The planning board is updated during public, biweekly planning meetings on Microsoft Teams.
 
-Available soon.
+The purpose of the meetings is to discuss and prioritize issues and pull requests. They can also be used to present new ideas or upcoming topics. Overall, these meetings improve communication among metal-stack contributors and address their concerns about the project's direction.
 
-## Mid-term
+| Date                              | Title             | Link  |
+| --------------------------------- | ----------------- | ----- |
+| Monday, 2025-06-23, 14:30 - 15:00 | Biweekly Planning | <TBD> |
+| ...                               |                   |       |
 
-Available soon.
+Planning meetings are currently not recorded. The meetings are held either in English or German depending on the attendees.
 
-## Long-term
+!!! info
 
-Available soon.
+    Note that anyone can contribute to metal-stack without participating in planning meetings. However, if you want to speed up the review process for your requirements, it might be helpful to attend the meetings.
 
-## Backlog
+## Idea Backlog
 
 The backlog contains ideas of what could become part of the roadmap in the future. The list is ordered alphabetically. Therefore, the order does not express the importance or weight of a backlog item.
 
@@ -27,12 +30,9 @@ We incorporate community feedback into the roadmap. If you think that important 
 - Add metal-stack to [Gardener conformance test grid](https://testgrid.k8s.io/gardener-all)
 - Autoscaler for metal control plane components
 - CI dashboard and public integration testing
-- Cilium as the default CNI for metal-stack on Gardener K8s clusters
 - Improved release and deploy processes (GitOps, [Spinnaker](https://spinnaker.io/), [Flux](https://fluxcd.io/))
 - Machine internet without firewalls
 - metal-stack dashboard (UI)
 - Offer our metal-stack extensions as enterprise products (accounting, cluster-api, S3) (neither of them will ever be required for running metal-stack, they just add extra value for certain enterprises)
 - Partition managed by Kubernetes (with Kubelets joining the control plane cluster)
 - Public offering / demo playground
-- Resource scoping in the metal-api (MEP-4)
-- Service / API tokens (for scoped technical user access)
