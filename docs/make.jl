@@ -28,7 +28,7 @@ makedocs(
             "Architecture" => "concepts/architecture.md",
             "Network" => [
                 "Theory" => "concepts/network/theory.md",
-                "Firewalls" => "concepts/network/firewalls.md",
+                "Firewalls" => "concepts/network/firewalls.md"
             ],
             "Kubernetes" => [
                 "Cloud Controller Manager" => "concepts/kubernetes/cloud-controller-manager.md",
@@ -37,7 +37,7 @@ makedocs(
                 "Cluster API" => "concepts/kubernetes/cluster-api.md",
                 "Isolated Cluster" => "concepts/kubernetes/isolated-clusters.md",
                 "GPU Workers" => "concepts/kubernetes/gpu-workers.md",
-                "Storage" => "concepts/kubernetes/storage.md",
+                "Storage" => "concepts/kubernetes/storage.md"
             ]
         ],
         "For Operators" => [
@@ -46,12 +46,12 @@ makedocs(
             "Deployment Concepts" => "operators/deployment-concepts.md",
             "Deployment Guide" => "operators/deployment-guide.md",
             "Upgrades" => "operators/upgrades.md",
-            "Troubleshoot" => "operators/troubleshoot.md",
+            "Troubleshoot" => "operators/troubleshoot.md"
         ],
         "For Users" => [
             "Manual" => "users/manual.md",
             "Client Libraries" => "users/client-libraries.md",
-            "Ansible Integration" => "users/integration-ansible.md",
+            "Ansible Integration" => "users/integration-ansible.md"
         ],
         "Release Notes" => "release-notes.md",
         "For Developers" => [
@@ -59,7 +59,7 @@ makedocs(
             "Planning Meetings" => "developers/planning-meetings.md",
             "Contribution Guideline" => "developers/contribution-guideline.md",
             "Release Flow" => "developers/release-flow.md",
-            "Community" => "developers/community.md",
+            "Community" => "developers/community.md"
         ],
         "References" => [
             "API" => "references/apidocs.md",
@@ -68,7 +68,7 @@ makedocs(
                 "metalctl" => "references/external/metalctl/README.md",
                 "csi-driver-lvm" => "references/external/csi-driver-lvm/README.md",
                 "firewall-controller" => "references/external/firewall-controller/README.md",
-                "tailscale" => "references/external/tailscale/README.md",
+                "tailscale" => "references/external/tailscale/README.md"
             ]
         ]
     ]
