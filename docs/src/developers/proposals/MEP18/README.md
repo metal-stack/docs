@@ -1,6 +1,6 @@
 # Autonomous Control Plane
 
-As described in the [deployment chapter](../../../installation/deployment.md), we strongly recommend Kubernetes as the target platform for running the metal-stack control plane.
+As described in the [deployment chapter](../../../operators/deployment-guide.md), we strongly recommend Kubernetes as the target platform for running the metal-stack control plane.
 
 Kubernetes clusters for this purpose are readily available from hyperscalers, metalstack.cloud, or other cloud providers. Simply using a managed Kubernetes cluster greatly simplifies a metal-stack installation. However, sometimes it might be desirable to host the metal-stack control plane autonomously, without the help of another cloud provider. Reasons for this might include corporate policies that prohibit the use of external data center products, or network constraints.
 

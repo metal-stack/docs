@@ -8,4 +8,4 @@ To make the firewalls created with metal-stack easily configurable through Kuber
 - Intrusion-detection with [suricata](https://suricata.io/)
 - network metric collection
 
-Please check out the [guide](../external/firewall-controller/README.md) on how to use it.
+Please check out the [guide](../../references/external/firewall-controller/README.md) on how to use it.

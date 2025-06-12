@@ -15,5 +15,3 @@ A release is created in the following way:
 - A release is created via Github releases, including all release notes, with a tag on the `main` branch.
 
 If you want, you can sign up at our Slack channel where we are announcing every new release. Often, we provide additional information for metal-stack administrators and adopters at this place, too.
-
-

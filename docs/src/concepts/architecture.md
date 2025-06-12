@@ -49,7 +49,7 @@ The following figure shows the relationships between these microservices:
 Some notes on this picture:
 
 - Users can access the metal-api with the CLI client called [metalctl](https://github.com/metal-stack/metalctl).
-- You can programmatically access the metal-api with [client libraries](../development/client_libraries.md) (e.g. [metal-go](https://github.com/metal-stack/metal-go)).
+- You can programmatically access the metal-api with [client libraries](../users/client-libraries.md) (e.g. [metal-go](https://github.com/metal-stack/metal-go)).
 - Our databases are wrapped in a specially built [backup-restore-sidecar](https://github.com/metal-stack/backup-restore-sidecar), which is consistently backing up the databases in external blob storage.
 - The metal-api can be scaled out using replicas when being deployed in Kubernetes.
 
@@ -71,11 +71,11 @@ We strongly advise to group your hardware into racks that are specifically assem
 
 !!! info
 
-    The hardware that we currently support to be placed inside a partition is described in the [hardware](hardware.md) document.
+    The hardware that we currently support to be placed inside a partition is described in the [hardware](../operators/hardware.md) document.
 
 !!! info
 
-    How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networking](networking.md) document.
+    How large you can grow your partitions and how the network topology inside a partition looks like is described in the [networking](network/theory.md) document.
 
 The metal-stack has microservices running on the leaf switches in a partition. For this reason, your leaf switches are required to run a Linux distribution that you have full access to. Additionally, there are a servers not added to the pool of user-allocatable machines, which are instead required for running metal-stack and we call them _management servers_. We also call the entirety of switches inside a partition the _switch plane_.
 
@@ -92,7 +92,7 @@ The microservices running inside a partition are:
 
 Some notes on this picture:
 
-- This figure is slightly simplified. The switch plane consists of spine switches, exit routers, management firewalls and a bastion router with more software components deployed on these entities. Please refer to the [networking](networking.md) document to see the full overview over the switch plane.
+- This figure is slightly simplified. The switch plane consists of spine switches, exit routers, management firewalls and a bastion router with more software components deployed on these entities. Please refer to the [networking](network/theory.md) document to see the full overview over the switch plane.
 - The image-cache is an optional component consisting of multiple services to allow caching images from the public image store inside a partition. This brings increased download performance on machine allocation and increases independence of a partition on the internet connection.
 
 ## Complete View

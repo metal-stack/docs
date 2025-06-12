@@ -100,7 +100,7 @@ This issue is special in a way that it prevents other issues from being evaluate
 
 When a machine has no partition, the [metal-hammer](https://github.com/metal-stack/metal-hammer) has not yet registered the machine at the [metal-api](https://github.com/metal-stack/metal-api). Instead, the machine was created through metal-stack's event machinery, which does not have a lot of information about a machine (e.g. a PXE boot event was reported from the pixiecore), or just by the [metal-bmc](https://github.com/metal-stack/metal-bmc) which discovered the machine through DHCP.
 
-This can usually happen on the very first boot of a machine and the machine's [hardware is not supported](../overview/hardware.md) by metal-stack, leading to the [metal-bmc](https://github.com/metal-stack/metal-bmc) being unable to report BMC details to the metal-api (a metal-bmc report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
+This can usually happen on the very first boot of a machine and the machine's [hardware is not supported](hardware.md) by metal-stack, leading to the [metal-bmc](https://github.com/metal-stack/metal-bmc) being unable to report BMC details to the metal-api (a metal-bmc report sets the partition id of a machine) and the metal-hammer not finishing the machine registration phase.
 
 To resolve this issue, you need to identify the machine in your metal-stack partition that emits PXE boot events and find the reason why it is not properly booting into the metal-hammer. The console logs of this machine should enable you to find out the root cause.
 
@@ -156,7 +156,7 @@ Under bad circumstances, a machine diverges from its typical machine lifecycle. 
 
 Reasons for this can be:
 
-- The machine's [hardware is not supported](../overview/hardware.md) and the metal-hammer crashes during the machine discovery
+- The machine's [hardware is not supported](hardware.md) and the metal-hammer crashes during the machine discovery
 - The machine registration fails through the metal-hammer because an orphaned / dead machine is still present in the metal-api's data base. The machine is connected to the same switch ports that were used by the orphaned machine. In this case, you should clean up the orphaned machine through `metalctl machine rm --remove-from-database`.
 
 Please also consider console logs of the machine for investigating the issue.
@@ -179,13 +179,13 @@ To resolve the issue, you need to recreate the firewalls that use the same ASN.
 
 The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
-If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the metal-bmc to find out what's going wrong with this machine.
+If it's uncapable of discovering this information, your [hardware might not be supported](hardware.md). Please investigate the logs of the metal-bmc to find out what's going wrong with this machine.
 
 #### bmc-without-ip
 
 The [metal-bmc](https://github.com/metal-stack/metal-bmc) is responsible to report connection data for the machine's [BMC](https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface#Baseboard_management_controller).
 
-If it's uncapable of discovering this information, your [hardware might not be supported](../overview/hardware.md). Please investigate the logs of the metal-bmc to find out what's going wrong with this machine.
+If it's uncapable of discovering this information, your [hardware might not be supported](hardware.md). Please investigate the logs of the metal-bmc to find out what's going wrong with this machine.
 
 #### bmc-no-distinct-ip
 

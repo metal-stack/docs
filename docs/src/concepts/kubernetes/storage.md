@@ -17,7 +17,7 @@ Depth = 5
 - Built-in multi-tenant capabilities
 - Configurable compression and replication factors
 
-We are maintaining an open source integration for running LightOS in our [Gardener](kubernetes.md) cluster provisioning. You can enable it through the controller registration of the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal).
+We are maintaining an open source integration for running LightOS in our [Gardener](gardener.md) cluster provisioning. You can enable it through the controller registration of the [gardener-extension-provider-metal](https://github.com/metal-stack/gardener-extension-provider-metal).
 
 With the integration in place, the extension-provider deploys a [duros-controller](https://github.com/metal-stack/duros-controller) along with a Duros Storage CRD into the seed's shoot namespace. The duros-controller takes care of creating projects and managing credentials at the Lightbits Duros API. It also provides storage classes as configured in the extension-provider's controller registration to the customer's shoot cluster such that users can start consuming the Lightbits storage immediately.
 
@@ -41,4 +41,4 @@ spec:
   storageClassName: csi-lvm-sc-linear
 ```
 
-The solution does not provide cloud-storage or whatsoever, but it improves the user's accessibility of local storage on bare-metal machines through Kubernetes. Check out the driver's documentation [here](../external/csi-driver-lvm/README.md).
+The solution does not provide cloud-storage or whatsoever, but it improves the user's accessibility of local storage on bare-metal machines through Kubernetes. Check out the driver's documentation [here](../../references/external/csi-driver-lvm/README.md).

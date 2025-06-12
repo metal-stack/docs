@@ -2,5 +2,14 @@
     "markdown.marp.themes": [
         "marp/themes/metal-stack.css"
     ],
-    "markdown.marp.enableHtml": true
+    "markdown.marp.enableHtml": true,
+    "workbench.colorCustomizations": {
+        "commandCenter.border": "#e7e7e799",
+        "tab.activeBorder": "#515bfd",
+        "titleBar.activeBackground": "#1f2cfc",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#1f2cfc99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#1f2cfc"
 }

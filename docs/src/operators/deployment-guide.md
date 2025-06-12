@@ -2,7 +2,7 @@
 
 TODO: Split into concepts and guide
 
-We are bootstrapping the [metal control plane](../overview/architecture.md#Metal-Control-Plane-1) as well as our [partitions](../overview/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
+We are bootstrapping the [metal control plane](../concepts/architecture.md#Metal-Control-Plane-1) as well as our [partitions](../concepts/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
 
 In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles).
 
@@ -33,7 +33,7 @@ The metal control plane is typically deployed in a Kubernetes cluster. Therefore
 
 !!! tip
 
-    For metal-stack it does not matter where your control plane Kubernetes cluster is located. You can of course use a cluster managed by a hyperscaler. This has the advantage of not having to setup Kubernetes by yourself and could even become beneficial in terms of fail-safe operation. However, we also describe a solution of how to setup metal-stack with a self-hosted, [Autonomous Control Plane](./autonomous-control-plane.md) cluster. The only requirement from metal-stack is that your partitions can establish network connections to the metal control plane. If you are interested, you can find a reasoning behind this deployment decision [here](../overview/architecture.md#Target-Deployment-Platforms).
+    For metal-stack it does not matter where your control plane Kubernetes cluster is located. You can of course use a cluster managed by a hyperscaler. This has the advantage of not having to setup Kubernetes by yourself and could even become beneficial in terms of fail-safe operation. However, we also describe a solution of how to setup metal-stack with a self-hosted, [Autonomous Control Plane](../developers/proposals/MEP18/README.md) cluster. The only requirement from metal-stack is that your partitions can establish network connections to the metal control plane. If you are interested, you can find a reasoning behind this deployment decision [here](../concepts/architecture.md#Target-Deployment-Platforms).
 
 Let's start off with a fresh folder for your deployment:
 
@@ -236,7 +236,7 @@ metal_control_plane_ingress_dns: <your-dns-domain> # if you do not have a DNS en
 
 We have several components in our stack that communicate over encrypted gRPC just like Kubernetes components do.
 
-For the very basic setup you will need to create self-signed certificates for the communication between the following components (see [architecture](../overview/architecture.md) document):
+For the very basic setup you will need to create self-signed certificates for the communication between the following components (see [architecture](../concepts/architecture.md) document):
 
 - [metal-api](https://github.com/metal-stack/metal-api) and [masterdata-api](https://github.com/metal-stack/masterdata-api) (in-cluster traffic communication)
 - [metal-api](https://github.com/metal-stack/metal-api) and [metal-hammer](https://github.com/metal-stack/metal-hammer) (partition to control plane communication)
@@ -558,7 +558,7 @@ In the metal-api, we have three different user roles for authorization:
 - Edit
 - View
 
-How the user permissions are used is documented in the [technical API docs](../apidocs/apidocs.md).
+How the user permissions are used is documented in the [technical API docs](../references/apidocs.md).
 
 If you decided to use OIDC, you can parametrize the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal) for this by defining the variable `metal_masterdata_api_tenants` with the following configuration:
 
