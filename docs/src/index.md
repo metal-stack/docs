@@ -17,12 +17,3 @@ metal-stack is an open source software that provides an API for provisioning and
 From the perspective of a user, the metal-stack does not feel any different from working with a conventional cloud provider. Users manage their resources (machines, networks and ip addresses, etc.) by themselves, which effectively turns your data center into an elastic cloud infrastructure.
 
 The major difference to other cloud providers is that compute power and data reside in your own data center.
-
-```@contents
-Pages = ["index.md"]
-Depth = 5
-```
-
-### Open Source
-
-The metal-stack is open source and free of constraints regarding vendors and third-party products. The stack is completely built on open source products. We have a community actively working on the metal-stack, which can assist you delivering all reasonable features you are gonna need.
