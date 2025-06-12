@@ -13,5 +13,3 @@ We increment our Gardener dependency version by version following the Gardener u
 !!! info
 
     If you use the Gardener integration of metal-stack do not skip any patch releases. You may skip patch releases if you depend on metal-stack only, but we recommend to just deploy every patch release one by one for the best possible upgrade experience.
-
-TODO: How to perform a metal-stack update?

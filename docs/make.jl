@@ -43,17 +43,13 @@ makedocs(
         "For Operators" => [
             "Supported Hardware" => "operators/hardware.md",
             "Operating Systems" => "operators/operating-systems.md",
-            "Deployment Concepts" => "operators/deployment-concepts.md",
             "Deployment Guide" => "operators/deployment-guide.md",
             "Upgrades" => "operators/upgrades.md",
             "Troubleshoot" => "operators/troubleshoot.md"
         ],
         "For Users" => [
-            "Manual" => "users/manual.md",
             "Client Libraries" => "users/client-libraries.md",
-            "Ansible Integration" => "users/integration-ansible.md"
         ],
-        "Release Notes" => "release-notes.md",
         "For Developers" => [
             "Enhancement Proposals" => "developers/proposals/index.md",
             "Planning Meetings" => "developers/planning-meetings.md",

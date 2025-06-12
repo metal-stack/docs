@@ -1,7 +1,5 @@
 # Contribution Guideline
 
-TODO: Github Org Structure (CODEOWNERS, Licenses, ...)
-
 This document describes the way we want to contribute code to the projects of metal-stack, which are hosted on [github.com/metal-stack](https://github.com/metal-stack).
 
 The document is meant to be understood as a general guideline for contributions, but not as burden to be placed on a developer. Use your best judgment when contributing code. Try to be as clean and precise as possible when writing code and try to make your code as maintainable and understandable as possible for other people.

@@ -6,9 +6,3 @@ For the [metal-api](https://github.com/metal-stack/metal-api) we officially supp
 
 - [metal-go](https://github.com/metal-stack/metal-go)
 - [metal-python](https://github.com/metal-stack/metal-python)
-
-TODO:
-
-- Examples
-- v1: swagger
-- v2: proto
