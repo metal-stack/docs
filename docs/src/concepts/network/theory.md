@@ -1,5 +1,7 @@
 # Networking
 
+TODO: (CLOS, BGP anycast +  frr peering)
+
 We spent a lot of time on trying to provide state-of-the-art networking in the data center. This document describes the requirements, ideas and implementation details of the network topology that hosts the metal-stack.
 
 The document is separated into three main sections describing the constraints, theoretical ideas and implementation details.
@@ -73,6 +75,8 @@ Tenant servers are dual-attached to the leaf layer in order to have redundancy a
 It is not only important to have a scalable and resilient infrastructure but also to support planning and operation teams. Visibility within the network is of significant meaning for them. Consequently layer-3 routing in favor of layer-2 bridging provides this kind of tooling.
 
 ### BGP
+
+TODO: BGB anycast?
 
 For routing the **Border Gateway Protocol (BGP)**, more specific: External BGP was selected. Extensive testing and operational experiences have shown that External BGP is well suited as a stand-alone routing protocol (see: [RFC7938](https://datatracker.ietf.org/doc/html/rfc7938)).
 

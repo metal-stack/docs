@@ -1,5 +1,7 @@
 # Deploying metal-stack
 
+TODO: Split into concepts and guide
+
 We are bootstrapping the [metal control plane](../overview/architecture.md#Metal-Control-Plane-1) as well as our [partitions](../overview/architecture.md#Partitions-1) with [Ansible](https://www.ansible.com/) through CI.
 
 In order to build up your deployment, we recommend to make use of the same Ansible roles that we are using by ourselves in order to deploy the metal-stack. You can find them in the repository called [metal-roles](https://github.com/metal-stack/metal-roles).

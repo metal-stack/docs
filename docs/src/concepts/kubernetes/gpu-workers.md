@@ -1,9 +1,4 @@
-# GPU Support
-
-```@contents
-Pages = ["gpu-support.md"]
-Depth = 5
-```
+# GPU Workers
 
 For workloads which require the assistance of GPUs, support for GPUs in bare metal servers was added to metal-stack.io v0.18.0.
 
