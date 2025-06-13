@@ -33,9 +33,9 @@ echo "Getting release vector"
 curl -Lo /tmp/release.yaml "https://raw.githubusercontent.com/metal-stack/releases/${version}/release.yaml"
 
 echo "Updating external repositories"
-update_repo "docs/src/external/csi-driver-lvm" "https://github.com/metal-stack/csi-driver-lvm.git" master
-update_repo "docs/src/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" "$(yq e '.projects.metal-stack.mini-lab.version' /tmp/release.yaml)"
-update_repo "docs/src/external/metalctl" "https://github.com/metal-stack/metalctl.git" "$(yq e '.binaries.metal-stack.metalctl.version' /tmp/release.yaml)"
+update_repo "docs/src/references/external/csi-driver-lvm" "https://github.com/metal-stack/csi-driver-lvm.git" master
+update_repo "docs/src/references/external/mini-lab" "https://github.com/metal-stack/mini-lab.git" "$(yq e '.projects.metal-stack.mini-lab.version' /tmp/release.yaml)"
+update_repo "docs/src/references/external/metalctl" "https://github.com/metal-stack/metalctl.git" "$(yq e '.binaries.metal-stack.metalctl.version' /tmp/release.yaml)"
 
 # TODO: For next release enable:
 # echo "Getting GEPM image vector"
@@ -46,4 +46,4 @@ echo "Special handling"
 # in metalctl/docs the generated do not start with a top-level heading (#) but with a sub-heading (##)
 # (hard-coded in cobra)
 # due to this reason the search results look very odd because the pages are indexed with the name "-"
-sed -i 's/^##/#/g' docs/src/external/metalctl/docs/*
+sed -i 's/^##/#/g' docs/src/references/external/metalctl/docs/*
