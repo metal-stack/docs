@@ -34,7 +34,6 @@ makedocs(
                 "Cloud Controller Manager" => "concepts/kubernetes/cloud-controller-manager.md",
                 "Firewall Controller Manager" => "concepts/kubernetes/firewall-controller-manager.md",
                 "Gardener" => "concepts/kubernetes/gardener.md",
-                "Cluster API" => "concepts/kubernetes/cluster-api.md",
                 "Isolated Cluster" => "concepts/kubernetes/isolated-clusters.md",
                 "GPU Workers" => "concepts/kubernetes/gpu-workers.md",
                 "Storage" => "concepts/kubernetes/storage.md"
