@@ -24,7 +24,7 @@ Possible types are:
 - `mgmtspine`
 - `mgmteor`
 
-Depending on the type its reconcilation loop will differ.
+Depending on the type its reconciliation loop will differ.
 The current behavior should mostly remain unchanged for leaf switches.
 Things to change for non-leaves:
 
