@@ -1,0 +1,8 @@
+[default.extend-words]
+# Don't correct the surname "Teh"
+CLOS = "CLOS"
+leafs = "leafs"
+nd = "nd"
+
+[files]
+extend-exclude = ["*.svg", "*.drawio", "allocate.yml"]

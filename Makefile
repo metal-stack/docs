@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-RELEASE_VERSION := $(or ${RELEASE_VERSION},"v0.14.4")
+RELEASE_VERSION := $(or ${RELEASE_VERSION},"v0.21.5")
 
 ifeq ($(CI),true)
 DOCKER_TTY_ARG=
@@ -11,7 +11,8 @@ endif
 build:
 	docker build -t docs-builder .
 	docker run -i$(DOCKER_TTY_ARG) --rm \
-	  -v $(PWD)/docs:/workdir/docs \
+	  -v $(PWD):/workdir \
+	  -v $(PWD)/.gitconfig:/root/.gitconfig \
 	  -e RELEASE_VERSION=$(RELEASE_VERSION) \
 	  -w /workdir \
 	  docs-builder julia \

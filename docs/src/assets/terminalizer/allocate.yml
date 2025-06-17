@@ -213,16 +213,16 @@ records:
   - delay: 18
     content: '  \"description\": \"Compute for the very large masses\",\n  \"id\": \"c1-xlarge-x86\",\n  \"name\": \"c1-xlarge-x86\"\n },\n \"state\": {\n  \"description\": \"\",\n  \"value\": \"\"\n },\n \"tags\":'
   - delay: 17
-    content: " [\\n  \\\"machine.metal-pod.io/network.primary.asn=4200056321\\\",\\n  \\\"machine.metal-pod.io/rack=fra-equ01-rack01\\\",\\n  \\\"machine.metal-pod.io/chassis=C217BAH31AG0535\\\"\\n ]\\n}\" \e[32mcaller\e[0m=wait.go:51"
+    content: " [\\n  \\\"machine.metal-stack.io/network.primary.asn=4200056321\\\",\\n  \\\"machine.metal-stack.io/rack=fra-equ01-rack01\\\",\\n  \\\"machine.metal-stack.io/chassis=C217BAH31AG0535\\\"\\n ]\\n}\" \e[32mcaller\e[0m=wait.go:51"
   - delay: 18
     content: "\r\n\e[32mINFO\e[0m[09-21|12:45:04] stopped waiting got                      \e[32mmachine\e[0m=\"{Allocation:0xc00030a2d0 Changed:0xc0003ee630 Created:0xc0003ee640 Description: Events:0xc000576390 Hardware:"
   - delay: 17
     content: >-
       0xc0006f4000 ID:0xc0003ee8f0 Ledstate:0xc0003ee900 Liveliness:0xc0003ee930
       Name: Partition:0xc0000c4b40 Rackid:0xc0003ee970 Size:0xc000236320
-      State:0xc0003ee9f0 Tags:[machine.metal-pod.io/network.prim
+      State:0xc0003ee9f0 Tags:[machine.metal-stack.io/network.prim
   - delay: 18
-    content: "ary.asn=4200056321 machine.metal-pod.io/rack=fra-equ01-rack01 machine.metal-pod.io/chassis=C217BAH31AG0535]}\" \e[32mcaller\e[0m=wait.go:58\r\n\e[32mINFO\e[0m[09-21|12:45:04] getdisk                         "
+    content: "ary.asn=4200056321 machine.metal-stack.io/rack=fra-equ01-rack01 machine.metal-stack.io/chassis=C217BAH31AG0535]}\" \e[32mcaller\e[0m=wait.go:58\r\n\e[32mINFO\e[0m[09-21|12:45:04] getdisk                         "
   - delay: 17
     content: "         \e[32mimageID\e[0m=ubuntu-19.04 \e[32mcaller\e[0m=disk.go:206\r\n\e[32mINFO\e[0m[09-21|12:45:04] event                                    \e[32mevent\e[0m=0xc0003eebc0 \e[32mmessage\e[0m=\"start installat"
   - delay: 16

@@ -1,7 +1,7 @@
 # Docs
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://docs.metal-stack.io/)
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://docs.metal-stack.io/dev/)
+[![Stable Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://docs.metal-stack.io/)
+[![Devel Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://docs.metal-stack.io/dev/)
 
 This repository contains the documentation of metal-stack at [docs.metal-stack.io](https://docs.metal-stack.io/).
 
@@ -11,7 +11,7 @@ It is being generated using [Julia Documenter](https://github.com/JuliaDocs/Docu
 
 To generate the documentation you can use the following command (only Docker is required):
 
-```
+```bash
 make
 ```
 
@@ -19,7 +19,7 @@ The result is being written to `docs/build` and is fully static. You can simply 
 
 To update the docs that is included from external repositories (e.g. metalctl, mini-lab, ...), you can run the following target:
 
-```
+```make
 RELEASE_VERSION=master make update
 ```
 
