@@ -35,5 +35,5 @@ Once a proposal was accepted, an issue should be raised and the implementation s
 | [MEP-14](MEP14/README.md) | Independence from external sources             |   `Completed`   |
 | MEP-15                    | HAL Improvements                               | `In Discussion` |
 | [MEP-16](MEP16/README.md) | Firewall Support for Cluster API Provider      | `In Discussion` |
-| MEP-17                    | Announced IP visibility                        | `In Discussion` |
+| [MEP-17](MEP17/README.md) | Announced IP visibility                        | `In Discussion` |
 | [MEP-18](MEP18/README.md) | Autonomous Control Plane                       | `In Discussion` |
