@@ -22,7 +22,6 @@ Possible types are:
 - `exit`
 - `mgmtleaf`
 - `mgmtspine`
-- `mgmteor`
 
 Depending on the type its reconciliation loop will differ.
 The current behavior should mostly remain unchanged for leaf switches.
