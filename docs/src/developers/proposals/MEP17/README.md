@@ -65,16 +65,15 @@ For this, a separate LLDP client should be used, that forwards all LLDP messages
 A new GRPC endpoint should be exposed by the metal-apiserver to report BGP routes.
 
 ```proto
-service IPService {
-  rpc ReportBGPRoutes(IPServiceReportBGPRoutesRequest) returns (IPServiceReportBGPRoutesResponse) {
-    option (project_roles) = PROJECT_ROLE_OWNER;
-    option (project_roles) = PROJECT_ROLE_EDITOR;
-    option (project_roles) = PROJECT_ROLE_VIEWER;
-    option (auditing) = AUDITING_EXCLUDED;
+service SwitchService {
+  rpc ReportBGPRoutes(SwitchServiceReportBGPRoutesRequest) returns (SwitchServiceReportBGPRoutesResponse) {
+    option (metalstack.api.v2.infra_roles) = INFRA_ROLE_EDITOR;
+    option (metalstack.api.v2.infra_roles) = INFRA_ROLE_VIEWER;
+    option (metalstack.api.v2.auditing) = AUDITING_EXCLUDED;
   }
 }
 
-message IPServiceReportBGPRoutesRequest {
+message SwitchServiceReportBGPRoutesRequest {
   repeated BGPRoute bgpRoutes = 1;
 }
 
@@ -85,7 +84,22 @@ message BGPRoute {
 }
 ```
 
-There should be a table for BGP routes in metal-db.
+There should be a table for BGP routes in metaldb:
+
+```go
+type (
+  BGPRoute struct {
+    CIDR string `rethinkdb:"cidr"`
+    LastAnnounced time.Time `rethinkdb:"lastannounced"`
+  }
+
+  BGPRoutes struct {
+    PartitionID string `rethinkdb:"partitionid"`
+    Routes []BGPRoute `rethinkdb:"routes"`
+  }
+)
+```
+
 Whenever new routes are reported they get merged into the existing ones by the strategy:
 
 - when new, just add
