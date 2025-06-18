@@ -106,6 +106,9 @@ Whenever new routes are reported they get merged into the existing ones by the s
 
 An expiration threshold should be defined and all expired routes should be cleaned up periodically.
 
+Only routes to external networks should be stored.
+Cluster-internal prefixes should be ignored.
+
 When an IP address is described with `metalctl network ip describe` the BGP routes should be queried.
 If no route to the described IP was announced it should be indicated, e.g.
 
