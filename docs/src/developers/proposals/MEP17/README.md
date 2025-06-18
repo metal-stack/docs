@@ -74,40 +74,23 @@ service SwitchService {
 }
 
 message SwitchServiceReportBGPRoutesRequest {
-  repeated BGPRoute bgpRoutes = 1;
+  string switch_id = 1;
+  repeated BGPRoute bgpRoutes = 2;
 }
 
 message BGPRoute {
   string cidr = 1;
-  string switch_id = 2;
-  google.protobuf.Timestamp last_announced = 3;
 }
 ```
 
-There should be a table for BGP routes in metaldb:
-
-```go
-type (
-  BGPRoute struct {
-    CIDR string `rethinkdb:"cidr"`
-    LastAnnounced time.Time `rethinkdb:"lastannounced"`
-  }
-
-  BGPRoutes struct {
-    Routes []BGPRoute `rethinkdb:"routes"`
-  }
-)
-```
-
+Reported routes should be stored to a redis database along with the switch that reported them and the timestamp of the last time they were reported.
+An expiration threshold should be defined and all expired routes should be cleaned up periodically.
+Only routes to external networks should be stored.
+Cluster-internal prefixes should be ignored.
 Whenever new routes are reported they get merged into the existing ones by the strategy:
 
 - when new, just add
 - when existing, update `last_announced` timestamp
-
-An expiration threshold should be defined and all expired routes should be cleaned up periodically.
-
-Only routes to external networks should be stored.
-Cluster-internal prefixes should be ignored.
 
 When an IP address is described with `metalctl network ip describe` the BGP routes should be queried.
 If no route to the described IP was announced it should be indicated, e.g.
