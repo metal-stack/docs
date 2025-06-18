@@ -8,27 +8,17 @@
 }
 
 message SwitchServiceReportBGPRoutesRequest {
-  repeated BGPRoute bgpRoutes = 1;
+  string switch_id = 1;
+  repeated BGPRoute bgpRoutes = 2;
 }
 
 message BGPRoute {
   string cidr = 1;
-  string switch_id = 2;
-  google.protobuf.Timestamp last_announced = 3;
-}</code></pre><p>There should be a table for BGP routes in metaldb:</p><pre><code class="language-go hljs">type (
-  BGPRoute struct {
-    CIDR string `rethinkdb:&quot;cidr&quot;`
-    LastAnnounced time.Time `rethinkdb:&quot;lastannounced&quot;`
-  }
-
-  BGPRoutes struct {
-    Routes []BGPRoute `rethinkdb:&quot;routes&quot;`
-  }
-)</code></pre><p>Whenever new routes are reported they get merged into the existing ones by the strategy:</p><ul><li>when new, just add</li><li>when existing, update <code>last_announced</code> timestamp</li></ul><p>An expiration threshold should be defined and all expired routes should be cleaned up periodically.</p><p>Only routes to external networks should be stored. Cluster-internal prefixes should be ignored.</p><p>When an IP address is described with <code>metalctl network ip describe</code> the BGP routes should be queried. If no route to the described IP was announced it should be indicated, e.g.</p><pre><code class="language-bash hljs">allocationuuid: allocation-id
+}</code></pre><p>Reported routes should be stored to a redis database along with the switch that reported them and the timestamp of the last time they were reported. An expiration threshold should be defined and all expired routes should be cleaned up periodically. Only routes to external networks should be stored. Cluster-internal prefixes should be ignored. Whenever new routes are reported they get merged into the existing ones by the strategy:</p><ul><li>when new, just add</li><li>when existing, update <code>last_announced</code> timestamp</li></ul><p>When an IP address is described with <code>metalctl network ip describe</code> the BGP routes should be queried. If no route to the described IP was announced it should be indicated, e.g.</p><pre><code class="language-bash hljs">allocationuuid: allocation-id
 description: my ip address
 ipaddress: 100.0.0.1
 name: ip-name
 networkid: network-id
 projectid: project-id
 type: static
-used: no # otherwise &#39;yes&#39;</code></pre></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Wednesday 18 June 2025 07:54">Wednesday 18 June 2025</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+used: no # otherwise &#39;yes&#39;</code></pre></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Wednesday 18 June 2025 13:39">Wednesday 18 June 2025</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
