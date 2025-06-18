@@ -67,20 +67,21 @@ Other switch series and models might work but were not reported to us.
 
     Of course, contributions for supporting other switch vendors and operating systems are highly appreciated.
 
-## Portable metal-stack Setup DIY
+## Portable metal-stack Setup
 
 A minimal physical hardware setup may contain at least the following components:
 
 !!! warning
 
-    This setup should work as the components are very similar to the currently supported ones but it's currently untested.
+    This setup dedicated to testing environments, getting to know the metal-stack software and discussing BOMs for production setups.
 
 | #  | Vendor     | Series        | Model               | Function                                                                 |
 |:---|:-----------|:--------------|:--------------------|:-------------------------------------------------------------------------|
-| 2x | Edge-Core  | AS5500 Series | AS5512-54x (10G)    | Leaf / Exit switches                                                     |
-| 1x | Supermicro | Microcloud    | SYS-5039MA16-H12RFT | Usable machines                                                          |
+| 1x | EdgeCore   | AS5500 Series | AS4630-54x (1G)     | Management Switch and Management Server                                  |
+| 2x | EdgeCore   | AS5500 Series | AS4625-54x (1G)     | Leaf switches                                                            |
+| 1x | Supermicro | Microcloud    | 3015MR-H8TNR        | Usable machines                                                          |
 | 1x | Teltonika  | Router        | RUTXR1              | Front router for internet and out-of-band access to servers and switches |
 
-Besides that, a 6HE rack with 1000mm depth and a portable LTE modem is needed.
+This setup will yield in 8 usable machines, one of them can be configured to provide persistent CSI storage.
 
-This MVP will yield in 12 usable machines, one of them will be reserved as management server.
+![Portable metal-stack Setup](starter.jpg)
