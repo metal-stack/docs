@@ -43,7 +43,7 @@ makedocs(
             "Supported Hardware" => "operators/hardware.md",
             "Operating Systems" => "operators/operating-systems.md",
             "Deployment Guide" => "operators/deployment-guide.md",
-            "Upgrades" => "operators/upgrades.md",
+            "Maintenance" => "operators/maintenance.md",
             "Troubleshoot" => "operators/troubleshoot.md"
         ],
         "For Users" => [
