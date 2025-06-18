@@ -67,7 +67,7 @@ A new GRPC endpoint should be exposed by the metal-apiserver to report BGP route
 
 ```proto
 service IPService {
-  rpc Get(IPServiceReportBGPRoutesRequest) returns (IPServiceReportBGPRoutesResponse) {
+  rpc ReportBGPRoutes(IPServiceReportBGPRoutesRequest) returns (IPServiceReportBGPRoutesResponse) {
     option (project_roles) = PROJECT_ROLE_OWNER;
     option (project_roles) = PROJECT_ROLE_EDITOR;
     option (project_roles) = PROJECT_ROLE_VIEWER;
@@ -81,7 +81,8 @@ message IPServiceReportBGPRoutesRequest {
 
 message BGPRoute {
   string cidr = 1;
-  google.protobuf.Timestamp last_announced = 2;
+  string switch_id = 2;
+  google.protobuf.Timestamp last_announced = 3;
 }
 ```
 
