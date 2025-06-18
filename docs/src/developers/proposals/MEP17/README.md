@@ -94,7 +94,6 @@ type (
   }
 
   BGPRoutes struct {
-    PartitionID string `rethinkdb:"partitionid"`
     Routes []BGPRoute `rethinkdb:"routes"`
   }
 )
