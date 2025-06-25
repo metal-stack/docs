@@ -1,0 +1,152 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample-service
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vpn-auth
+  namespace: sample-service
+data:
+  auth-key: <base64 encoded auth key from headscale>
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-service
+  namespace: sample-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-service
+  template:
+    metadata:
+      name: sample-service
+      labels:
+        app: sample-service
+    spec:
+      serviceAccountName: tailscale-relay
+      containers:
+        # this is your real service container
+        - name: sample-service-container
+          imagePullPolicy: Always
+          image: nginx
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "128Mi"
+            requests:
+              cpu: "20m"
+              memory: "64Mi"
+        # tailscale sidecar
+        - name: tailscale
+          image: ghcr.io/tailscale/tailscale:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_KUBE_SECRET
+              value: tailscale-auth
+            - name: TS_DEBUG_FIREWALL_MODE
+              value: nftables
+            - name: TS_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: vpn-auth
+                  key: auth-key
+            - name: TS_HOSTNAME
+              value: "sample-service"
+            - name: TS_STATE_DIR
+              value: /var/lib/tailscale
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: TS_EXTRA_ARGS
+              value: "--login-server https://<headscale public dns entry> --accept-routes --advertise-tags=tag:sample-service" 
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "20m"
+              memory: "64Mi"
+          volumeMounts:
+            - name: tailscale-state
+              mountPath: /var/lib/tailscale
+      volumes:
+        - name: tailscale-state
+          persistentVolumeClaim:
+            claimName: tailscale-pvc
+      shareProcessNamespace: true
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tailscale-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tailscale-relay
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tailscale-relay
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resourceNames:
+  - tailscale-auth
+  resources:
+  - secrets
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tailscale-relay
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tailscale-relay
+subjects:
+- kind: ServiceAccount
+  name: tailscale-relay
