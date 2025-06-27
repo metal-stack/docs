@@ -1,15 +1,10 @@
 # Planning Meetings
 
-We maintain a public board for planning development tasks in metal-stack on GitHub: https://github.com/orgs/metal-stack/projects/34.
+Please find our development planning board [on GitHub](https://github.com/orgs/metal-stack/projects/34).
 
-The planning board is updated during public, biweekly planning meetings on Microsoft Teams.
+Public planning meetings are held **biweekly** on **odd calendar weeks** from **14:00 to 14:30** on Microsoft Teams. The purpose is to provide an overview of our current projects and priorities, as well as to discuss new topics and issues within the group.
 
-The purpose of the meetings is to discuss and prioritize issues and pull requests. They can also be used to present new ideas or upcoming topics. Overall, these meetings improve communication among metal-stack contributors and address their concerns about the project's direction.
-
-| Date                              | Title             | Link  |
-| :-------------------------------- | :---------------- | :---: |
-| Monday, 2025-06-23, 14:30 - 15:00 | Biweekly Planning | <TBD> |
-| ...                               |                   |       |
+You can use [this link](https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZTVmNWFkYjYtMzVmYi00ZTMxLTk5ZTUtMGFjYjU2OTk0MjQz%40thread.v2/0?context=%7b%22Tid%22%3a%22f9d9b921-8f78-466d-95fd-4495e73d8d65%22%2c%22Oid%22%3a%228ac2a791-e637-4a90-8505-0a1ee175ebfc%22%7d) to join. If you want to get an invitation to the event, please drop us a line on our Slack channel.
 
 Planning meetings are currently not recorded. The meetings are held either in English or German depending on the attendees.
 
