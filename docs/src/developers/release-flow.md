@@ -72,7 +72,7 @@ Before adding a repository in the metal-stack org to the releases repository, it
   - For container images these are embedded using Buildx.
 - The following branch protection rules should be set:
   - The mainline should be protected.
-  - A pull request should be required before merging (required by at least one code owners).
+  - A pull request should be required before merging (required by at least one code owner).
   - Status checks should be required to pass.
   - Force push should not be allowed on this branch.
 - One person from the releases maintainers has to add the repository to the metal-robot in order to pick up the releases, add them to the release vector and generate release notes.
