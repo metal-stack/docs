@@ -44,6 +44,39 @@ Answer: Most changes are automatically integrated by the metal-robot. For manual
 
 Answer: CODEOWNERS, COntirbuting MD Lincence
 
+**Question: What requirements need to be fulfilled to add a repository to the release vector?**
+
+Please see the section below named [#requirements-for-release-vector-repositories].
+
+### Requirements for Release Vector Repositories
+
+Before adding a repository in the metal-stack org to the releases repository, it is advised for the maintainer to fulfill the following points:
+
+- The following files should be present at the repository root:
+  - [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
+    - When a repository is created, the metal-robot automatically creates a <repository-name>-maintainers team in our GitHub org.
+    - The CODEOWNERS file should reference this group.
+    - The group should contain at least two maintainers.
+  - `LICENCE`
+    - This usually should be MIT with "metal-stack" as authors.
+  - `CONTRIBUTING.md`
+    - This should contain the following content:
+      ```
+      # Contributing
+
+      Please check out the [contributing section](https://docs.metal-stack.io/stable/development/contributing/) in our [docs](https://docs.metal-stack.io/).
+      ```
+  - `README.md`
+- The `developers-core` team should be given repository access with `write` role, the codeowners team should have the `maintain` role
+- Release artifacts should have an SPDX-formatted SBOM attached.
+  - For container images these are embedded using Buildx.
+- The following branch protection rules should be set:
+  - The mainline should be protected.
+  - A pull request should be required before merging (required by at least one code owners).
+  - Status checks should be required to pass.
+  - Force push should not be allowed on this branch.
+- One person from the releases maintainers has to add the repository to the metal-robot in order to pick up the releases, add them to the release vector and generate release notes.
+
 ### How-To Release a Project
 
 [release-drafter](https://github.com/release-drafter/release-drafter) is preferred in order to generate release notes from merged PRs for your projects. It should be triggered for pushes on your main branch.
