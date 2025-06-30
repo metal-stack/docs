@@ -55,8 +55,8 @@ Before adding a repository in the metal-stack org to the releases repository, it
 - The following files should be present at the repository root:
   - [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
     - When a repository is created, the metal-robot automatically creates a <repository-name>-maintainers team in our GitHub org.
-    - The CODEOWNERS file should reference this group.
-    - The group should contain at least two maintainers.
+    - The CODEOWNERS file should reference this team.
+    - The team should contain at least two maintainers.
   - `LICENCE`
     - This usually should be MIT with "metal-stack" as authors.
   - `CONTRIBUTING.md`
