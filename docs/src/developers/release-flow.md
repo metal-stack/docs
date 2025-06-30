@@ -46,7 +46,7 @@ Answer: CODEOWNERS, COntirbuting MD Lincence
 
 **Question: What requirements need to be fulfilled to add a repository to the release vector?**
 
-Please see the section below named [#requirements-for-release-vector-repositories].
+Please see the section below named [Requirements for Release Vector Repositories](#requirements-for-release-vector-repositories).
 
 ### Requirements for Release Vector Repositories
 
