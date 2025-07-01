@@ -550,14 +550,6 @@ metal-stack currently supports two authentication methods:
 - user authentication through [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC)
 - [HMAC](https://en.wikipedia.org/wiki/HMAC) auth, typically used for access by technical users (because we do not have service account tokens at the time being)
 
-In the metal-api, we have three different user roles for authorization:
-
-- Admin
-- Edit
-- View
-
-How the user permissions are used is documented in the [technical API docs](../references/apidocs.md).
-
 If you decided to use OIDC, you can parametrize the [metal role](https://github.com/metal-stack/metal-roles/tree/master/control-plane/roles/metal) for this by defining the variable `metal_masterdata_api_tenants` with the following configuration:
 
 ```yaml

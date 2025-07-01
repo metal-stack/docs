@@ -7,7 +7,7 @@ user roles for authorization:
 - `Edit`
 - `View`
 
-As part of MEP-4, significant work is underway to introduce more fine-grained access control mechanisms within metal-stack, enhancing the precision and flexibility of permission management.
+As part of [MEP-4](../developers/proposals/MEP4/README.md), significant work is underway to introduce more fine-grained access control mechanisms within metal-stack, enhancing the precision and flexibility of permission management.
 
 To ensure that internal components interact securely with the metal-api, metal-stack assigns specific roles to each service based on the principle of least privilege.
 
