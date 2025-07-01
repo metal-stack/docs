@@ -40,10 +40,6 @@ Answer: Every repository in metal-stack has a `CODEOWNERS` file pointing to a ma
 
 Answer: Most changes are automatically integrated by the metal-robot. For manually managed components, please raise a pull request against the `develop` branch. Only release maintainers are allowed to push to `develop` as otherwise it would be possible to mess up the release pipeline.
 
-**Question: I want my repository in the release vector?
-
-Answer: CODEOWNERS, COntirbuting MD Lincence
-
 **Question: What requirements need to be fulfilled to add a repository to the release vector?**
 
 Please see the section below named [Requirements for Release Vector Repositories](#requirements-for-release-vector-repositories).
