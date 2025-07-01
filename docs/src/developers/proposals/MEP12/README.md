@@ -2,7 +2,7 @@
 
 Currently, when creating a machine through the metal-api, the machine is placed randomly inside a partition. This algorithm does not consider spreading machines across different racks and different chassis. This may lead to the situation that a group of machines (that for example form a cluster) can end up being placed in the same rack and the same chassis.
 
-Spreading a group of machines across racks can enhance availability for scenarios like a rack loosing power or a chassis meltdown.
+Spreading a group of machines across racks can enhance availability for scenarios like a rack losing power or a chassis meltdown.
 
 So, instead of just randomly deciding the placement of a machine candidate, we want to propose a placement strategy that attempts to spread machine candidates across the racks inside a partition.
 
