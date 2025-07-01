@@ -40,9 +40,38 @@ Answer: Every repository in metal-stack has a `CODEOWNERS` file pointing to a ma
 
 Answer: Most changes are automatically integrated by the metal-robot. For manually managed components, please raise a pull request against the `develop` branch. Only release maintainers are allowed to push to `develop` as otherwise it would be possible to mess up the release pipeline.
 
-**Question: I want my repository in the release vector?
+**Question: What requirements need to be fulfilled to add a repository to the release vector?**
 
-Answer: CODEOWNERS, COntirbuting MD Lincence
+Please see the section below named [Requirements for Release Vector Repositories](#requirements-for-release-vector-repositories).
+
+### Requirements for Release Vector Repositories
+
+Before adding a repository in the metal-stack org to the releases repository, it is advised for the maintainer to fulfill the following points:
+
+- The following files should be present at the repository root:
+  - [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
+    - When a repository is created, the metal-robot automatically creates a <repository-name>-maintainers team in our GitHub org.
+    - The CODEOWNERS file should reference this team.
+    - The team should contain at least two maintainers.
+  - `LICENSE`
+    - This usually should be MIT with "metal-stack" as authors.
+  - `CONTRIBUTING.md`
+    - This should contain the following content:
+      ```
+      # Contributing
+
+      Please check out the [contributing section](https://docs.metal-stack.io/stable/development/contributing/) in our [docs](https://docs.metal-stack.io/).
+      ```
+  - `README.md`
+- The `developers-core` team should be given repository access with `write` role, the codeowners team should have the `maintain` role
+- Release artifacts should have an SPDX-formatted SBOM attached.
+  - For container images these are embedded using Buildx.
+- The following branch protection rules should be set:
+  - The mainline should be protected.
+  - A pull request should be required before merging (required by at least one code owner).
+  - Status checks should be required to pass.
+  - Force push should not be allowed on this branch.
+- One person from the releases maintainers has to add the repository to the metal-robot in order to pick up the releases, add them to the release vector and generate release notes.
 
 ### How-To Release a Project
 
