@@ -16,6 +16,4 @@ We increment our Gardener dependency version by version following the Gardener u
 
 ## Rollback
 
-Rollback in metal-stack is possible as long as no database schema migration has occurred between the releases. The system uses forward-only DB migrations (e.g. for RethinkDB), so if a schema change is involved, reverting the application requires also restoring the database to its previous state (pre-migration). This ensures data consistency and system stability.
-
-If no database migration has taken place, the release version can simply be rolled back and redeployed. However, if a migration has occurred, the backup-restore-sidecar must be used to [manually](https://github.com/metal-stack/backup-restore-sidecar/blob/master/docs/manual_restore.md) restore the database from a backup created before the schema change.
+metal-stack employs forward-only database migrations (e.g., for RethinkDB), and each release undergoes thorough integration testing. However, rollback procedures are not included in test coverage. To maintain data integrity and system reliability, rolling back a full release is not supported and strongly discouraged. In the event of issues after an upgrade, it is possible to downgrade specific components rather than reverting the entire system.
