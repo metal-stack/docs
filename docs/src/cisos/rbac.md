@@ -17,8 +17,24 @@ The metal-hammer component interacts with the metal-api and, under the current a
 
 ### metal-bmc
 
-The metal-bmc collects hardware information from machines and reports it to the metal-api. This functionality requires the `Edit` role based on the current role-based access model.
+The metal-bmc collects hardware information from machines and reports it to the metal-api. This functionality requires the `Edit` role.
 
 ### pixiecore
 
 pixiecore enables PXE booting within the designated PXE boot network. It communicates with the metal-api and requires the `View` role to function properly.
+
+### Gardener
+
+Gardener requires the `Admin` role to communicate with the metal-api and manage clusters effectively.
+
+### metal-metrics-exporter
+
+To collect monitoring data, metal-metrics-exporter runs as a control-plane component and queries the metal-api, which also requires the `Admin` role.
+
+### image-cache
+
+The image-cache component mirrors container images as configured in the metal-api. It operates with the `View` role.
+
+### metal-core
+
+For managing and configuring network switches through the metal-api, metal-core needs the `Edit` role.
