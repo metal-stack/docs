@@ -16,12 +16,12 @@ We increment our Gardener dependency version by version following the Gardener u
 
 ## Releases
 
-Before upgrading your metal-stack installation, review the release notes carefully - they contain important information on required pre-upgrade actions and notable changes. These notes are currently shared via a dedicated Slack channel. Once you are prepared, you can deploy a new metal-stack version by updating the `metal_stack_release_version` variable in your Ansible configuration and trigger the corresponding deployment jobs in your CI.
+Before upgrading your metal-stack installation, review the release notes carefully - they contain important information on required pre-upgrade actions and notable changes. These notes are currently shared via a dedicated Slack channel and are also available in the release on GitHub. Once you are prepared, you can deploy a new metal-stack version by updating the `metal_stack_release_version` variable in your Ansible configuration and trigger the corresponding deployment jobs in your CI.
 metal-stack uses prebuilt system images for firewalls and worker machines, which are downloaded from images.metal-stack.io. In offline or air-gapped setups, these images must be manually downloaded in advance and uploaded to your local S3-compatible storage. Ensure that the image paths and metadata are correctly maintained so the system can retrieve them during provisioning.
 If you are using metal-stack in combination with Gardener, make sure to reconcile all shoot clusters after upgrading metal-stack to ensure they remain in a consistent and fully functional state.
 metal-images for firewalls and worker nodes follow independent release cycles, typically driven by the need for security patches or system updates. When new images are made available, reconciling provisioned machines is necessary to apply them.
 In a Gardener setup, image updates can be triggered by referencing the new image in the shoot spec.
-Because all outbound traffic passes through the firewall node, a short downtime of about 30 seconds may occur during its restart with the updated image.
+Because all outbound traffic passes through the firewall node, this results in a short downtime of around 30 seconds. This interruption only occurs if the firewall image has actually changed.
 The worker nodes are rolled out one after the other and, if possible, the containers are redistributed to the machines that are still available. However, for stateful workloads like databases, temporary disruptions may occur during node restarts.
 
 ## Rollback
