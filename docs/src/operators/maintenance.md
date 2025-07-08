@@ -21,7 +21,7 @@ metal-stack uses prebuilt system images for firewalls and worker machines, which
 If you are using metal-stack in combination with Gardener, make sure to reconcile all shoot clusters after upgrading metal-stack to ensure they remain in a consistent and fully functional state.
 metal-images for firewalls and worker nodes follow independent release cycles, typically driven by the need for security patches or system updates. When new images are made available, reconciling provisioned machines is necessary to apply them.
 In a Gardener setup, image updates can be triggered by referencing the new image in the shoot spec.
-Because all outbound traffic passes through the firewall node, this results in a short downtime of around 30 seconds. This interruption only occurs if the firewall image has actually changed.
+Because all outbound traffic passes through the firewall node, this results in a short downtime of around 30 seconds. This interruption only occurs if the firewall image has actually changed. The process works as follows: a new firewall node is provisioned and configured in parallel with the existing one. Once setup is complete, traffic is switched over to the new node, and the old firewall is then decommissioned. This minimizes disruption while ensuring a seamless transition.
 The worker nodes are rolled out one after the other and, if possible, the containers are redistributed to the machines that are still available. However, for stateful workloads like databases, temporary disruptions may occur during node restarts.
 
 ## Rollback
