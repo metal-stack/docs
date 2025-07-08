@@ -22,7 +22,7 @@ If you are using metal-stack in combination with Gardener and you do not run pre
 metal-images for firewalls and worker nodes follow independent release cycles, typically driven by the need for security patches or system updates. When new images are made available, the machines must be re-provisioned to apply the updates. When using metal-stack in a Kubernetes context, this results in a rolling update of the cluster worker groups.
 In a Gardener setup, image updates can be triggered by referencing the new image in the shoot spec.
 Because all outbound traffic passes through the firewall node, this results in a short downtime of around 30 seconds. This interruption only occurs if the firewall image has actually changed. The process works as follows: a new firewall node is provisioned and configured in parallel with the existing one. Once setup is complete, traffic is switched over to the new node, and the old firewall is then decommissioned. This minimizes disruption while ensuring a seamless transition.
-The worker nodes are rolled out one after the other and, if possible, the containers are redistributed to the machines that are still available. However, for stateful workloads like databases, temporary disruptions may occur during node restarts.
+The worker nodes are rolled out one after the other and, if possible, the containers are redistributed to the machines that are still available. However, for unclustered stateful workloads like databases, temporary disruptions may occur during node restarts.
 
 ## Rollback
 
