@@ -35,10 +35,12 @@ include this info in the _SBOM_ file name as well.
 ```bash
 # This is an example using https://github.com/metal-stack/metalctl
 wget https://github.com/metal-stack/metalctl/releases/latest/download/sbom-darwin-arm64.json
+```
 
 ## Identify CVEs
 
-There are many tools that can help you to identify the CVEs with the help of an SBOM. Just to name one example, the [cve-bin-tool]() can be used to do this, which would look like this:
+There are many tools that can help you to identify the CVEs with the help of an SBOM. Just to name one example, the
+[cve-bin-tool](https://github.com/intel/cve-bin-tool) can be used to do this, which would look like this:
 
 ```plain
 cve-bin-tool --sbom-file sbom.json --format json 
@@ -58,3 +60,4 @@ cve-bin-tool --sbom-file sbom.json --format json
            INFO     cve_bin_tool - Overall CVE summary:                                                                                                                             cli.py:1181
            INFO     cve_bin_tool - There are 0 products with known CVEs detected                                                                                                    cli.py:1182
            INFO     cve_bin_tool.OutputEngine - JSON report stored                                                                                                                  __init__.py:878
+```
