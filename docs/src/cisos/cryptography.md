@@ -7,7 +7,7 @@ metal-stack incorporates multiple layers of cryptographic protection and secure 
 TLS certificates used by metal-stack components - as outlined in the [architecture section](../concepts/architecture.md) - can be generated using either RSA 4096-bit or ECDSA 256-bit keys. We recommend RSA 4096.
 
 By default, in-cluster communication is not encrypted. If encryption is required within the cluster, it must be configured manually using a service mesh (e.g., Istio or Linkerd) or a similar mechanism.
-For outbound traffic, we recommend integrating cert-manager to handle certificate issuance and enable automated certificate rotation.
+For outbound traffic, we recommend integrating cert-manager in combination with Let's Encrypt to handle certificate issuance and enable automated certificate rotation for ingress domains. In offline environments where Let's Encrypt cannot be used, the certificates must be issued and managed manually or via an internal CA.
 
 ### VPN & Network Encryption
 
