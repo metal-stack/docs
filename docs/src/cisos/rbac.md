@@ -16,7 +16,7 @@ To ensure that internal components interact securely with the metal-api, metal-s
 | [metal-bmc](https://github.com/metal-stack/metal-bmc)                                                                 | Edit  |
 | [metal-core](https://github.com/metal-stack/metal-core)                                                               | Edit  |
 | [metal-hammer](https://github.com/metal-stack/metal-hammer/)                                                          | View  |
-| [metal-metrics-exporter](https://github.com/metal-stack/metal-metrics-exporter)                                       | Admin |
+| [metal-metrics-exporter](https://github.com/metal-stack/metal-metrics-exporter)                                       | View  |
 | [metal-ccm](https://github.com/metal-stack/metal-ccm)                                                                 | Admin |
 | [pixiecore](https://github.com/metal-stack/pixie)                                                                     | View  |
 | [metal-console](https://github.com/metal-stack/metal-console)                                                         | Admin |
