@@ -49,6 +49,9 @@ makedocs(
         "For Users" => [
             "Client Libraries" => "users/client-libraries.md",
         ],
+        "For CISOs" => [
+            "RBAC" => "cisos/rbac.md",
+        ],
         "For Developers" => [
             "Enhancement Proposals" => "developers/proposals/index.md",
             "Planning Meetings" => "developers/planning-meetings.md",
