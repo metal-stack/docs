@@ -6,6 +6,9 @@ metal-stack incorporates multiple layers of cryptographic protection and secure 
 
 TLS certificates used by metal-stack components - as outlined in the [architecture section](../concepts/architecture.md) - can be generated using either RSA 4096-bit or ECDSA 256-bit keys. We recommend RSA 4096.
 
+By default, in-cluster communication is not encrypted. If encryption is required within the cluster, it must be configured manually using a service mesh (e.g., Istio or Linkerd) or a similar mechanism.
+For outbound traffic, we recommend integrating cert-manager to handle certificate issuance and enable automated certificate rotation.
+
 ### VPN & Network Encryption
 
 metal-stack employs WireGuard-based VPN technology, orchestrated via Headscale. WireGuard leverages Elliptic Curve Cryptography (ECC) for key exchange and relies on the Noise Protocol Framework to establish secure and lightweight cryptographic handshakes.
