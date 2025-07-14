@@ -21,6 +21,9 @@ makedocs(
     clean = true,
     pages = [
         "Home" => "index.md",
+
+        # Basic information for beginners.
+        # Aim to link to deeper and more specialized resources.
         "General" => [
             # these paths need to be kept
             # otherwise existing links will break and degrade search results
@@ -29,9 +32,15 @@ makedocs(
             "Why Bare Metal" => "concepts/why-bare-metal.md",
 
             "Flavors of metal-stack" => "general/flavors-of-metal-stack.md",
+        ],
+        # Specific for non-operators that use metal-stack.
+        # Keep top level pages as minimal as possible.
         "For Users" => [
             "Client Libraries" => "users/client-libraries.md",
         ],
+
+        # The main section for anyone managing metal-stack.
+        # Assume Kubernetes knowledge.
         "For Operators" => [
             "Supported Hardware" => "operators/hardware.md",
             "Operating Systems" => "operators/operating-systems.md",
@@ -39,6 +48,9 @@ makedocs(
             "Maintenance" => "operators/maintenance.md",
             "Troubleshoot" => "operators/troubleshoot.md"
         ],
+
+        # Describes all concepts.
+        # Do not get into details that might change regularly.
         "Concepts" => [
             "Architecture" => "concepts/architecture.md",
             "Network" => [
@@ -55,9 +67,15 @@ makedocs(
                 "Storage" => "concepts/kubernetes/storage.md"
             ]
         ],
+
+        # For non-technical users.
+        # Describes compliance related docs.
         "For CISOs" => [
             "RBAC" => "cisos/rbac.md",
         ],
+
+        # For maintainers.
+        # Assume lots of knowledge.
         "For Developers" => [
             "Enhancement Proposals" => "developers/proposals/index.md",
             "Planning Meetings" => "developers/planning-meetings.md",
@@ -65,6 +83,8 @@ makedocs(
             "Release Flow" => "developers/release-flow.md",
             "Community" => "developers/community.md"
         ],
+
+        # Mostly auto-generated contents.
         "References" => [
             "API" => "references/apidocs.md",
             "Components" => [
