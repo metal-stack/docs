@@ -20,7 +20,7 @@ Currently the only way to act as a different user than the default ones, is by u
 ## Role Mapping
 
 The following table shows which role is required to access the endpoints of the various services at a high level.
-Only the minimum role required to access the group of endpoints is shown.
+Only the minimum role required to access the group of endpoints is shown. For the more in-depth documentation of all endpoints, head over to the [API documentation](../references/apidocs.md).
 
 | **Service**                     | **Group of Endpoints**          | **Minimum Role** |
 | ------------------------------- | ------------------------------- | ---------------- |
