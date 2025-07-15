@@ -71,7 +71,11 @@ makedocs(
         # For non-technical users.
         # Describes compliance related docs.
         "For CISOs" => [
-            "RBAC" => "cisos/rbac.md",
+            "Security" => [
+                "cisos/security/principles.md",
+                "cisos/security/sbom.md",
+                "cisos/security/cryptography.md"
+            ],
         ],
 
         # For maintainers.
