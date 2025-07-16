@@ -53,6 +53,7 @@ makedocs(
         # Do not get into details that might change regularly.
         "Concepts" => [
             "Architecture" => "concepts/architecture.md",
+            "User Management" => "concepts/user-management.md",
             "Network" => [
                 "Theory" => "concepts/network/theory.md",
                 "Firewalls" => "concepts/network/firewalls.md"

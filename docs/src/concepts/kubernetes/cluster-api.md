@@ -4,8 +4,8 @@
 
 We provide the [Cluster API provider for metal-stack (CAPMS)](https://github.com/metal-stack/cluster-api-provider-metal-stack) infrastructure provider that allows the declaration of Kubernetes clusters.
 
-> [!CAUTION]
-> This project is currently under heavy development and is not advised to be used in production any time soon.
-> Please use our stack on top of [Gardener](./gardener.md) for production workloads.
+!!! warning "Early Development Stage"
+    This project is currently under heavy development and is not advised to be used in production any time soon.
+    Please use our stack on top of [Gardener](./gardener.md) for production workloads.
 
 Due to the early development stage of the project, all docs are currently in the [README](https://github.com/metal-stack/cluster-api-provider-metal-stack/blob/main/README.md) of the provider repository.

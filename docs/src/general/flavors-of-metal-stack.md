@@ -18,4 +18,4 @@ When compared to our Cluster API integration, this is more and provides a lot mo
 
 Our [Cluster API integration](https://github.com/metal-stack/cluster-api-provider-metal-stack) is a more experimental approach to provide Kubernetes clusters with metal-stack. It is based on the [Cluster API](https://cluster-api.sigs.k8s.io/) project.
 
-Resulting clusters are as minimal as possible and need to configured manually after creation. With this approach there is no concept of service clusters. Each cluster is manually created and managed.
+Resulting clusters are as minimal as possible and need to be configured manually after creation. With this approach there is no concept of service clusters. Each cluster is manually created and managed.
