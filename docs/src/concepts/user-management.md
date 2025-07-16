@@ -13,6 +13,8 @@ The current system provides three default users with their corresponding roles:
 - **Metal-Edit** has the **Edit** role and may create, edit and delete most resources.
 - **Metal-Viewer** is a **Viewer** and may only view resources and may access machines.
 
+Each of these users have a corresponding [HMAC](https://en.wikipedia.org/wiki/HMAC) token, which can be used to authenticate against the API. The tokens do not expire and can be used as long as the service is running. Be cautious with who you share the tokens with.
+
 ## OIDC
 
 Currently the only way to act as a different user than the default ones, is by using OIDC authentication. Here the OIDC provider decides which role the user has.
