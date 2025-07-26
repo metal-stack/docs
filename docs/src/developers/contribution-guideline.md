@@ -17,6 +17,11 @@ Depth = 5
 
 Open a Github issue in the project you would like to contribute. Within the issue, your idea can be discussed. It is also possible to directly create a pull request when the set of changes is relatively small.
 
+When opening an issue please consider the following aspects:
+
+1. Create a meaningful issue describing the WHY? of your contribution.
+1. Try to set appropriate labels to the issue. For example, attach the `triage` label to your issue if you want it to be discussed in the next [planning meeting](./planning-meetings.md). It might be useful to attend the meeting if you want to emphasize it being worked on.
+
 ### Pull Requests
 
 The process described here has several goals:
@@ -25,12 +30,11 @@ The process described here has several goals:
 - Enable a sustainable system to review contributions
 - Enable documented and reproducible addition of contributions
 
-1. Create a meaningful issue describing the WHY? of your contribution
-1. Create a repository fork within the context of that issue.
-1. Create a Draft Pull Request to the master branch of the target repository.
-1. Develop, document and test your contribution (try not to solve more than one issue in a single pull request)
-1. Ask for merging your contribution by removing the draft marker
-1. If code owners are defined, try to assign the request to a code owner
+1. Create a repository fork within the context of that issue. Members of the organization may work on the repository directly without a fork, which allows building development artifacts more easily.
+1. Develop, document and test your contribution (try not to solve more than one issue in a single pull request).
+1. Create a Draft Pull Request to the repository's main branch.
+1. Create a meaningful description of the pull request or reference the related issue. The pull request template explains what the content should include, please read it.
+1. Ask for merging your contribution by removing the draft marker. Repository maintainers (see [Code Ownership](#code-ownership)) are notified automatically, but you can also reach out to people directly on Slack if you want a review from a specific person.
 
 ## General Objectives
 

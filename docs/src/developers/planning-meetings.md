@@ -12,6 +12,18 @@ Planning meetings are currently not recorded. The meetings are held either in En
 
     Note that anyone can contribute to metal-stack without participating in planning meetings. However, if you want to speed up the review process for your requirements, it might be helpful to attend the meetings.
 
+## Agenda
+
+Here is the agenda that we generally want to follow in a planning meeting:
+
+- Possibility to bring up news that are interesting for every developer of the metal-stack org
+- Check `Done` column and archive cards
+  - Attendees have the chance to briefly present achievements if they want
+- Check the `In Progress` column and discuss whether these tasks are still worked on, there were significant blockers or they can be lower-prioritized
+- Check new issues labelled with `triage` and prioritize them
+- Allow attendees to bring up issues and prioritize them
+  - Attendees have the chance to briefly present these new issues
+
 ## Idea Backlog
 
 The backlog contains ideas of what could become part of the roadmap in the future. The list is ordered alphabetically. Therefore, the order does not express the importance or weight of a backlog item.
