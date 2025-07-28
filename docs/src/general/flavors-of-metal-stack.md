@@ -8,7 +8,7 @@ As modern infrastructure and cloud native applications are designed with Kuberne
 
 Regardless which flavor of metal-stack you use, it is always possible to manually provision machines, networks and ip addresses. This is the most basic way of using metal-stack and is very similar to how traditional bare metal infrastructures are managed.
 
-Using plain metal-stack without additional layer was not a focus in the past. Therefore firewall and role management might be premature. These will be addressed by [MEP-4](../developers/proposals/MEP4/index.md) and [MEP-16](../developers/proposals/MEP16/index.md) in the future.
+Using plain metal-stack without additional layer was not a focus in the past. Therefore firewall and role management might be premature. These will be addressed by [MEP-4](../developers/proposals/MEP4/README.md) and [MEP-16](../developers/proposals/MEP16/README.md) in the future.
 
 ## Gardener
 
