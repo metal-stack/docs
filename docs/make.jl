@@ -75,7 +75,8 @@ makedocs(
             "Security" => [
                 "cisos/security/principles.md",
                 "cisos/security/sbom.md",
-                "cisos/security/cryptography.md"
+                "cisos/security/cryptography.md",
+                "cisos/security/communication-matrix.md",
             ],
         ],
 
