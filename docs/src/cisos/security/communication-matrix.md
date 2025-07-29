@@ -11,6 +11,10 @@ This matrix describes the communication between components in the metal-stack an
 
 ## Plain metal-stack
 
+!!! info
+
+    The following table might not be displayed in completeness. Scroll to the right to see all entries.
+
 | No.  |       Component        |      Source Zone       | Protocol |      Destination       |   Destination Zone   | Port  |  C  |  I  | Auth | Trust |            Purpose             |                      Notes                       |
 | :--: | :--------------------: | :--------------------: | :------: | :--------------------: | :------------------: | :---: | :-: | :-: | :--: | :---: | :----------------------------: | :----------------------------------------------: |
 | 1.1  |        metalctl        |        Internet        |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |       |          API Requests          |         Used for management operations.          |
@@ -62,6 +66,10 @@ This matrix describes the communication between components in the metal-stack an
 
 When using metal-stack in conjunction with Gardener, the following communications will additionally be used by metal-stack components.
 
+!!! info
+
+    The following table might not be displayed in completeness. Scroll to the right to see all entries.
+
 | No.  |                 Component                 | Source Zone  | Protocol |  Destination   |  Destination Zone   | Port |  C  |  I  | Auth | Trust |   Purpose    |                    Notes                    |
 | :--: | :---------------------------------------: | :----------: | :------: | :------------: | :-----------------: | :--: | :-: | :-: | :--: | :---: | :----------: | :-----------------------------------------: |
 | G1.1 |                 metal-ccm                 | Seed Cluster |  HTTPS   |   metal-api    | Metal Control Plane | 443  |  x  |  x  |  x   |   x   | API Requests |       Used for management operations.       |
@@ -81,6 +89,10 @@ When using metal-stack in conjunction with Gardener, the following communication
 
 By using the Cluster API provider for metal-stack, the following communictations are required by metal-stack components.
 
+!!! info
+
+    The following table might not be displayed in completeness. Scroll to the right to see all entries.
+
 | No.  |            Component             |    Source Zone     | Protocol | Destination |  Destination Zone   | Port |  C  |  I  | Auth | Trust |   Purpose    |              Notes              |
 | :--: | :------------------------------: | :----------------: | :------: | :---------: | :-----------------: | :--: | :-: | :-: | :--: | :---: | :----------: | :-----------------------------: |
 | C1.1 |            metal-ccm             |  Workload Cluster  |  HTTPS   |  metal-api  | Metal Control Plane | 443  |  x  |  x  |  x   |       | API Requests | Used for management operations. |
@@ -89,6 +101,10 @@ By using the Cluster API provider for metal-stack, the following communictations
 ## With Lightbits
 
 In order to use Lightbits as a storage solution, the following communications are required by metal-stack components.
+
+!!! info
+
+    The following table might not be displayed in completeness. Scroll to the right to see all entries.
 
 | No.  |    Component     | Source Zone  | Protocol |  Destination   | Destination Zone  | Port |  C  |  I  | Auth | Trust |   Purpose    |              Notes              |
 | :--: | :--------------: | :----------: | :------: | :------------: | :---------------: | :--: | :-: | :-: | :--: | :---: | :----------: | :-----------------------------: |
