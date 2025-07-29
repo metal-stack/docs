@@ -67,12 +67,11 @@ This matrix describes the communication between components in the metal-stack an
 | 15.1 |       machine OS       |        Machine         |   DHCP   |      DHCP Server       |       Machine        | 67/68 |     |     |      |   x   |    Machine OS Provisioning     |          Used to obtain an IP address.           |
 | 15.2 |       machine OS       |        Machine         |   DNS    |       DNS Server       |       Machine        |  53   |     |     |      |   x   |     Machine OS Resolution      |            Used to resolve hostnames.            |
 | 15.3 |       machine OS       |        Machine         |   NTP    |       NTP Server       |       Machine        |  123  |     |     |      |   x   |      Machine OS Time Sync      |  Used to synchronize time with the NTP server.   |
-| 16.1 |     kube-apiserver     |        Various         |  HTTPS   |   Container Registry   |       unknown        |  443  |  x  |  x  |  ?   |   ?   |        Container Images        |          Used to pull container images.          |
-| 17.1 | metal-metrics-exporter |  Metal Control Plane   |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
-| 18.1 |       prometheus       |  Metal Control Plane   |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
-| 18.2 |       prometheus       |  Metal Control Plane   |  HTTPS   | metal-metrics-exporter | Metal Control Plane  | 9080  |     |     |      |   x   |           Monitoring           |   Scrapes metrics from metal-metrics-exporter.   |
-| 18.3 |       prometheus       |  Metal Control Plane   |  HTTPS   |    metal-apiserver     | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |      Scrapes metrics from metal-apiserver.       |
-| 18.4 |       prometheus       |  Metal Control Plane   |  HTTPS   |     masterdata-api     | Metal Control Plane  | 2113  |  x  |  x  |  x   |   x   |           Monitoring           |       Scrapes metrics from masterdata-api.       |
+| 16.1 | metal-metrics-exporter |  Metal Control Plane   |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
+| 17.1 |       prometheus       |  Metal Control Plane   |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
+| 17.2 |       prometheus       |  Metal Control Plane   |  HTTPS   | metal-metrics-exporter | Metal Control Plane  | 9080  |     |     |      |   x   |           Monitoring           |   Scrapes metrics from metal-metrics-exporter.   |
+| 17.3 |       prometheus       |  Metal Control Plane   |  HTTPS   |    metal-apiserver     | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |      Scrapes metrics from metal-apiserver.       |
+| 17.4 |       prometheus       |  Metal Control Plane   |  HTTPS   |     masterdata-api     | Metal Control Plane  | 2113  |  x  |  x  |  x   |   x   |           Monitoring           |       Scrapes metrics from masterdata-api.       |
 
 ## With Gardener
 
