@@ -12,14 +12,15 @@ The supported images for worker nodes currently are:
 
 | Platform | Distribution | Version |
 | :------- | :----------- | :------ |
-| Linux    | Debian       | 11      |
-| Linux    | Ubuntu       | 22.04   |
+| Linux    | Debian       | 12      |
+| Linux    | Debian       | 13      |
+| Linux    | Ubuntu       | 24.04   |
 
 The supported images for firewalls are:
 
 | Platform | Distribution | Version | Based On |
 | :------- | :----------- | :------ | -------- |
-| Linux    | Ubuntu       | 3       | 22.04    |
+| Linux    | Ubuntu       | 3       | 24.04    |
 
 ## Building Your Own Images
 

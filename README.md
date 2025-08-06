@@ -28,3 +28,18 @@ The `RELEASE_VERSION` points to our [releases](https://github.com/metal-stack/re
 ## Pull Requests
 
 A pull request will automatically generate a preview on our Gitlab page with Github Actions on `https://docs.metal-stack.io/previews/PR<your-pr-number>`.
+
+## How to organize the docs?
+
+- Prioritize the `concept` section. If this is about a MEP, you likely already have the contents for this.
+- Use the `general` section to distribute users to their sections or to the deeper concept.
+- user, operator or developer specific sections would be nice, but are optional.
+
+### Example
+
+- Roles and Permissions
+  - Concept: explains all roles, permissions and sessions
+  - For operators: OIDC, creation in CI, ... How to / Explanation
+  - For users: how to guide to create tokens and edit permissions
+  - General: base concept, links to How to guides and deeper Concept
+  - CISO / Compliance: minimal need to know Principle Explanation / Concept

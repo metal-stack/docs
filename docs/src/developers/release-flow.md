@@ -18,7 +18,7 @@ A release is created in the following way:
 
 - Individual repository maintainers within the metal-stack GitHub Organization can publish a release of their component.
 - This release is automatically pushed to the `develop` branch of the release repository by the metal-robot.
-- A push triggers a virtual release integration test using the mini-lab environment. This setup launches metal-stack with the `sonic`, `cumulus`, and `gardener` flavors to validate the different Ansible roles and execute basic operations across the metal-stack layer.
+- A push triggers a virtual release integration test using the mini-lab environment. This setup launches metal-stack with the `sonic` and `gardener` flavors to validate the different Ansible roles and execute basic operations across the metal-stack layer.
 - To contribute components that are not directly part of the release vector, a pull request must be made against the `develop` branch of the release repository. Release maintainers may push directly to the `develop` branch.
 - The release maintainers can `/freeze` the `develop` branch, effectively stopping the metal-robot from pushing component releases to this branch.
 - The `develop` branch is tagged by a release maintainer with a `-rc.x` suffix to create a __release candidate__.
