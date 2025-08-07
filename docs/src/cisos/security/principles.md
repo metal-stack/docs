@@ -1,6 +1,18 @@
-# RBAC
+# Security Principles
 
-The [metal-api](https://github.com/metal-stack/metal-api) offers three different user roles for authorization:
+metal-stack adheres to several security principles to ensure the integrity, confidentiality and availability of its services and data. These principles guide the design and implementation of security measures across the metal-stack architecture.
+
+## Minimal Need to Know
+
+The minimal need to know principle is a security concept that restricts access to information and resources only to those who absolutely need it for their specific role or task. This principle is implemented throughout the metal-stack architecture and operational practices to enhance security and reduce the risk of unauthorized access or data breaches.
+
+### RBAC
+
+!!! info
+
+    As of now metal-stack does not implement fine-grained Role-Based Access Control (RBAC) within the `metal-api` but this is worked on in [MEP-4](../../developers/proposals/MEP4/README.md).
+
+As described in our [User Management](../../concepts/user-management.md) concept the [metal-api](https://github.com/metal-stack/metal-api) currently offers three different user roles for authorization:
 
 - `Admin`
 - `Edit`
@@ -25,4 +37,10 @@ To ensure that internal components interact securely with the metal-api, metal-s
 
 Users can interact with the metal-api using [metalctl](https://github.com/metal-stack/metalctl), the command-line interface provided by metal-stack. Depending on the required operations, users should authenticate with the appropriate role to match their level of access.
 
-As part of [MEP-4](../developers/proposals/MEP4/README.md), significant work is underway to introduce more fine-grained access control mechanisms within metal-stack, enhancing the precision and flexibility of permission management.
+## Defence in Depth
+
+Defence in depth is a security strategy that employs multiple layers of defense to protect systems and data. By implementing various security measures at different levels, metal-stack aims to mitigate risks and enhance overall security posture.
+
+## Redundancy
+
+Redundancy is a key principle in metal-stack's security architecture. It involves duplicating critical components and services to ensure that if one fails, others can take over, maintaining system availability and reliability. This is particularly important for data storage and processing, where redundancy helps prevent data loss and ensures continuous operation.
