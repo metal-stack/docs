@@ -97,6 +97,7 @@ Please note that every networking setup has its own requirements and configurati
 | S3.2 | ssh client | Management Server |   SSH    |      ssh daemon      |       Switch        |  22   |  x  |  x  |  x   |   x   |  SSH Access   |   Used to access the SONiC switch via SSH.    |
 | S4.1 | FRRouting  |     Firewall      |   BGP    |      FRRouting       |      Switches       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
 | S4.2 | FRRouting  |      Machine      |   BGP    |      FRRouting       |      Firewall       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
+| S4.3 | FRRouting  |     Switches      |   BGP    |      FRRouting       |      Switches       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
 
 ### Used Technologies
 
