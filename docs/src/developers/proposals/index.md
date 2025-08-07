@@ -1,4 +1,4 @@
-Metal Stack Enhancement Proposals (MEPs)
+# Metal Stack Enhancement Proposals (MEPs)
 
 This section contains proposals which address substantial modifications to metal-stack.
 
