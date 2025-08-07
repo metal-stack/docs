@@ -114,7 +114,7 @@ Please note that every networking setup has its own requirements and configurati
 
 ## With Gardener
 
-When using metal-stack in conjunction with Gardener, the following communications will additionally be used by metal-stack components.
+When using metal-stack in [conjunction with Gardener](../../concepts/kubernetes/gardener.md), the following communications will additionally be used by metal-stack components.
 
 !!! info
 
@@ -138,13 +138,13 @@ When using metal-stack in conjunction with Gardener, the following communication
 
 ### Used Technologies
 
-| Technology | Parties                          | Notes                                                  |
-| ---------- | -------------------------------- | ------------------------------------------------------ |
-| Gardener   | Contains of multiple components. | Has various connections. Mostly other Kubernetes pods. |
+| Technology | Parties                          | Notes                                          |
+| ---------- | -------------------------------- | ---------------------------------------------- |
+| Gardener   | Contains of multiple components. | Cluster management system for many Kubernetes. |
 
 ## With Cluster API
 
-By using the Cluster API provider for metal-stack, the following communictations are required by metal-stack components.
+By using the [Cluster API provider for metal-stack](../../concepts/kubernetes/cluster-api.md), the following communictations are required by metal-stack components.
 
 !!! info
 
@@ -158,9 +158,9 @@ By using the Cluster API provider for metal-stack, the following communictations
 
 ### Used Technologies
 
-| Technology  | Parties                                                   | Notes                           |
-| ----------- | --------------------------------------------------------- | ------------------------------- |
-| Cluster API | Contains of multiple components and additional providers. | Connects to the kube-apiserver. |
+| Technology  | Parties                                                   | Notes                                                     |
+| ----------- | --------------------------------------------------------- | --------------------------------------------------------- |
+| Cluster API | Contains of multiple components and additional providers. | Cluster management system for single Kubernetes clusters. |
 
 ## With Lightbits
 
