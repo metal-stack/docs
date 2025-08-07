@@ -11,6 +11,8 @@ This matrix describes the communication between components in the metal-stack an
 
 ## Plain metal-stack
 
+While metal-stack can be used in different environments and setups, the following communication is required by metal-stack components in a standard setup. This includes all components running on the control plane, partition management and machines.
+
 !!! info
 
     The following table might not be displayed in completeness. Scroll to the right to see all entries.
@@ -74,8 +76,9 @@ This matrix describes the communication between components in the metal-stack an
 
 | Technology                        | Parties    | Notes                                                                            |
 | --------------------------------- | ---------- | -------------------------------------------------------------------------------- |
-| iPXE                              | Machines   | Used for network-based bootstrapping of machines.                                |
 | DHCP                              | All        | Used for obtaining IP addresses and boot configurations.                         |
+| NTP                               | All        | Used for synchronizing time across all components.                               |
+| iPXE                              | Machines   | Used for network-based bootstrapping of machines.                                |
 | TFTP                              | Machines   | Used for transferring boot files to machines.                                    |
 | HTTP                              | Multiple   | Communication in trusted networks.                                               |
 | HTTPS                             | Multiple   | Cross-network communication.                                                     |
@@ -86,7 +89,7 @@ This matrix describes the communication between components in the metal-stack an
 ## With SONiC
 
 While metal-stack does not directly depend on SONiC, it is the only actively maintained implementation of our networking stack. Therefore, the following communication is required by metal-stack components to interact with SONiC.
-Please note that every networking setup has its own requirements and configurations, so the following table might not be complete for your setup.
+Please note that every [networking setup](../../concepts/network/theory.md) has its own requirements and configurations, so the following table might not be complete for your setup.
 
 | No.  | Component  |    Source Zone    | Protocol |     Destination      |  Destination Zone   | Port  |  C  |  I  | Auth | Trust |    Purpose    |                     Notes                     |
 | :--: | :--------: | :---------------: | :------: | :------------------: | :-----------------: | :---: | :-: | :-: | :--: | :---: | :-----------: | :-------------------------------------------: |
@@ -98,19 +101,21 @@ Please note that every networking setup has its own requirements and configurati
 | S4.1 | FRRouting  |     Firewall      |   BGP    |      FRRouting       |      Switches       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
 | S4.2 | FRRouting  |      Machine      |   BGP    |      FRRouting       |      Firewall       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
 | S4.3 | FRRouting  |     Switches      |   BGP    |      FRRouting       |      Switches       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
+| S5.1 | tailscale  |     Firewall      |  HTTPS   |      Headscale       | Metal Control Plane |  443  |  x  |  x  |  x   |   x   |  VPN Access   | Used for Wireguard VPN access via Headscale.  |
 
 ### Used Technologies
 
-| Technology | Parties                     | Notes                                                                       |
-| ---------- | --------------------------- | --------------------------------------------------------------------------- |
-| VRF        | Switches, Firewalls         | Isolation of network segments, e.g. for management and data traffic.        |
-| VLAN       | Switches, Firewalls         | Layer 2 traffic segmentation.                                               |
-| VXLAN      | Switches, Firewalls         | Encapsulate Layer 2 frames in Layer 3 packets for network virtualization.   |
-| EVPN       | Switches, Firewalls         | Overlay network technology for scalable and flexible network architectures. |
-| BGP        | Multiple                    | Routing protocol for dynamic routing and network management.                |
-| ssh        | Management Server, Switches | Secure shell access for management and configuration.                       |
-| LLDP       | Switches, Machines          | Link Layer Discovery Protocol for network device discovery.                 |
-| ICMP       | Multiple                    | Used for network diagnostics and reachability testing.                      |
+| Technology | Parties                     | Notes                                                                                  |
+| ---------- | --------------------------- | -------------------------------------------------------------------------------------- |
+| VRF        | Switches, Firewalls         | Isolation of network segments, e.g. for management and data traffic.                   |
+| VLAN       | Switches, Firewalls         | Layer 2 traffic segmentation.                                                          |
+| VXLAN      | Switches, Firewalls         | Encapsulate Layer 2 frames in Layer 3 packets for network virtualization.              |
+| EVPN       | Switches, Firewalls         | Overlay network technology for scalable and flexible network architectures.            |
+| VPN        | Firewalls                   | Management access [without open SSH ports](../../developers/proposals/MEP9/README.md). |
+| BGP        | Multiple                    | Routing protocol for dynamic routing and network management.                           |
+| SSH        | Management Server, Switches | Secure shell access for management and configuration.                                  |
+| LLDP       | Switches, Machines          | Link Layer Discovery Protocol for network device discovery.                            |
+| ICMP       | Multiple                    | Used for network diagnostics and reachability testing.                                 |
 
 ## With Gardener
 
@@ -164,7 +169,7 @@ By using the [Cluster API provider for metal-stack](../../concepts/kubernetes/cl
 
 ## With Lightbits
 
-In order to use Lightbits as a storage solution, the following communications are required by metal-stack components.
+In order to use [Lightbits as a storage solution](../../concepts/kubernetes/storage.md), the following communications are required by metal-stack components.
 
 !!! info
 
