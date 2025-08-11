@@ -11,70 +11,115 @@ This matrix describes the communication between components in the metal-stack an
 
 ## Plain metal-stack
 
+While metal-stack can be used in different environments and setups, the following communication is required by metal-stack components in a standard setup. This includes all components running on the control plane, partition management and machines.
+
 !!! info
 
     The following table might not be displayed in completeness. Scroll to the right to see all entries.
 
-| No.  |       Component        |      Source Zone       | Protocol |      Destination       |   Destination Zone   | Port  |  C  |  I  | Auth | Trust |            Purpose             |                      Notes                       |
-| :--: | :--------------------: | :--------------------: | :------: | :--------------------: | :------------------: | :---: | :-: | :-: | :--: | :---: | :----------------------------: | :----------------------------------------------: |
-| 1.1  |        metalctl        |        Internet        |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |       |          API Requests          |         Used for management operations.          |
-| 1.2  |        metalctl        |        Internet        |  HTTPS   |     OIDC Provider      |       unknown        |  443  |  x  |  x  |  x   |       | Authentication & Authorization |        Optional. Needs to be configured.         |
-| 1.3  |        metalctl        |        Internet        |  HTTPS   |         GitHub         |       Internet       |  443  |  x  |  x  |      |       |            Updater             |       Used for updates and version checks.       |
-| 2.1  |       metal-api        |  Metal Control Plane   |   TCP    |        metal-db        | Metal Control Plane  | 28015 |     |     |  x   |   x   |           RethinkDB            |                 Database access.                 |
-| 2.2  |       metal-api        |  Metal Control Plane   |   TCP    |     masterdata-api     | Metal Control Plane  | 8443  |     |     |  x   |   x   |            Postgres            |                 Database access.                 |
-| 2.3  |       metal-api        |  Metal Control Plane   |   HTTP   |          ipam          | Metal Control Plane  | 9090  |     |     |      |   x   |       Address Management       |           Used to manage IP addresses.           |
-| 2.4  |       metal-api        |  Metal Control Plane   |   TLS    |          nsq           | Metal Control Plane  | 4150  |  x  |  x  |  x   |   x   |       Machine Operation        |  Used for machine operations and notifications.  |
-| 2.5  |       metal-api        |  Metal Control Plane   |   HTTP   |      nsq lookupd       | Metal Control Plane  | 4161  |     |     |  x   |   x   |       Machine Operation        |  Used for machine operations and notifications.  |
-| 2.6  |       metal-api        |  Metal Control Plane   |   TCP    |  auditing timescaledb  | Metal Control Plane  | 5432  |     |     |  x   |   x   |           Audit Logs           | Logging of auditing events. Used for compliance. |
-| 2.7  |       metal-api        |  Metal Control Plane   |  HTTPS   |       headscale        | Metal Control Plane  | 50443 |  x  |  x  |  x   |   x   |         Headscale API          |      Headscale is used for VPN networking.       |
-| 2.8  |       metal-api        |  Metal Control Plane   |  HTTPS   | S3-compatible Storage  |       unknown        |  443  |  ?  |  ?  |  ?   |   ?   |            Firmware            |        Optional. Needs to be configured.         |
-| 2.9  |       metal-api        |  Metal Control Plane   |  HTTPS   |     OIDC Provider      |       unknown        |  443  |  ?  |  ?  |  ?   |   ?   | Authentication & Authorization |        Optional. Needs to be configured.         |
-| 3.1  |    metal-apiserver     |  Metal Control Plane   |   TCP    |         valkey         | Metal Control Plane  | 6379  |     |     |  x   |   x   |        Background Jobs         | Used for background job processing and caching.  |
-| 3.2  |    metal-apiserver     |  Metal Control Plane   |   TCP    |        metal-db        | Metal Control Plane  | 28015 |  x  |  x  |  x   |   x   |           RethinkDB            |                 Database access.                 |
-| 3.3  |    metal-apiserver     |  Metal Control Plane   |   TCP    |     masterdata-api     | Metal Control Plane  | 8080  |     |     |  x   |   x   |            Postgres            |                 Database access.                 |
-| 3.4  |    metal-apiserver     |  Metal Control Plane   |   HTTP   |          ipam          | Metal Control Plane  | 9090  |     |     |      |   x   |       Address Management       |           Used to manage IP addresses.           |
-| 3.5  |    metal-apiserver     |  Metal Control Plane   |   TCP    |  auditing timescaledb  | Metal Control Plane  | 5432  |     |     |  x   |   x   |           Audit Logs           | Logging of auditing events. Used for compliance. |
-| 3.6  |    metal-apiserver     |  Metal Control Plane   |  HTTPS   |       headscale        | Metal Control Plane  | 50443 |  x  |  x  |  x   |   x   |         Headscale API          |      Headscale is used for VPN networking.       |
-| 3.7  |    metal-apiserver     |  Metal Control Plane   |  HTTPS   |     OIDC Provider      |       unknown        |  443  |  x  |  x  |  x   |   ?   | Authentication & Authorization |        Optional. Needs to be configured.         |
-| 4.1  |     masterdata-api     |  Metal Control Plane   |   TCP    |     masterdata-db      | Metal Control Plane  | 5432  |     |     |  x   |   x   |    Postgres database access    |                 Database access.                 |
-| 5.1  |          ipam          |  Metal Control Plane   |   TCP    |        ipam-db         | Metal Control Plane  | 5432  |     |     |  x   |   x   |    Postgres database access    |                 Database access.                 |
-| 6.1  | backup-restore-sidecar |  Metal Control Plane   |  HTTPS   | S3-compatible Storage  |       unknown        |  443  |  ?  |  ?  |  ?   |   ?   |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 6.2  | backup-restore-sidecar |  Metal Control Plane   |  HTTPS   |       Google API       |       Internet       |  443  |  x  |  x  |  x   |       |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 6.3  | backup-restore-sidecar |  Metal Control Plane   |   TCP    |        Postgres        | Metal Control Plane  | 5432  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 6.4  | backup-restore-sidecar |  Metal Control Plane   |   TCP    |       RethinkDB        | Metal Control Plane  | 28015 |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 6.5  | backup-restore-sidecar |  Metal Control Plane   |   TCP    |          ETCD          | Metal Control Plane  | 2380  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 6.6  | backup-restore-sidecar |  Metal Control Plane   |   TCP    |         Redis          | Metal Control Plane  | 6379  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 6.7  | backup-restore-sidecar |  Metal Control Plane   |   TCP    |         keydb          | Metal Control Plane  | 6379  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
-| 7.1  |     metal-console      |  Partition Management  |   HTTP   |       metal-api        | Metal Control Plane  | 8080  |     |     |  x   |   x   |          API Requests          |         Used for management operations.          |
-| 7.2  |     metal-console      |  Partition Management  |  HTTPS   |       metal-bmc        | Partition Management | 3333  |  x  |  x  |  x   |   x   |       Machine Management       |         Used for management operations.          |
-| 8.1  |          ssh           |        unknown         |   TCP    |     metal-console      | Partition Management | 10001 |  x  |  x  |  x   |   ?   |      Machine Access (SSH)      |    Used to access the metal-console via SSH.     |
-| 9.1  |       pixiecore        |  Partition Management  |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
-| 10.1 |       metal-bmc        |  Partition Management  |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
-| 10.2 |       metal-bmc        |  Partition Management  |   TLS    |          nsq           | Partition Management | 4150  |  x  |  x  |  x   |   x   |       Machine Operation        |  Used for machine operations and notifications.  |
-| 10.2 |       metal-bmc        |  Partition Management  |   IPMI   |      machine BMC       |       Machine        |  623  |     |     |  x   |   x   |       Machine Operation        |             Used for BMC management.             |
-| 11.1 | metal-cache-image-sync |  Partition Management  |  HTTPS   | S3-compatible Storage  |       unknown        |  443  |  ?  |  ?  |  ?   |       |     Image Caching and Sync     |        Optional. Needs to be configured.         |
-| 11.2 | metal-cache-image-sync |  Partition Management  |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |       |          API Requests          |         Used for management operations.          |
-| 12.1 |       metal-core       | Partition Switch Plane |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
-| 12.2 |       metal-core       | Partition Switch Plane |   TCP    |  SONiC ConfigDB Redis  |        Switch        | 6379  |     |     |      |   x   |          API Requests          |         Used for management operations.          |
-| 13.1 |      metal-hammer      |        Machine         |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
-| 13.2 |      metal-hammer      |        Machine         |  HTTPS   |       pixiecore        | Partition Management |  443  |  x  |  x  |      |   x   |       Machine Management       |           Used for machine management.           |
-| 13.3 |      metal-hammer      |        Machine         |  HTTPS   |       Prometheus       |       unknown        |  443  |  x  |  x  |  x   |   x   |           Monitoring           |      Actively pushes metrics to Prometheus.      |
-| 13.4 |      metal-hammer      |        Machine         |   HTTP   |        HAProxy         | Metal Control Plane  | 9001  |     |  x  |      |   x   |   Image Caching and Pulling    |         Used to pull images via HAProxy.         |
-| 13.5 |      metal-hammer      |        Machine         |  HTTPS   |   Container Registry   |       internet       |  443  |  x  |  x  |  ?   |       |       Image and Pulling        |      Used to pull images from the registry.      |
-| 14.1 |    machine firmware    |        Machine         |  HTTPS   |       pixiecore        | Partition Management |  443  |  x  |  x  |      |   x   |       Machine Management       |           Used to provision machines.            |
-| 14.2 |    machine firmware    |        Machine         |   TFTP   |       pixiecore        | Partition Management |  69   |     |     |      |   x   |    Machine OS Provisioning     |       Used to provision machine firmware.        |
-| 15.1 |       machine OS       |        Machine         |   DHCP   |      DHCP Server       |       Machine        | 67/68 |     |     |      |   x   |    Machine OS Provisioning     |          Used to obtain an IP address.           |
-| 15.2 |       machine OS       |        Machine         |   DNS    |       DNS Server       |       Machine        |  53   |     |     |      |   x   |     Machine OS Resolution      |            Used to resolve hostnames.            |
-| 15.3 |       machine OS       |        Machine         |   NTP    |       NTP Server       |       Machine        |  123  |     |     |      |   x   |      Machine OS Time Sync      |  Used to synchronize time with the NTP server.   |
-| 16.1 | metal-metrics-exporter |  Metal Control Plane   |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
-| 17.1 |       prometheus       |  Metal Control Plane   |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
-| 17.2 |       prometheus       |  Metal Control Plane   |  HTTPS   | metal-metrics-exporter | Metal Control Plane  | 9080  |     |     |      |   x   |           Monitoring           |   Scrapes metrics from metal-metrics-exporter.   |
-| 17.3 |       prometheus       |  Metal Control Plane   |  HTTPS   |    metal-apiserver     | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |      Scrapes metrics from metal-apiserver.       |
-| 17.4 |       prometheus       |  Metal Control Plane   |  HTTPS   |     masterdata-api     | Metal Control Plane  | 2113  |  x  |  x  |  x   |   x   |           Monitoring           |       Scrapes metrics from masterdata-api.       |
+| No.  |       Component        |     Source Zone      | Protocol |      Destination       |   Destination Zone   | Port  |  C  |  I  | Auth | Trust |            Purpose             |                      Notes                       |
+| :--: | :--------------------: | :------------------: | :------: | :--------------------: | :------------------: | :---: | :-: | :-: | :--: | :---: | :----------------------------: | :----------------------------------------------: |
+| 1.1  |        metalctl        |       Internet       |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |       |          API Requests          |         Used for management operations.          |
+| 1.2  |        metalctl        |       Internet       |  HTTPS   |     OIDC Provider      |       unknown        |  443  |  x  |  x  |  x   |       | Authentication & Authorization |        Optional. Needs to be configured.         |
+| 1.3  |        metalctl        |       Internet       |  HTTPS   |         GitHub         |       Internet       |  443  |  x  |  x  |      |       |            Updater             |       Used for updates and version checks.       |
+| 2.1  |       metal-api        | Metal Control Plane  |   TCP    |        metal-db        | Metal Control Plane  | 28015 |     |     |  x   |   x   |           RethinkDB            |                 Database access.                 |
+| 2.2  |       metal-api        | Metal Control Plane  |   TCP    |     masterdata-api     | Metal Control Plane  | 8443  |     |     |  x   |   x   |            Postgres            |                 Database access.                 |
+| 2.3  |       metal-api        | Metal Control Plane  |   HTTP   |          ipam          | Metal Control Plane  | 9090  |     |     |      |   x   |       Address Management       |           Used to manage IP addresses.           |
+| 2.4  |       metal-api        | Metal Control Plane  |   TLS    |          nsq           | Metal Control Plane  | 4150  |  x  |  x  |  x   |   x   |       Machine Operation        |  Used for machine operations and notifications.  |
+| 2.5  |       metal-api        | Metal Control Plane  |   HTTP   |      nsq lookupd       | Metal Control Plane  | 4161  |     |     |  x   |   x   |       Machine Operation        |  Used for machine operations and notifications.  |
+| 2.6  |       metal-api        | Metal Control Plane  |   TCP    |  auditing timescaledb  | Metal Control Plane  | 5432  |     |     |  x   |   x   |           Audit Logs           | Logging of auditing events. Used for compliance. |
+| 2.7  |       metal-api        | Metal Control Plane  |  HTTPS   |       headscale        | Metal Control Plane  | 50443 |  x  |  x  |  x   |   x   |         Headscale API          |      Headscale is used for VPN networking.       |
+| 2.8  |       metal-api        | Metal Control Plane  |  HTTPS   | S3-compatible Storage  |       unknown        |  443  |  ?  |  ?  |  ?   |   ?   |            Firmware            |        Optional. Needs to be configured.         |
+| 2.9  |       metal-api        | Metal Control Plane  |  HTTPS   |     OIDC Provider      |       unknown        |  443  |  ?  |  ?  |  ?   |   ?   | Authentication & Authorization |        Optional. Needs to be configured.         |
+| 3.1  |    metal-apiserver     | Metal Control Plane  |   TCP    |         valkey         | Metal Control Plane  | 6379  |     |     |  x   |   x   |        Background Jobs         | Used for background job processing and caching.  |
+| 3.2  |    metal-apiserver     | Metal Control Plane  |   TCP    |        metal-db        | Metal Control Plane  | 28015 |  x  |  x  |  x   |   x   |           RethinkDB            |                 Database access.                 |
+| 3.3  |    metal-apiserver     | Metal Control Plane  |   TCP    |     masterdata-api     | Metal Control Plane  | 8080  |     |     |  x   |   x   |            Postgres            |                 Database access.                 |
+| 3.4  |    metal-apiserver     | Metal Control Plane  |   HTTP   |          ipam          | Metal Control Plane  | 9090  |     |     |      |   x   |       Address Management       |           Used to manage IP addresses.           |
+| 3.5  |    metal-apiserver     | Metal Control Plane  |   TCP    |  auditing timescaledb  | Metal Control Plane  | 5432  |     |     |  x   |   x   |           Audit Logs           | Logging of auditing events. Used for compliance. |
+| 3.6  |    metal-apiserver     | Metal Control Plane  |  HTTPS   |       headscale        | Metal Control Plane  | 50443 |  x  |  x  |  x   |   x   |         Headscale API          |      Headscale is used for VPN networking.       |
+| 3.7  |    metal-apiserver     | Metal Control Plane  |  HTTPS   |     OIDC Provider      |       unknown        |  443  |  x  |  x  |  x   |   ?   | Authentication & Authorization |        Optional. Needs to be configured.         |
+| 4.1  |     masterdata-api     | Metal Control Plane  |   TCP    |     masterdata-db      | Metal Control Plane  | 5432  |     |     |  x   |   x   |    Postgres database access    |                 Database access.                 |
+| 5.1  |          ipam          | Metal Control Plane  |   TCP    |        ipam-db         | Metal Control Plane  | 5432  |     |     |  x   |   x   |    Postgres database access    |                 Database access.                 |
+| 6.1  | backup-restore-sidecar | Metal Control Plane  |  HTTPS   | S3-compatible Storage  |       unknown        |  443  |  ?  |  ?  |  ?   |   ?   |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 6.2  | backup-restore-sidecar | Metal Control Plane  |  HTTPS   |       Google API       |       Internet       |  443  |  x  |  x  |  x   |       |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 6.3  | backup-restore-sidecar | Metal Control Plane  |   TCP    |        Postgres        | Metal Control Plane  | 5432  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 6.4  | backup-restore-sidecar | Metal Control Plane  |   TCP    |       RethinkDB        | Metal Control Plane  | 28015 |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 6.5  | backup-restore-sidecar | Metal Control Plane  |   TCP    |          ETCD          | Metal Control Plane  | 2380  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 6.6  | backup-restore-sidecar | Metal Control Plane  |   TCP    |         Redis          | Metal Control Plane  | 6379  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 6.7  | backup-restore-sidecar | Metal Control Plane  |   TCP    |         keydb          | Metal Control Plane  | 6379  |     |     |  x   |   x   |        Backup & Restore        |        Optional. Needs to be configured.         |
+| 7.1  |     metal-console      | Partition Management |   HTTP   |       metal-api        | Metal Control Plane  | 8080  |     |     |  x   |   x   |          API Requests          |         Used for management operations.          |
+| 7.2  |     metal-console      | Partition Management |  HTTPS   |       metal-bmc        | Partition Management | 3333  |  x  |  x  |  x   |   x   |       Machine Management       |         Used for management operations.          |
+| 8.1  |          ssh           |       unknown        |   TCP    |     metal-console      | Partition Management | 10001 |  x  |  x  |  x   |   ?   |      Machine Access (SSH)      |    Used to access the metal-console via SSH.     |
+| 9.1  |       pixiecore        | Partition Management |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
+| 10.1 |       metal-bmc        | Partition Management |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
+| 10.2 |       metal-bmc        | Partition Management |   TLS    |          nsq           | Partition Management | 4150  |  x  |  x  |  x   |   x   |       Machine Operation        |  Used for machine operations and notifications.  |
+| 10.2 |       metal-bmc        | Partition Management |   IPMI   |      machine BMC       |       Machine        |  623  |     |     |  x   |   x   |       Machine Operation        |             Used for BMC management.             |
+| 11.1 | metal-cache-image-sync | Partition Management |  HTTPS   | S3-compatible Storage  |       unknown        |  443  |  ?  |  ?  |  ?   |       |     Image Caching and Sync     |        Optional. Needs to be configured.         |
+| 11.2 | metal-cache-image-sync | Partition Management |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |       |          API Requests          |         Used for management operations.          |
+| 12.1 |      metal-hammer      |       Machine        |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |          API Requests          |         Used for management operations.          |
+| 12.2 |      metal-hammer      |       Machine        |  HTTPS   |       pixiecore        | Partition Management |  443  |  x  |  x  |      |   x   |       Machine Management       |           Used for machine management.           |
+| 12.3 |      metal-hammer      |       Machine        |  HTTPS   |       Prometheus       |       unknown        |  443  |  x  |  x  |  x   |   x   |           Monitoring           |      Actively pushes metrics to Prometheus.      |
+| 12.4 |      metal-hammer      |       Machine        |   HTTP   |        HAProxy         | Metal Control Plane  | 9001  |     |  x  |      |   x   |   Image Caching and Pulling    |         Used to pull images via HAProxy.         |
+| 12.5 |      metal-hammer      |       Machine        |  HTTPS   |   Container Registry   |       internet       |  443  |  x  |  x  |  ?   |       |       Image and Pulling        |      Used to pull images from the registry.      |
+| 13.1 |    machine firmware    |       Machine        |  HTTPS   |       pixiecore        | Partition Management |  443  |  x  |  x  |      |   x   |       Machine Management       |      Used to provision machines with iPXE.       |
+| 13.2 |    machine firmware    |       Machine        |   TFTP   |       pixiecore        | Partition Management |  69   |     |     |      |   x   |    Machine OS Provisioning     |       Used to provision machine firmware.        |
+| 14.1 |       machine OS       |       Machine        |   DHCP   |      DHCP Server       |       Machine        | 67/68 |     |     |      |   x   |    Machine OS Provisioning     |          Used to obtain an IP address.           |
+| 14.2 |       machine OS       |       Machine        |   DNS    |       DNS Server       |       Machine        |  53   |     |     |      |   x   |     Machine OS Resolution      |            Used to resolve hostnames.            |
+| 14.3 |       machine OS       |       Machine        |   NTP    |       NTP Server       |       Machine        |  123  |     |     |      |   x   |      Machine OS Time Sync      |  Used to synchronize time with the NTP server.   |
+| 15.1 | metal-metrics-exporter | Metal Control Plane  |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
+| 16.1 |       prometheus       | Metal Control Plane  |  HTTPS   |       metal-api        | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |         Scrapes metrics from metal-api.          |
+| 16.2 |       prometheus       | Metal Control Plane  |  HTTPS   | metal-metrics-exporter | Metal Control Plane  | 9080  |     |     |      |   x   |           Monitoring           |   Scrapes metrics from metal-metrics-exporter.   |
+| 16.3 |       prometheus       | Metal Control Plane  |  HTTPS   |    metal-apiserver     | Metal Control Plane  |  443  |  x  |  x  |  x   |   x   |           Monitoring           |      Scrapes metrics from metal-apiserver.       |
+| 16.4 |       prometheus       | Metal Control Plane  |  HTTPS   |     masterdata-api     | Metal Control Plane  | 2113  |  x  |  x  |  x   |   x   |           Monitoring           |       Scrapes metrics from masterdata-api.       |
+
+### Used Technologies
+
+| Technology                        | Parties    | Notes                                                                            |
+| --------------------------------- | ---------- | -------------------------------------------------------------------------------- |
+| DHCP                              | All        | Used for obtaining IP addresses and boot configurations.                         |
+| NTP                               | All        | Used for synchronizing time across all components.                               |
+| iPXE                              | Machines   | Used for network-based bootstrapping of machines.                                |
+| TFTP                              | Machines   | Used for transferring boot files to machines.                                    |
+| HTTP                              | Multiple   | Communication in trusted networks.                                               |
+| HTTPS                             | Multiple   | Cross-network communication.                                                     |
+| DNS                               | Multiple   | Used for resolving hostnames to IP addresses.                                    |
+| Kubernetes                        | Cluster    | Metal-stack components running in pods. Optional, but recommended.               |
+| Container Network Interface (CNI) | Kubernetes | Provides networking capabilities for pods in a cluster. Required for Kubernetes. |
+
+## With SONiC
+
+While metal-stack does not directly depend on SONiC, it is the only actively maintained implementation of our networking stack. Therefore, the following communication is required by metal-stack components to interact with SONiC.
+Please note that every [networking setup](../../concepts/network/theory.md) has its own requirements and configurations, so the following table might not be complete for your setup.
+
+| No.  | Component  |    Source Zone    | Protocol |     Destination      |  Destination Zone   | Port  |  C  |  I  | Auth | Trust |    Purpose    |                     Notes                     |
+| :--: | :--------: | :---------------: | :------: | :------------------: | :-----------------: | :---: | :-: | :-: | :--: | :---: | :-----------: | :-------------------------------------------: |
+| S1.1 | metal-core |   Leaf Switches   |  HTTPS   |      metal-api       | Metal Control Plane |  443  |  x  |  x  |  x   |   x   | API Requests  |        Used for management operations.        |
+| S1.2 | metal-core |   Leaf Switches   |   TCP    | SONiC ConfigDB Redis |       Switch        | 6379  |     |     |      |   x   | API Requests  |        Used for management operations.        |
+| S2.1 | DHCP Relay |   Leaf Switches   | TCP/UDP  |     DHCP Server      |  Management Server  | 67/68 |     |     |      |   x   | DHCP Requests |        Used to forward DHCP requests.         |
+| S3.1 | ssh client |      unknown      |   SSH    |      ssh daemon      |  Management Server  |  22   |  x  |  x  |  x   |       |  SSH Access   | Used to access the management server via SSH. |
+| S3.2 | ssh client | Management Server |   SSH    |      ssh daemon      |       Switch        |  22   |  x  |  x  |  x   |   x   |  SSH Access   |   Used to access the SONiC switch via SSH.    |
+| S4.1 | FRRouting  |     Firewall      |   BGP    |      FRRouting       |      Switches       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
+| S4.2 | FRRouting  |      Machine      |   BGP    |      FRRouting       |      Firewall       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
+| S4.3 | FRRouting  |     Switches      |   BGP    |      FRRouting       |      Switches       |  179  |     |     |      |   x   |    Routing    |           Used for dynamic routing.           |
+| S5.1 | tailscale  |     Firewall      |  HTTPS   |      Headscale       | Metal Control Plane |  443  |  x  |  x  |  x   |   x   |  VPN Access   | Used for Wireguard VPN access via Headscale.  |
+
+### Used Technologies
+
+| Technology | Parties                     | Notes                                                                                  |
+| ---------- | --------------------------- | -------------------------------------------------------------------------------------- |
+| VRF        | Switches, Firewalls         | Isolation of network segments, e.g. for management and data traffic.                   |
+| VLAN       | Switches, Firewalls         | Layer 2 traffic segmentation.                                                          |
+| VXLAN      | Switches, Firewalls         | Encapsulate Layer 2 frames in Layer 3 packets for network virtualization.              |
+| EVPN       | Switches, Firewalls         | Overlay network technology for scalable and flexible network architectures.            |
+| VPN        | Firewalls                   | Management access [without open SSH ports](../../developers/proposals/MEP9/README.md). |
+| BGP        | Multiple                    | Routing protocol for dynamic routing and network management.                           |
+| SSH        | Management Server, Switches | Secure shell access for management and configuration.                                  |
+| LLDP       | Switches, Machines          | Link Layer Discovery Protocol for network device discovery.                            |
+| ICMP       | Multiple                    | Used for network diagnostics and reachability testing.                                 |
 
 ## With Gardener
 
-When using metal-stack in conjunction with Gardener, the following communications will additionally be used by metal-stack components.
+When using metal-stack in [conjunction with Gardener](../../concepts/kubernetes/gardener.md), the following communications will additionally be used by metal-stack components.
 
 !!! info
 
@@ -96,9 +141,15 @@ When using metal-stack in conjunction with Gardener, the following communication
 | G5.3 |     gardener-extension-provider-metal     | Seed Cluster |  HTTPS   | kube-apiserver |    Seed Cluster     | 443  |  x  |  x  |  x   |       | API Requests |       Used for management operations.       |
 | G5.4 |     gardener-extension-provider-metal     | Seed Cluster |  HTTPS   | kube-apiserver |    Shoot Cluster    | 443  |  x  |  x  |  x   |       | API Requests |       Used for management operations.       |
 
+### Used Technologies
+
+| Technology | Parties                          | Notes                                          |
+| ---------- | -------------------------------- | ---------------------------------------------- |
+| Gardener   | Contains of multiple components. | Cluster management system for many Kubernetes. |
+
 ## With Cluster API
 
-By using the Cluster API provider for metal-stack, the following communictations are required by metal-stack components.
+By using the [Cluster API provider for metal-stack](../../concepts/kubernetes/cluster-api.md), the following communictations are required by metal-stack components.
 
 !!! info
 
@@ -110,9 +161,15 @@ By using the Cluster API provider for metal-stack, the following communictations
 | C1.2 |            metal-ccm             |  Workload Cluster  |  HTTPS   | kube-apiserver |  Workload Cluster   | 443  |  x  |  x  |  x   |   x   | API Requests | Used for management operations. |
 | C2.1 | cluster-api-provider-metal-stack | Management Cluster |  HTTPS   |   metal-api    | Metal Control Plane | 443  |  x  |  x  |  x   |       | API Requests | Used for management operations. |
 
+### Used Technologies
+
+| Technology  | Parties                                                   | Notes                                                     |
+| ----------- | --------------------------------------------------------- | --------------------------------------------------------- |
+| Cluster API | Contains of multiple components and additional providers. | Cluster management system for single Kubernetes clusters. |
+
 ## With Lightbits
 
-In order to use Lightbits as a storage solution, the following communications are required by metal-stack components.
+In order to use [Lightbits as a storage solution](../../concepts/kubernetes/storage.md), the following communications are required by metal-stack components.
 
 !!! info
 
@@ -126,3 +183,9 @@ In order to use Lightbits as a storage solution, the following communications ar
 | L2.2 | lb-csi-controller | Shoot Cluster |  HTTPS   | kube-apiserver |   Shoot Cluster   | 443  |  x  |  x  |  x   |   x   | Kubernetes | Used for management operations. |
 | L3.1 |    lb-csi-node    | Shoot Cluster |   TCP    |   duros-api    | Lightbits Cluster | 4420 |  x  |  x  |  x   |       |  Storage   | Used for management operations. |
 | L3.2 |    lb-csi-node    | Shoot Cluster |   TCP    |   duros-api    | Lightbits Cluster | 8009 |  x  |  x  |  x   |       |  Storage   | Used for management operations. |
+
+### Used Technologies
+
+| Technology | Parties | Notes                       |
+| ---------- | ------- | --------------------------- |
+| Lightbits  | Storage | Used for storage solutions. |
