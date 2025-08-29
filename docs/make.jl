@@ -9,7 +9,7 @@ makedocs(
         repolink = "https://github.com/metal-stack/docs.git",
         prettyurls = is_ci_build,
         assets = ["assets/favicon.ico", "assets/youtube.css"],
-        canonical = "https://docs.metal-stack.io/",
+        canonical = "https://docs.archive.metal-stack.io/",
         highlights = ["yaml"],
     ),
     authors = "metal-stack authors and contributors.",

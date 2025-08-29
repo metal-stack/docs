@@ -1,9 +1,12 @@
 # Docs
 
-[![Stable Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://docs.metal-stack.io/)
-[![Devel Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://docs.metal-stack.io/dev/)
+[![Stable Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://docs.archive.metal-stack.io/)
+[![Devel Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://docs.archive.metal-stack.io/dev/)
 
-This repository contains the documentation of metal-stack at [docs.metal-stack.io](https://docs.metal-stack.io/).
+> [!WARNING]
+> This repository has been deprecated and replaced by [website](https://github.com/metal-stack/website).
+
+This repository contains the documentation of metal-stack at [docs.archive.metal-stack.io](https://docs.archive.metal-stack.io/).
 
 It is being generated using [Julia Documenter](https://github.com/JuliaDocs/Documenter.jl). Everything is basically build on Markdown files. Check their [docs](https://juliadocs.github.io/Documenter.jl/stable/) if you want to dig deeper.
 
@@ -27,7 +30,7 @@ The `RELEASE_VERSION` points to our [releases](https://github.com/metal-stack/re
 
 ## Pull Requests
 
-A pull request will automatically generate a preview on our Gitlab page with Github Actions on `https://docs.metal-stack.io/previews/PR<your-pr-number>`.
+A pull request will automatically generate a preview on our Gitlab page with Github Actions on `https://docs.archive.metal-stack.io/previews/PR<your-pr-number>`.
 
 ## How to organize the docs?
 
